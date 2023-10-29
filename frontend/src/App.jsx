@@ -1,11 +1,11 @@
 import React from 'react';
+import './App.css'
+import LoginPage from './pages/LoginPage';
+// import RegisterPage from './pages/RegisterPage'
 
 function App () {
-  return (
-    <>
-      <h1 className='text-2xl p-5 font-bold underline'>Let&apos;s go!</h1>
-    </>
-  );
+  document.title = 'AirBRB';
+  return <LoginPage></LoginPage>
 }
 
 export default App;
