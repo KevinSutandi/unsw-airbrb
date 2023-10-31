@@ -95,12 +95,12 @@ export default function LoginModal ({ open, onClose, openRegisterModal }) {
 
               <div className='mt-6'>
                 <p className='text-sm text-gray-500'>
-                  Don&apos;t have an account?{' '}
+                  Don&apos;t have an account?&nbsp;
                   <button
                     onClick={openRegisterModal}
-                    className='text-sm text-gray-500 hover:text-blue-600 hover:underline'
+                    className='text-sm text-blue-500 hover:text-blue-700 hover:underline'
                   >
-                    Sign Up
+                    Register
                   </button>
                 </p>
               </div>

@@ -34,7 +34,7 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
               <div className="text-center">
                 <UserIcon className="h-12 w-12 mx-auto text-blue-400" aria-hidden="true" />
                 <Dialog.Title as="h3" className="text-lg font-semibold leading-6 text-gray-900 mt-4">
-                  Login
+                  Register
                 </Dialog.Title>
               </div>
 
@@ -104,9 +104,10 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
 
               <div className="mt-6">
                 <p className="text-sm text-gray-500">
-                  Already have an account                   <button
+                  Already have an account?&nbsp;
+                  <button
                     onClick={openLoginModal}
-                    className='text-sm text-gray-500 hover:text-blue-600 hover:underline'
+                    className='text-sm text-blue-500 hover:text-blue-700 hover:underline'
                   >Login</button>
                 </p>
               </div>
