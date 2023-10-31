@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import '../App.css';
+import '../../App.css';
 import { Dialog, Popover } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import logo from '../assets/logo.jpeg';
-import LoginModal from '../components/LoginModal';
-import RegisterModal from '../components/RegisterModal';
+import { Bars3Icon, XMarkIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import logo from '../../assets/logo.jpeg';
+import LoginModal from '../AuthModals/LoginModal';
+import RegisterModal from '../AuthModals/RegisterModal';
 
-export default function HomePage () {
+export default function NavBar () {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
@@ -28,9 +28,10 @@ export default function HomePage () {
         aria-label='Global'
       >
         <div className='flex lg:flex-1'>
-          <a href='#' className='-m-1.5 p-1.5'>
+          <a href='#' className='-m-1.5 p-1.5 flex hover:scale-105 ease-in duration-200'>
             <span className='sr-only'>AirBRB</span>
-            <img className='h-8 w-auto' src={logo} alt='' />
+            <img className='h-10 w-auto' src={logo} alt='' />
+            <span className='mx-3 my-auto text-2xl underline underline-offset-3'>AirBRB</span>
           </a>
         </div>
         <div className='flex lg:hidden'>
@@ -44,20 +45,21 @@ export default function HomePage () {
           </button>
         </div>
         <Popover.Group className='hidden lg:flex lg:gap-x-12'>
-          <a href='#' className='text-sm font-semibold leading-6 text-gray-900'>
+          <a href='#' className='text-sm font-semibold leading-6 text-gray-900 hover:text-gray-500 ease-in duration-100'>
             We
           </a>
-          <a href='#' className='text-sm font-semibold leading-6 text-gray-900'>
+          <a href='#' className='text-sm font-semibold leading-6 text-gray-900 hover:text-gray-500 ease-in duration-100'>
             Love
           </a>
-          <a href='#' className='text-sm font-semibold leading-6 text-gray-900'>
-            Hayden
+          <a href='#' className='text-sm font-semibold leading-6 text-gray-900 hover:text-gray-500 ease-in duration-100'>
+          AirBRB your home
           </a>
         </Popover.Group>
         <div className='hidden lg:flex lg:flex-1 lg:justify-end'>
+        <MagnifyingGlassIcon className='h-6 w-6 mr-10 hover:text-gray-500 cursor-pointer'/>
           <button
             onClick={openLoginModal}
-            className='text-sm font-semibold leading-6 text-gray-900'
+            className='text-sm font-semibold leading-6 text-gray-900 hover:text-gray-500 ease-in duration-100'
           >
             Log in <span aria-hidden='true'>&rarr;</span>
           </button>
@@ -72,9 +74,10 @@ export default function HomePage () {
         <div className='fixed inset-0 z-10' />
         <Dialog.Panel className='fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
           <div className='flex items-center justify-between'>
-            <a href='#' className='-m-1.5 p-1.5'>
+            <a href='#' className='-m-1.5 p-1.5 flex'>
               <span className='sr-only'>AirBRB</span>
               <img className='h-8 w-auto' src={logo} alt='' />
+              <span className='mx-3 my-auto text-2xl underline underline-offset-3'>AirBRB</span>
             </a>
             <button
               type='button'
@@ -82,7 +85,7 @@ export default function HomePage () {
               onClick={() => setMobileMenuOpen(false)}
             >
               <span className='sr-only'>Close menu</span>
-              <XMarkIcon className='h-6 w-6' aria-hidden='true' />
+              <XMarkIcon className='h-6 w-6 hover:bg-gray-50' aria-hidden='true' />
             </button>
           </div>
           <div className='mt-6 flow-root'>
@@ -104,7 +107,7 @@ export default function HomePage () {
                   href='#'
                   className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50'
                 >
-                  Hayden
+                  List your home
                 </a>
               </div>
               <div className='py-6'>
