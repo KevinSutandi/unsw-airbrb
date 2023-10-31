@@ -3,10 +3,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Re
 import HomePage from './pages/HomePage';
 
 function App () {
+  document.title = 'AirBRB';
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path='/' element={<HomePage />} />
       </Routes>
     </Router>
   );
