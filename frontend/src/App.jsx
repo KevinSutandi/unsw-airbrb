@@ -1,15 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Replace Switch with Routes
-import HomePage from './pages/HomePage';
+import HomePage from './screens/HomePage';
+import NavBar from './components/HomeComponents/NavBar';
 
 function App () {
   document.title = 'AirBRB';
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={<HomePage />} />
-      </Routes>
-    </Router>
+    <>
+      <NavBar />
+      <Router>
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 

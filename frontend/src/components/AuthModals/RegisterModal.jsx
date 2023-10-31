@@ -49,7 +49,7 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
                       id="email"
                       name="email"
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
-                      placeholder="youremail@example.com"
+                      placeholder="Enter your email"
                     />
                   </div>
 
@@ -58,11 +58,11 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
                       Name
                     </label>
                     <input
-                      type="password"
-                      id="password"
-                      name="password"
+                      type="name"
+                      id="name"
+                      name="name"
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
-                      placeholder="********"
+                      placeholder="Enter your name"
                     />
                   </div>
 
@@ -75,7 +75,7 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
                       id="password"
                       name="password"
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
-                      placeholder="********"
+                      placeholder="Enter your password"
                     />
                   </div>
 
@@ -88,7 +88,7 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
                       id="confirmPassword"
                       name="confirmPassword"
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
-                      placeholder="********"
+                      placeholder="Enter your password again"
                     />
                   </div>
                   <div>
