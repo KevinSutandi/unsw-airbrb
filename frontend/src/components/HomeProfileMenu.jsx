@@ -5,7 +5,7 @@ import ProfileIcon from '../assets/profileIcon.svg'
 
 export default function Example ({ onClick }) {
   return (
-    <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+    <div>
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex w-12 justify-center rounded-full h-12 bg-black px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">

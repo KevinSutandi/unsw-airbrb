@@ -59,16 +59,10 @@ export default function NavBar () {
             Hayden
           </a>
         </Popover.Group>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-        <MagnifyingGlassIcon className='h-6 w-6 mr-10 hover:text-gray-500 cursor-pointer'/>
-          <button
-            onClick={openLoginModal}
-            className='text-sm font-semibold leading-6 text-gray-900 hover:text-gray-500 ease-in duration-100'
-          >
-            Log in <span aria-hidden="true">&rarr;</span>
-          </button>
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
+          <MagnifyingGlassIcon className='h-6 w-6 mr-10 hover:text-gray-500 cursor-pointer'/>
+          <HomeProfileMenu onClick={openLoginModal}></HomeProfileMenu>
         </div>
-        <HomeProfileMenu onClick={openLoginModal}></HomeProfileMenu>
       </nav>
       <Dialog
         as="div"
