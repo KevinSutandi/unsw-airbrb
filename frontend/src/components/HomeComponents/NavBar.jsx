@@ -61,7 +61,7 @@ export default function NavBar () {
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
           <MagnifyingGlassIcon className='h-6 w-6 mr-10 hover:text-gray-500 cursor-pointer'/>
-          <HomeProfileMenu onClick={openLoginModal}></HomeProfileMenu>
+          <HomeProfileMenu openLoginModal={openLoginModal} openRegisterModal={openRegisterModal}></HomeProfileMenu>
         </div>
       </nav>
       <Dialog

@@ -3,7 +3,7 @@ import { Fragment, React } from 'react';
 // import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import ProfileIcon from '../assets/profileIcon.svg'
 
-export default function Example ({ onClick }) {
+export default function Example ({ openLoginModal, openRegisterModal }) {
   return (
     <div>
       <Menu as="div" className="relative inline-block text-left">
@@ -29,6 +29,7 @@ export default function Example ({ onClick }) {
                     className={`${
                       active ? 'bg-blue-500 text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm font-bold`}
+                    onClick={openRegisterModal}
                   >
                     Sign up
                   </button>
@@ -36,7 +37,7 @@ export default function Example ({ onClick }) {
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
-                  <button onClick={onClick}
+                  <button onClick={openLoginModal}
                     className={`${
                       active ? 'bg-blue-500 text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
