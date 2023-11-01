@@ -1,9 +1,27 @@
-import React, { Fragment, useRef } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/24/outline';
+import { URL } from '../../config';
+import axios from 'axios';
 
 export default function RegisterModal ({ open, onClose, openLoginModal }) {
-  const cancelButtonRef = useRef(null);
+  const cancelButtonRef = useRef(null)
+  const [formData, setFormData] = useState({
+    email: '',
+    name: '',
+    password: '',
+    setPassword: '',
+  })
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${URL}user/auth/register`, formData)
+      console.log(res.data.token)
+    } catch (err) {
+      console.error('Login failed' + err.response ? err.response.data : err.message)
+    }
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -39,7 +57,7 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
               </div>
 
               <div className="mt-6">
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={e => handleRegister(e)}>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                       Email
@@ -50,6 +68,8 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
                       name="email"
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
                       placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
                     />
                   </div>
 
@@ -63,6 +83,8 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
                       name="name"
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
                       placeholder="Enter your name"
+                      value={formData.name}
+                      onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
                     />
                   </div>
 
@@ -76,6 +98,8 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
                       name="password"
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
                       placeholder="Enter your password"
+                      value={formData.password}
+                      onChange={e => setFormData(prev => ({ ...prev, password: e.target.value }))}
                     />
                   </div>
 
@@ -89,6 +113,8 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
                       name="confirmPassword"
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
                       placeholder="Enter your password again"
+                      value={formData.confirmPassword}
+                      onChange={e => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                     />
                   </div>
                   <div>

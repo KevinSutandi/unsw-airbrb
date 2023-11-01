@@ -1,9 +1,28 @@
-import React, { Fragment, useRef } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/24/outline';
+import axios from 'axios';
+import { URL } from '../../config.js';
 
 export default function LoginModal ({ open, onClose, openRegisterModal }) {
   const cancelButtonRef = useRef(null);
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+
+    const postBody = {
+      email, password
+    }
+
+    try {
+      const res = await axios.post(`${URL}user/auth/login`, postBody)
+      console.log(res)
+    } catch (err) {
+      console.error('Login failed' + err.response ? err.response.data : err.message)
+    }
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -50,7 +69,7 @@ export default function LoginModal ({ open, onClose, openRegisterModal }) {
               </div>
 
               <div className='mt-6'>
-                <form className='space-y-4'>
+                <form className='space-y-4' onSubmit={handleLogin}>
                   <div>
                     <label
                       htmlFor='email'
@@ -64,6 +83,8 @@ export default function LoginModal ({ open, onClose, openRegisterModal }) {
                       name='email'
                       className='mt-1 p-2 block w-full rounded-md border border-gray-300'
                       placeholder='youremail@example.com'
+                      onChange={e => setEmail(e.target.value)}
+                      value={email}
                     />
                   </div>
 
@@ -80,6 +101,8 @@ export default function LoginModal ({ open, onClose, openRegisterModal }) {
                       name='password'
                       className='mt-1 p-2 block w-full rounded-md border border-gray-300'
                       placeholder='********'
+                      onChange={e => setPassword(e.target.value)}
+                      value={password}
                     />
                   </div>
                   <div>
