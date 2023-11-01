@@ -63,7 +63,7 @@ export default function HomePage () {
             Log in <span aria-hidden="true">&rarr;</span>
           </button>
         </div> */}
-        <HomeProfileMenu></HomeProfileMenu>
+        <HomeProfileMenu onClick={openLoginModal}></HomeProfileMenu>
       </nav>
       <Dialog
         as="div"
