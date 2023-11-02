@@ -29,7 +29,6 @@ export default function RegisterModal ({
       setToken(res.data.token);
       setRegisterModalOpen(false);
     } catch (err) {
-      setRegisterModalOpen(false);
       setErrorModalOpen(true);
       setErrorMessage(err.response.data.error);
       console.error(

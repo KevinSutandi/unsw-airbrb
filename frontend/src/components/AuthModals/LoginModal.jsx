@@ -24,7 +24,6 @@ export default function LoginModal ({
       setToken(res.data.token);
       setLoginModalOpen(false);
     } catch (err) {
-      setLoginModalOpen(false);
       setErrorModalOpen(true);
       setErrorMessage(err.response.data.error);
       console.error(
