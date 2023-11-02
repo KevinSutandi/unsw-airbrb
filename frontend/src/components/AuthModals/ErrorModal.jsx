@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+// eslint-disable-next-line no-unused-vars
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function ErrorModals ({ open, onClose, errorMessage }) {
   return (
@@ -28,6 +30,13 @@ export default function ErrorModals ({ open, onClose, errorMessage }) {
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel className="relative w-full max-w-sm p-6 bg-white rounded-lg shadow-xl">
+              <div className='group absolute top-1 right-1 z-12 p-2 cursor-pointer rounded-lg hover:bg-gray-300'>
+                <XMarkIcon
+                  className="w-5 h-5 text-gray-500 group-hover:text-gray-800"
+                  onClick={onClose}
+                ></XMarkIcon>
+              </div>
+
               <div className="text-center">
                 <Dialog.Title
                   as="h3"
