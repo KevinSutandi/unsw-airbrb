@@ -156,6 +156,7 @@ export default function NavBar () {
         openLoginModal={openLoginModal}
         setRegisterModalOpen={setRegisterModalOpen}
         setErrorMessage={setErrorMessage}
+        setErrorModalOpen={setErrorModalOpen}
       />
       <ErrorModal
         open={errorModalOpen}

@@ -5,30 +5,47 @@ import { URL } from '../../config';
 import { createInstance } from '../../utils/api';
 import { setToken } from '../../utils/auth';
 
-export default function RegisterModal ({ open, onClose, openLoginModal, setRegisterModalOpen }) {
-  const cancelButtonRef = useRef(null)
+export default function RegisterModal ({
+  open,
+  onClose,
+  openLoginModal,
+  setRegisterModalOpen,
+  setErrorModalOpen,
+  setErrorMessage,
+}) {
+  const cancelButtonRef = useRef(null);
   const [formData, setFormData] = useState({
     email: '',
     name: '',
     password: '',
     setPassword: '',
-  })
+  });
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const instance = createInstance()
+    const instance = createInstance();
     try {
-      const res = await instance.post(`${URL}user/auth/register`, formData)
-      setToken(res.data.token)
-      setRegisterModalOpen(false)
+      const res = await instance.post(`${URL}user/auth/register`, formData);
+      setToken(res.data.token);
+      setRegisterModalOpen(false);
     } catch (err) {
-      console.error('Login failed' + err.response ? err.response.data.error : err.message)
+      setRegisterModalOpen(false);
+      setErrorModalOpen(true);
+      setErrorMessage(err.response.data.error);
+      console.error(
+        'Login failed' + err.response ? err.response.data.error : err.message
+      );
     }
-  }
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={onClose}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        initialFocus={cancelButtonRef}
+        onClose={onClose}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-200"
@@ -53,16 +70,25 @@ export default function RegisterModal ({ open, onClose, openLoginModal, setRegis
           >
             <Dialog.Panel className="relative w-full max-w-sm p-6 bg-white rounded-lg shadow-xl">
               <div className="text-center">
-                <UserIcon className="h-12 w-12 mx-auto text-blue-400" aria-hidden="true" />
-                <Dialog.Title as="h3" className="text-lg font-semibold leading-6 text-gray-900 mt-4">
+                <UserIcon
+                  className="h-12 w-12 mx-auto text-blue-400"
+                  aria-hidden="true"
+                />
+                <Dialog.Title
+                  as="h3"
+                  className="text-lg font-semibold leading-6 text-gray-900 mt-4"
+                >
                   Register
                 </Dialog.Title>
               </div>
 
               <div className="mt-6">
-                <form className="space-y-4" onSubmit={e => handleRegister(e)}>
+                <form className="space-y-4" onSubmit={(e) => handleRegister(e)}>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Email
                     </label>
                     <input
@@ -72,12 +98,20 @@ export default function RegisterModal ({ open, onClose, openLoginModal, setRegis
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
                       placeholder="Enter your email"
                       value={formData.email}
-                      onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Name
                     </label>
                     <input
@@ -87,12 +121,20 @@ export default function RegisterModal ({ open, onClose, openLoginModal, setRegis
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
                       placeholder="Enter your name"
                       value={formData.name}
-                      onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Password
                     </label>
                     <input
@@ -102,12 +144,20 @@ export default function RegisterModal ({ open, onClose, openLoginModal, setRegis
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
                       placeholder="Enter your password"
                       value={formData.password}
-                      onChange={e => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          password: e.target.value,
+                        }))
+                      }
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Confirm Password
                     </label>
                     <input
@@ -117,7 +167,12 @@ export default function RegisterModal ({ open, onClose, openLoginModal, setRegis
                       className="mt-1 p-2 block w-full rounded-md border border-gray-300"
                       placeholder="Enter your password again"
                       value={formData.confirmPassword}
-                      onChange={e => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          confirmPassword: e.target.value,
+                        }))
+                      }
                     />
                   </div>
                   <div>
@@ -136,8 +191,10 @@ export default function RegisterModal ({ open, onClose, openLoginModal, setRegis
                   Already have an account?&nbsp;
                   <button
                     onClick={openLoginModal}
-                    className='text-sm text-blue-500 hover:text-blue-700 hover:underline'
-                  >Login</button>
+                    className="text-sm text-blue-500 hover:text-blue-700 hover:underline"
+                  >
+                    Login
+                  </button>
                 </p>
               </div>
             </Dialog.Panel>
