@@ -19,7 +19,7 @@ export default function RegisterModal ({ open, onClose, openLoginModal, setRegis
     const instance = createInstance()
     try {
       const res = await instance.post(`${URL}user/auth/register`, formData)
-      setToken(res)
+      setToken(res.data.token)
       setRegisterModalOpen(false)
     } catch (err) {
       console.error('Login failed' + err.response ? err.response.data : err.message)

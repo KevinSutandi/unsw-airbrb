@@ -1,10 +1,10 @@
-import axios from 'axios'
+import axios from 'axios';
 import { URL } from '../config';
 
 export const createInstance = (token = null) => {
   const headers = {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  };
 
   if (token) {
     headers.Authorization = 'Bearer ' + token;
@@ -12,6 +12,6 @@ export const createInstance = (token = null) => {
 
   return axios.create({
     baseURL: URL,
-    headers
+    headers,
   });
-}
+};

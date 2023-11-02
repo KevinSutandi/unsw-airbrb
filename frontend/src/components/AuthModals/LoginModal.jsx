@@ -19,7 +19,7 @@ export default function LoginModal ({
     const instance = createInstance();
     try {
       const res = await instance.post(`${URL}user/auth/login`, formData);
-      setToken(res);
+      setToken(res.data.token);
       setLoginModalOpen(false);
     } catch (err) {
       console.error(
