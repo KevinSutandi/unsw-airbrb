@@ -11,11 +11,16 @@ import logo from '../../assets/logo.jpeg';
 import LoginModal from '../AuthModals/LoginModal';
 import RegisterModal from '../AuthModals/RegisterModal';
 import HomeProfileMenu from './HomeProfileMenu';
+import ErrorModal from '../AuthModals/ErrorModal';
 
 export default function NavBar () {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [errorModalOpen, setErrorModalOpen] = useState(true);
+  // eslint-disable-next-line no-unused-vars
+  const [errorMessage, setErrorMessage] = useState('');
 
   const openLoginModal = () => {
     setRegisterModalOpen(false);
@@ -142,13 +147,21 @@ export default function NavBar () {
         onClose={() => setLoginModalOpen(false)}
         openRegisterModal={openRegisterModal}
         setLoginModalOpen={setLoginModalOpen}
+        setErrorMessage={setErrorMessage}
+        setErrorModalOpen={setErrorModalOpen}
       />
       <RegisterModal
         open={registerModalOpen}
         onClose={() => setRegisterModalOpen(false)}
         openLoginModal={openLoginModal}
         setRegisterModalOpen={setRegisterModalOpen}
+        setErrorMessage={setErrorMessage}
       />
+      <ErrorModal
+        open={errorModalOpen}
+        onClose={() => setErrorModalOpen(false)}
+        errorMessage={errorMessage}
+      ></ErrorModal>
     </header>
   );
 }

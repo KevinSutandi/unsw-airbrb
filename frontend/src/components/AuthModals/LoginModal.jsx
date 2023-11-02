@@ -10,6 +10,8 @@ export default function LoginModal ({
   onClose,
   openRegisterModal,
   setLoginModalOpen,
+  setErrorMessage,
+  setErrorModalOpen,
 }) {
   const cancelButtonRef = useRef(null);
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -22,6 +24,9 @@ export default function LoginModal ({
       setToken(res.data.token);
       setLoginModalOpen(false);
     } catch (err) {
+      setLoginModalOpen(false);
+      setErrorModalOpen(true);
+      setErrorMessage(err.response.data.error);
       console.error(
         'Login failed' + err.response ? err.response.data : err.message
       );
