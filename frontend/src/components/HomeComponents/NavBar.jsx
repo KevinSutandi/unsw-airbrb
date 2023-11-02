@@ -10,7 +10,7 @@ import {
 import logo from '../../assets/logo.jpeg';
 import LoginModal from '../AuthModals/LoginModal';
 import RegisterModal from '../AuthModals/RegisterModal';
-import HomeProfileMenu from '../HomeProfileMenu';
+import HomeProfileMenu from './HomeProfileMenu';
 
 export default function NavBar () {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

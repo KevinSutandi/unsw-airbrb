@@ -1,7 +1,7 @@
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment, React } from 'react';
 // import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import ProfileIcon from '../assets/profileIcon.svg';
+import ProfileIcon from '../../assets/profileIcon.svg';
 
 export default function HomeProfileMenu ({ openLoginModal, openRegisterModal }) {
   return (

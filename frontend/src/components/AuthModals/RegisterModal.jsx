@@ -22,7 +22,7 @@ export default function RegisterModal ({ open, onClose, openLoginModal, setRegis
       setToken(res.data.token)
       setRegisterModalOpen(false)
     } catch (err) {
-      console.error('Login failed' + err.response ? err.response.data : err.message)
+      console.error('Login failed' + err.response ? err.response.data.error : err.message)
     }
   }
 
