@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper'
-import '../App.css';
 
 export default function HomePage () {
   const [products, setProducts] = useState([]);
 
+  const token = localStorage.getItem('token')
+
   useEffect(() => {
-    makeRequest('GETNOAUTH', 'LISTINGS', {})
+    makeRequest('GET', 'LISTINGS', { token })
       .then((response) => {
-        // Assuming the response contains an array of products
         setProducts(response.data.listings);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-  }, []); // The empty dependency array ensures that this effect runs once on component mount
+  }, []);
 
   return (
     <div className='bg-white'>
