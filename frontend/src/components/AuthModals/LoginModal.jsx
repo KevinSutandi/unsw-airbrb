@@ -1,24 +1,20 @@
 import React, { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/24/outline';
-import axios from 'axios';
 import { URL } from '../../config.js';
+import { createInstance } from '../../helpers.jsx';
 
-export default function LoginModal ({ open, onClose, openRegisterModal }) {
+export default function LoginModal ({ open, onClose, openRegisterModal, setLoginModalOpen }) {
   const cancelButtonRef = useRef(null);
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [formData, setFormData] = useState({ email: '', password: '' })
 
   const handleLogin = async (e) => {
     e.preventDefault()
-
-    const postBody = {
-      email, password
-    }
-
+    const instance = createInstance()
     try {
-      const res = await axios.post(`${URL}user/auth/login`, postBody)
-      console.log(res)
+      const res = await instance.post(`${URL}user/auth/login`, formData)
+      console.log(res.data.token)
+      setLoginModalOpen(false)
     } catch (err) {
       console.error('Login failed' + err.response ? err.response.data : err.message)
     }
@@ -83,8 +79,8 @@ export default function LoginModal ({ open, onClose, openRegisterModal }) {
                       name='email'
                       className='mt-1 p-2 block w-full rounded-md border border-gray-300'
                       placeholder='youremail@example.com'
-                      onChange={e => setEmail(e.target.value)}
-                      value={email}
+                      onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      value={formData.email}
                     />
                   </div>
 
@@ -101,8 +97,8 @@ export default function LoginModal ({ open, onClose, openRegisterModal }) {
                       name='password'
                       className='mt-1 p-2 block w-full rounded-md border border-gray-300'
                       placeholder='********'
-                      onChange={e => setPassword(e.target.value)}
-                      value={password}
+                      onChange={e => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                      value={formData.password}
                     />
                   </div>
                   <div>

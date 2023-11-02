@@ -2,9 +2,9 @@ import React, { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { URL } from '../../config';
-import axios from 'axios';
+import { createInstance } from '../../helpers';
 
-export default function RegisterModal ({ open, onClose, openLoginModal }) {
+export default function RegisterModal ({ open, onClose, openLoginModal, setRegisterModalOpen }) {
   const cancelButtonRef = useRef(null)
   const [formData, setFormData] = useState({
     email: '',
@@ -15,9 +15,11 @@ export default function RegisterModal ({ open, onClose, openLoginModal }) {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    const instance = createInstance()
     try {
-      const res = await axios.post(`${URL}user/auth/register`, formData)
+      const res = await instance.post(`${URL}user/auth/register`, formData)
       console.log(res.data.token)
+      setRegisterModalOpen(false)
     } catch (err) {
       console.error('Login failed' + err.response ? err.response.data : err.message)
     }
