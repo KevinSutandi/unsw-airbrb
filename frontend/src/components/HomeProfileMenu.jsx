@@ -1,15 +1,15 @@
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment, React } from 'react';
 // import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import ProfileIcon from '../assets/profileIcon.svg'
+import ProfileIcon from '../assets/profileIcon.svg';
 
-export default function Example ({ openLoginModal, openRegisterModal }) {
+export default function HomeProfileMenu ({ openLoginModal, openRegisterModal }) {
   return (
     <div>
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex w-12 justify-center rounded-full h-12 bg-black px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-            <img src={ProfileIcon} alt='Profile Icon' className="w-8 h-8" />
+            <img src={ProfileIcon} alt="Profile Icon" className="w-8 h-8" />
           </Menu.Button>
         </div>
         <Transition
@@ -37,7 +37,8 @@ export default function Example ({ openLoginModal, openRegisterModal }) {
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
-                  <button onClick={openLoginModal}
+                  <button
+                    onClick={openLoginModal}
                     className={`${
                       active ? 'bg-blue-500 text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

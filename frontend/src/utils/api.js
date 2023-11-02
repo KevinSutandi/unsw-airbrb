@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { URL } from './config';
+import { URL } from '../config';
 
 export const createInstance = (token = null) => {
   const headers = {
