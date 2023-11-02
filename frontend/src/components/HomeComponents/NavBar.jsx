@@ -5,11 +5,14 @@ import { Bars3Icon, XMarkIcon, MagnifyingGlassIcon } from '@heroicons/react/24/o
 import logo from '../../assets/logo.jpeg';
 import LoginModal from '../AuthModals/LoginModal';
 import RegisterModal from '../AuthModals/RegisterModal';
+import { useNavigate } from 'react-router-dom';
 
 export default function NavBar () {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
+
+  const navigate = useNavigate()
 
   const openLoginModal = () => {
     setRegisterModalOpen(false);
@@ -21,6 +24,10 @@ export default function NavBar () {
     setRegisterModalOpen(true);
   };
 
+  const navigateHome = () => {
+    navigate('/')
+  }
+
   return (
     <header className='bg-white'>
       <nav
@@ -28,7 +35,7 @@ export default function NavBar () {
         aria-label='Global'
       >
         <div className='flex lg:flex-1'>
-          <a href='#' className='-m-1.5 p-1.5 flex hover:scale-105 ease-in duration-200'>
+          <a className='-m-1.5 p-1.5 flex hover:scale-105 ease-in duration-200' onClick={navigateHome}>
             <span className='sr-only'>AirBRB</span>
             <img className='h-10 w-auto' src={logo} alt='' />
             <span className='mx-3 my-auto text-2xl underline underline-offset-3'>AirBRB</span>

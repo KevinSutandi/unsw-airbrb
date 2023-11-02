@@ -7,8 +7,8 @@ function App () {
   document.title = 'AirBRB';
   return (
     <>
-      <NavBar />
       <Router>
+      <NavBar />
         <Routes>
           <Route path='/' element={<HomePage />} />
         </Routes>
