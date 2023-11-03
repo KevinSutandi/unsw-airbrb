@@ -13,3 +13,10 @@ export type Product = {
   reviews: any[];
   color: string;
 };
+
+export type HostedListingsProps = {
+  isLoggedIn: boolean;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+};

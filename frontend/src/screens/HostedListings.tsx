@@ -2,18 +2,24 @@ import React, { useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { getEmail, getToken } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
+import { HostedListingsProps } from '../types/types';
 
-export default function HostedListngs ({ isLoggedIn, setErrorMessage, setErrorModalOpen, setIsLoggedIn }) {
+export default function HostedListngs({
+  isLoggedIn,
+  setErrorMessage,
+  setErrorModalOpen,
+  setIsLoggedIn,
+}: HostedListingsProps) {
   // const [myListings, setMyListings] = useState('')
 
   const navigate = useNavigate();
   useEffect(() => {
-    const token = getToken()
+    const token = getToken();
 
     if (token === 'null') {
       navigate('/');
-      setErrorMessage("Cannot access 'My Listings' Page when not Logged In")
-      setErrorModalOpen(true)
+      setErrorMessage("Cannot access 'My Listings' Page when not Logged In");
+      setErrorModalOpen(true);
       return;
     }
 
@@ -35,8 +41,8 @@ export default function HostedListngs ({ isLoggedIn, setErrorMessage, setErrorMo
 
   return (
     <>
-      <div className='mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-15 lg:max-w-7xl lg:px-8'>
-        <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
+      <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-15 lg:max-w-7xl lg:px-8">
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
           My Listings
         </h2>
       </div>
