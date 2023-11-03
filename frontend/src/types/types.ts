@@ -20,3 +20,7 @@ export type HostedListingsProps = {
   setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+export type ListingsReturn = {
+  listings: Product[]
+}

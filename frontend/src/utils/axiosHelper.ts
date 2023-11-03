@@ -3,11 +3,11 @@ import { PATHS } from './paths';
 import { URL } from '../config';
 import { RequestOptions } from '../types/types';
 
-export const makeRequest = async (
+export const makeRequest = async <T> (
   method: Method,
   path: keyof typeof PATHS,
   options: RequestOptions
-): Promise<AxiosResponse<any>> => {
+): Promise<AxiosResponse<T>> => {
   try {
     const { token, ...others } = options;
     const headers: { [key: string]: string } = {

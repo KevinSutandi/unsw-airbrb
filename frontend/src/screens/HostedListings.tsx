@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { getEmail, getToken } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
-import { HostedListingsProps } from '../types/types';
+import { HostedListingsProps, ListingsReturn, Product } from '../types/types';
 
-export default function HostedListngs({
+export default function HostedListngs ({
   isLoggedIn,
   setErrorMessage,
   setErrorModalOpen,
@@ -24,19 +24,21 @@ export default function HostedListngs({
     }
 
     const userEmail = getEmail();
-    makeRequest('GET', 'LISTINGS', { token })
-      .then((response) => {
-        // Assuming response.data.listings is an array of listings
-        const filteredListings = response.data.listings.filter(
-          (listing) => listing.owner === userEmail
-        );
+    if (token) {
+      makeRequest<ListingsReturn>('GET', 'LISTINGS', { token })
+        .then((response) => {
+          // Assuming response.data.listings is an array of listings
+          const filteredListings = response.data.listings.filter(
+            (listing) => listing.owner === userEmail
+          );
 
-        // filteredListings now contains only the listings where the owner's email matches the user's email
-        console.log(filteredListings);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+          // filteredListings now contains only the listings where the owner's email matches the user's email
+          console.log(filteredListings);
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }
   }, []);
 
   return (
