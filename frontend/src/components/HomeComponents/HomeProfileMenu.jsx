@@ -7,6 +7,7 @@ export default function HomeProfileMenu ({
   openRegisterModal,
   isLoggedIn,
   handleLogout,
+  navigateHostedListings
 }) {
   return (
     <div>
@@ -41,7 +42,7 @@ export default function HomeProfileMenu ({
                       <button
                         className={`${
                           active ? 'bg-blue-500 text-white' : 'text-gray-900'
-                        } group flex w-full items-center rounded-md px-2 py-2 text-sm font-bold`}
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm font-bold`} onClick={navigateHostedListings}
                       >
                         View Listings
                       </button>

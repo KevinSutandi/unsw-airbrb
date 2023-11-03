@@ -5,22 +5,18 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { getToken, setToken } from '../../utils/auth';
+import { getToken, setEmail, setToken } from '../../utils/auth';
 import logo from '../../assets/logo.jpeg';
 import LoginModal from '../AuthModals/LoginModal';
 import RegisterModal from '../AuthModals/RegisterModal';
 import { useNavigate } from 'react-router-dom';
 import HomeProfileMenu from './HomeProfileMenu';
-import ErrorModal from '../AuthModals/ErrorModal';
 import { makeRequest } from '../../utils/axiosHelper';
 
-export default function NavBar () {
+export default function NavBar ({ isLoggedIn, setIsLoggedIn, setErrorModalOpen, setErrorMessage }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setNewToken] = useState('');
 
   useEffect(() => {
@@ -47,6 +43,8 @@ export default function NavBar () {
       await makeRequest('POST', 'AUTH_LOGOUT', { token });
       setIsLoggedIn(false);
       setToken(null);
+      setEmail(null);
+      navigate('/')
     } catch (err) {
       setErrorModalOpen(true);
       setErrorMessage(err.response.data.error);
@@ -59,6 +57,10 @@ export default function NavBar () {
   const navigateHome = () => {
     navigate('/');
   };
+
+  const navigateHostedListings = () => {
+    navigate('/listings')
+  }
 
   return (
     <header className='bg-white'>
@@ -107,8 +109,8 @@ export default function NavBar () {
             openLoginModal={openLoginModal}
             openRegisterModal={openRegisterModal}
             isLoggedIn={isLoggedIn}
-            setIsLoggedIn={setIsLoggedIn}
             handleLogout={handleLogout}
+            navigateHostedListings={navigateHostedListings}
           />
         </div>
       </nav>
@@ -165,7 +167,7 @@ export default function NavBar () {
               {isLoggedIn
                 ? (
                 <div className='py-6'>
-                  <button className='-mx-3 block rounded-lg px-3 py-2.5 text-base font-bold leading-7 text-gray-900 hover:bg-gray-50'>
+                  <button className='-mx-3 block rounded-lg px-3 py-2.5 text-base font-bold leading-7 text-gray-900 hover:bg-gray-50' onClick={navigateHostedListings}>
                     View Listings
                   </button>
                   <button
@@ -216,11 +218,6 @@ export default function NavBar () {
         setErrorModalOpen={setErrorModalOpen}
         setNewToken={setNewToken}
       />
-      <ErrorModal
-        open={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        errorMessage={errorMessage}
-      ></ErrorModal>
     </header>
   );
 }

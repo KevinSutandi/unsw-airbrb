@@ -2,7 +2,7 @@ import React, { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { makeRequest } from '../../utils/axiosHelper';
-import { setToken } from '../../utils/auth';
+import { setToken, setEmail } from '../../utils/auth';
 
 export default function RegisterModal ({
   open,
@@ -28,6 +28,7 @@ export default function RegisterModal ({
       const res = await makeRequest('POST', 'AUTH_REGISTER', formData);
       setToken(res.data.token);
       setNewToken(res.data.token);
+      setEmail(formData.email)
       setIsLoggedIn(true);
       setRegisterModalOpen(false);
     } catch (err) {
