@@ -36,3 +36,33 @@ export type ErrorModalsProps = {
   onClose: () => void;
   errorMessage: string;
 };
+
+export type NavBarProps = {
+  isLoggedIn: boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export type HomeProfileMenuProps = {
+  openLoginModal: () => void;
+  openRegisterModal: () => void;
+  isLoggedIn: boolean;
+  handleLogout: () => void;
+  navigateHostedListings: () => void;
+};
+
+export type RegisterModalProps = {
+  open: boolean
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose: () => void
+  openLoginModal: () => void
+  setRegisterModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setNewToken: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export type AuthReturn = {
+  token: string
+}
