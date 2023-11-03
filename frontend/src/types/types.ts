@@ -11,4 +11,5 @@ export type Product = {
   thumbnail: string;
   price: number;
   reviews: any[];
+  color: string;
 };

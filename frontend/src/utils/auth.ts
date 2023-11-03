@@ -7,9 +7,9 @@ export const setToken = (token: string) => {
 };
 
 export const getEmail = () => {
-  return localStorage.getItem('email')
-}
+  return localStorage.getItem('email');
+};
 
-export const setEmail = (email) => {
-  return localStorage.setItem('email', email)
-}
+export const setEmail = (email: string) => {
+  return localStorage.setItem('email', email);
+};
