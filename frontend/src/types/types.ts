@@ -53,16 +53,27 @@ export type HomeProfileMenuProps = {
 };
 
 export type RegisterModalProps = {
-  open: boolean
+  open: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  onClose: () => void
-  openLoginModal: () => void
+  onClose: () => void;
+  openLoginModal: () => void;
   setRegisterModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setNewToken: React.Dispatch<React.SetStateAction<string>>;
-}
+};
 
 export type AuthReturn = {
-  token: string
-}
+  token: string;
+};
+
+export type LoginModalProps = {
+  open: boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose: () => void;
+  openRegisterModal: () => void;
+  setLoginModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setNewToken: React.Dispatch<React.SetStateAction<string>>;
+};
