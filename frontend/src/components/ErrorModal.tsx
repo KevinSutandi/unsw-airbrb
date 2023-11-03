@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { ErrorModalsProps } from '../types/types';
 
-export default function ErrorModals ({ open, onClose, errorMessage }) {
+export default function ErrorModals ({ open, onClose, errorMessage }: ErrorModalsProps) {
   useEffect(() => {
     if (open) {
       // Automatically close the modal after 3 seconds

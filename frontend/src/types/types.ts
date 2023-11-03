@@ -30,3 +30,9 @@ export type ListingsReturn = {
 export type HomePageProps = {
   isLoggedIn: boolean;
 };
+
+export type ErrorModalsProps = {
+  open: boolean;
+  onClose: () => void;
+  errorMessage: string;
+};
