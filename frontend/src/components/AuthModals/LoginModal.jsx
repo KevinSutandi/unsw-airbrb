@@ -1,7 +1,7 @@
 import React, { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/24/outline';
-import { setToken } from '../../utils/auth.js';
+import { setEmail, setToken } from '../../utils/auth.js';
 import { makeRequest } from '../../utils/axiosHelper.js';
 
 export default function LoginModal ({
@@ -26,6 +26,7 @@ export default function LoginModal ({
     try {
       const res = await makeRequest('POST', 'AUTH_LOGIN', formData);
       setToken(res.data.token);
+      setEmail(formData.email)
       setIsLoggedIn(true);
       setNewToken(res.data.token);
       clearForm();
