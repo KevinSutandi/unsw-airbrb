@@ -1,28 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
-import { Product } from '../types/types';
+import { StarIcon } from '@heroicons/react/24/solid';
+import { getToken } from '../utils/auth';
+import { HomePageProps, ListingsReturn, Product } from '../types/types';
 
-export default function HomePage() {
+// Function to generate star icons based on the average rating
+const generateStarIcons = (averageStars: number) => {
+  const starIcons = [];
+  const maxRating = 5;
+
+  for (let i = 1; i <= maxRating; i++) {
+    if (i <= averageStars) {
+      starIcons.push(<StarIcon key={i} className="text-yellow-300 w-5 h-5" />);
+    } else {
+      starIcons.push(<StarIcon key={i} className="text-gray-300 w-5 h-5" />);
+    }
+  }
+
+  return starIcons;
+};
+
+export default function HomePage ({ isLoggedIn }: HomePageProps) {
   const [products, setProducts] = useState<Product[]>([]);
 
-  const token = localStorage.getItem('token');
-
   useEffect(() => {
+    const token = getToken();
     if (token) {
-      makeRequest('GET', 'LISTINGS', { token })
+      makeRequest<ListingsReturn>('GET', 'LISTINGS', { token })
         .then((response) => {
           setProducts(response.data.listings);
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
         });
-    } else {
-      console.log('Cannot get token');
     }
   }, []);
 
+  products.forEach((product) => {
+    const reviews = product.reviews;
+    let totalStars = 0;
+    reviews.forEach((review) => {
+      totalStars += review.rating;
+    });
+
+    const average = totalStars / reviews.length;
+    product.averageStars = average;
+    product.numReviews = reviews.length;
+  });
+
   return (
     <div className="bg-white">
+      {isLoggedIn && (
+        <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-14 lg:max-w-7xl lg:px-8">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            Your Bookings
+          </h2>
+        </div>
+      )}
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <h2 className="text-2xl font-bold tracking-tight text-gray-900">
           Listings
@@ -38,11 +72,11 @@ export default function HomePage() {
                   className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                 />
               </div>
-              <div className="mt-4 flex justify-bet‹ween">
+              <div className="mt-4 flex justify-between">
                 <div>
                   <h3 className="text-sm text-gray-700">
                     <a className="cursor-pointer">
-                      <span aria-hidden="true" className="absolute inset-0 " />
+                      <span aria-hidden="true" className="absolute inset-0" />
                       <span className="font-semibold">{product.title}</span>
                     </a>
                   </h3>
@@ -57,72 +91,10 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="text-yellow-300 shrink-0 w-5 h-5"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="text-yellow-300 shrink-0 w-5 h-5"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="text-yellow-300 shrink-0 w-5 h-5"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="text-yellow-300 shrink-0 w-5 h-5"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="text-gray-300 shrink-0 w-5 h-5"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <p className="text-gray-400 text-sm ml-1">(24)</p>
+                {generateStarIcons(product.averageStars)}
+                <p className="text-gray-400 text-sm ml-1">
+                  ({product.numReviews})
+                </p>
               </div>
             </div>
           ))}

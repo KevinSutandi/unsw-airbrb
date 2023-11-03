@@ -12,6 +12,8 @@ export type Product = {
   price: number;
   reviews: any[];
   color: string;
+  averageStars: number;
+  numReviews: number;
 };
 
 export type HostedListingsProps = {
@@ -22,5 +24,9 @@ export type HostedListingsProps = {
 };
 
 export type ListingsReturn = {
-  listings: Product[]
-}
+  listings: Product[];
+};
+
+export type HomePageProps = {
+  isLoggedIn: boolean;
+};
