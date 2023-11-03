@@ -15,7 +15,7 @@ import { makeRequest } from '../../utils/axiosHelper';
 import { NavBarProps } from '../../types/types';
 import axios from 'axios';
 
-export default function NavBar({
+export default function NavBar ({
   isLoggedIn,
   setIsLoggedIn,
   setErrorModalOpen,
@@ -182,7 +182,8 @@ export default function NavBar({
                   List your home
                 </a>
               </div>
-              {isLoggedIn ? (
+              {isLoggedIn
+                ? (
                 <div className="py-6">
                   <button
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-bold leading-7 text-gray-900 hover:bg-gray-50"
@@ -197,7 +198,8 @@ export default function NavBar({
                     Log out
                   </button>
                 </div>
-              ) : (
+                  )
+                : (
                 <div className="py-6">
                   <button
                     onClick={openRegisterModal}
@@ -212,7 +214,7 @@ export default function NavBar({
                     Log in
                   </button>
                 </div>
-              )}
+                  )}
             </div>
           </div>
         </Dialog.Panel>

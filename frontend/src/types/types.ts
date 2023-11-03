@@ -48,7 +48,7 @@ export type HomeProfileMenuProps = {
   openLoginModal: () => void;
   openRegisterModal: () => void;
   isLoggedIn: boolean;
-  handleLogout: () => void;
+  handleLogout: (e: React.MouseEvent<HTMLButtonElement>) => void;
   navigateHostedListings: () => void;
 };
 

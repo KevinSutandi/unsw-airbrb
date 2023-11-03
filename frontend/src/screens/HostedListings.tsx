@@ -2,13 +2,11 @@ import React, { useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { getEmail, getToken } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
-import { HostedListingsProps, ListingsReturn, Product } from '../types/types';
+import { HostedListingsProps, ListingsReturn } from '../types/types';
 
 export default function HostedListngs ({
-  isLoggedIn,
   setErrorMessage,
   setErrorModalOpen,
-  setIsLoggedIn,
 }: HostedListingsProps) {
   // const [myListings, setMyListings] = useState('')
 
