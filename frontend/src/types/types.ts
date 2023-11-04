@@ -1,16 +1,20 @@
 export type RequestOptions = {
   token?: string;
-  [key: string]: any;
+  [key: string]: unknown;
+};
+
+export type Review = {
+  rating: number;
 };
 
 export type Product = {
   id: number;
   title: string;
   owner: string;
-  address: any;
+  address: unknown;
   thumbnail: string;
   price: number;
-  reviews: any[];
+  reviews: Review[];
   color: string;
   averageStars: number;
   numReviews: number;
