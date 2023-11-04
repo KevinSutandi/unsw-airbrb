@@ -30,8 +30,13 @@
     ],
     "import/extensions": [
       "error",
+      "ignorePackages",
       {
-        "extensions": [".ts", ".tsx", ".js", ".jsx", ".gif", ".svg"]
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never",
+        "svg": "always"
       }
     ],
     "linebreak-style": 0,

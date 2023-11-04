@@ -1,9 +1,9 @@
 import React, { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/24/outline';
-import { setEmail, setToken } from '../../utils/auth.js';
-import { makeRequest } from '../../utils/axiosHelper.js';
-import { AuthReturn, LoginModalProps } from '../../types/types.js';
+import { setEmail, setToken } from '../../utils/auth';
+import { makeRequest } from '../../utils/axiosHelper';
+import { AuthReturn, LoginModalProps } from '../../types/types';
 import axios from 'axios';
 
 export default function LoginModal ({

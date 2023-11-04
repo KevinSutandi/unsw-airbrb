@@ -14,6 +14,7 @@ export default function ErrorModals ({ open, onClose, errorMessage }: ErrorModal
       // Clear the timer if the modal is manually closed before the timer expires
       return () => clearTimeout(timer);
     }
+    return undefined
   }, [open, onClose]);
 
   return (
