@@ -2,66 +2,65 @@ import React, { useState, useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { getToken } from '../utils/auth';
+import { HomePageProps, ListingsReturn, Product } from '../types/types';
 
 // Function to generate star icons based on the average rating
-const generateStarIcons = (averageStars) => {
+const generateStarIcons = (averageStars: number) => {
   const starIcons = [];
   const maxRating = 5;
 
   for (let i = 1; i <= maxRating; i++) {
     if (i <= averageStars) {
-      starIcons.push(
-        <StarIcon
-          key={i}
-          className="text-yellow-300 w-5 h-5"
-        />
-      );
+      starIcons.push(<StarIcon key={i} className="text-yellow-300 w-5 h-5" />);
     } else {
-      starIcons.push(
-        <StarIcon
-          key={i}
-          className="text-gray-300 w-5 h-5"
-        />
-      );
+      starIcons.push(<StarIcon key={i} className="text-gray-300 w-5 h-5" />);
     }
   }
 
   return starIcons;
 };
 
-export default function HomePage ({ isLoggedIn }) {
-  const [products, setProducts] = useState([]);
+export default function HomePage ({ isLoggedIn }: HomePageProps) {
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    const token = getToken()
-    makeRequest('GET', 'LISTINGS', { token })
-      .then((response) => {
-        setProducts(response.data.listings);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    const token = getToken();
+    if (token) {
+      makeRequest<ListingsReturn>('GET', 'LISTINGS', { token })
+        .then((response) => {
+          setProducts(response.data.listings);
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }
   }, []);
 
   products.forEach((product) => {
     const reviews = product.reviews;
     let totalStars = 0;
     reviews.forEach((review) => {
-      totalStars += review.rating
-    })
+      totalStars += review.rating;
+    });
 
-    const average = (totalStars) / reviews.length
+    const average = totalStars / reviews.length;
     product.averageStars = average;
     product.numReviews = reviews.length;
-  })
+  });
 
   return (
     <div className="bg-white">
-      {isLoggedIn && <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-14 lg:max-w-7xl lg:px-8">
-      <h2 className="text-2xl font-bold tracking-tight text-gray-900">Your Bookings</h2>
-      </div>}
+      {isLoggedIn && (
+        <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-14 lg:max-w-7xl lg:px-8">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            Your Bookings
+          </h2>
+        </div>
+      )}
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900">Listings</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+          Listings
+        </h2>
 
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {products.map((product) => (
@@ -85,12 +84,17 @@ export default function HomePage ({ isLoggedIn }) {
                 </div>
                 <p className="text-sm font-bold text-gray-900 underline underline-offset-2">
                   ${product.price}
-                  <span className="text-sm font-normal text-gray-500"> per night</span>
+                  <span className="text-sm font-normal text-gray-500">
+                    {' '}
+                    per night
+                  </span>
                 </p>
               </div>
               <div className="flex items-center">
                 {generateStarIcons(product.averageStars)}
-                <p className="text-gray-400 text-sm ml-1">({product.numReviews})</p>
+                <p className="text-gray-400 text-sm ml-1">
+                  ({product.numReviews})
+                </p>
               </div>
             </div>
           ))}

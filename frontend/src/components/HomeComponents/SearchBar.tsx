@@ -6,7 +6,7 @@ function SearchBar () {
   const openSearchDialog = () => setIsOpen(true);
   const closeSearchDialog = () => setIsOpen(false);
 
-  const handleSearch = (query) => {
+  const handleSearch = (query: string) => {
     // Replace this with your search functionality
     console.log(`Searching for: ${query}`);
   };
@@ -40,7 +40,8 @@ function SearchBar () {
                   className='w-full px-4 py-2 rounded-md border'
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
-                      handleSearch(e.target.value);
+                      const input = e.target as HTMLInputElement;
+                      handleSearch(input.value);
                       closeSearchDialog();
                     }
                   }}
