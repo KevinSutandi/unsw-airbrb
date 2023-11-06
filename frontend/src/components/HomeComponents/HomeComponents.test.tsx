@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import HomeProfileMenu from './HomeProfileMenu';
 import React from 'react';
 
-describe('Home Components', () => {
+describe('Home Components Not Logged In', () => {
   const mockOpenLoginModal = jest.fn();
   const mockOpenRegisterModal = jest.fn();
   const mockHandleLogout = jest.fn();
@@ -49,7 +49,6 @@ describe('Home Components', () => {
   it('Opening log in modal', () => {
     setup();
     const loginButton = screen.getByRole('menuitem', { name: /Login/i });
-
     fireEvent.click(loginButton);
     expect(mockOpenLoginModal).toHaveBeenCalled();
   });
