@@ -19,11 +19,40 @@ jest.mock('../../utils/axiosHelper', () => ({
 }));
 
 describe('Auth Modals', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+  const registerSetup = () => {
+    const setIsLoggedIn = jest.fn();
+    const openLoginModal = jest.fn();
+    const onClose = jest.fn();
+    const setRegisterModalOpen = jest.fn();
+    const setErrorMessage = jest.fn();
+    const setErrorModalOpen = jest.fn();
+    const setNewToken = jest.fn();
 
-  it('Switch between login to register modal', () => {
+    render(
+      <RegisterModal
+        open={true}
+        setIsLoggedIn={setIsLoggedIn}
+        openLoginModal={openLoginModal}
+        onClose={onClose}
+        setRegisterModalOpen={setRegisterModalOpen}
+        setErrorMessage={setErrorMessage}
+        setErrorModalOpen={setErrorModalOpen}
+        setNewToken={setNewToken}
+      />
+    );
+
+    return {
+      setIsLoggedIn,
+      openLoginModal,
+      onClose,
+      setRegisterModalOpen,
+      setErrorMessage,
+      setErrorModalOpen,
+      setNewToken,
+    };
+  };
+
+  const loginSetup = () => {
     const setIsLoggedIn = jest.fn();
     const openRegisterModal = jest.fn();
     const onClose = jest.fn();
@@ -44,32 +73,47 @@ describe('Auth Modals', () => {
         setNewToken={setNewToken}
       />
     );
+
+    return {
+      setIsLoggedIn,
+      openRegisterModal,
+      onClose,
+      setLoginModalOpen,
+      setErrorMessage,
+      setErrorModalOpen,
+      setNewToken,
+    };
+  };
+
+  const submitRegisterForm = () => {
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'test@gmail.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/name/i), {
+      target: { value: 'Mark' },
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: 'test1234567890' },
+    });
+    fireEvent.change(screen.getByLabelText(/confirm password/i), {
+      target: { value: 'test1234567890' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /register/i }));
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('Switch between login to register modal', () => {
+    const { openRegisterModal } = loginSetup();
     const registerButton = screen.getByRole('button', { name: /Register/i });
     fireEvent.click(registerButton);
     expect(openRegisterModal).toHaveBeenCalledTimes(1);
   });
 
   it('Switch between register to login modal', () => {
-    const setIsLoggedIn = jest.fn();
-    const openLoginModal = jest.fn();
-    const onClose = jest.fn();
-    const setRegisterModalOpen = jest.fn();
-    const setErrorMessage = jest.fn();
-    const setErrorModalOpen = jest.fn();
-    const setNewToken = jest.fn();
-
-    render(
-      <RegisterModal
-        open={true}
-        setIsLoggedIn={setIsLoggedIn}
-        openLoginModal={openLoginModal}
-        onClose={onClose}
-        setRegisterModalOpen={setRegisterModalOpen}
-        setErrorMessage={setErrorMessage}
-        setErrorModalOpen={setErrorModalOpen}
-        setNewToken={setNewToken}
-      />
-    );
+    const { openLoginModal } = registerSetup();
     const loginButton = screen.getByRole('button', { name: /Login/i });
     fireEvent.click(loginButton);
     expect(openLoginModal).toHaveBeenCalledTimes(1);
@@ -85,44 +129,14 @@ describe('Auth Modals', () => {
       isAxiosError: true,
     });
 
-    const setIsLoggedIn = jest.fn();
-    const openLoginModal = jest.fn();
-    const onClose = jest.fn();
-    const setRegisterModalOpen = jest.fn();
-    const setErrorMessage = jest.fn();
-    const setErrorModalOpen = jest.fn();
-    const setNewToken = jest.fn();
-
-    render(
-      <RegisterModal
-        open={true}
-        setIsLoggedIn={setIsLoggedIn}
-        openLoginModal={openLoginModal}
-        onClose={onClose}
-        setRegisterModalOpen={setRegisterModalOpen}
-        setErrorMessage={setErrorMessage}
-        setErrorModalOpen={setErrorModalOpen}
-        setNewToken={setNewToken}
-      />
-    );
-
-    const emailInput = screen.getByLabelText(/email/i);
-    const nameInput = screen.getByLabelText(/name/i);
-    const passwordInput = screen.getByLabelText(/password/i);
-    const confirmPasswordInput = screen.getByLabelText(/confirm password/i);
-
-    fireEvent.change(emailInput, { target: { value: 'test@gmail.com' } });
-    fireEvent.change(nameInput, { target: { value: 'Mark' } });
-    fireEvent.change(passwordInput, { target: { value: 'test1234567890' } });
-    fireEvent.change(confirmPasswordInput, {
-      target: { value: 'test1234567890' },
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: /register/i }));
+    const { setIsLoggedIn, setErrorModalOpen, setErrorMessage } =
+      registerSetup();
+    submitRegisterForm();
 
     await waitFor(() => {
       expect(setErrorModalOpen).toHaveBeenCalledWith(true);
       expect(setErrorMessage).toHaveBeenCalledWith('Register failed');
+      expect(setIsLoggedIn).not.toHaveBeenCalled();
     });
   });
 
@@ -134,42 +148,9 @@ describe('Auth Modals', () => {
       },
     });
 
-    const setIsLoggedIn = jest.fn();
-    const openLoginModal = jest.fn();
-    const onClose = jest.fn();
-    const setRegisterModalOpen = jest.fn();
-    const setErrorMessage = jest.fn();
-    const setErrorModalOpen = jest.fn();
-    const setNewToken = jest.fn();
-
-    render(
-      <RegisterModal
-        open={true}
-        setIsLoggedIn={setIsLoggedIn}
-        openLoginModal={openLoginModal}
-        onClose={onClose}
-        setRegisterModalOpen={setRegisterModalOpen}
-        setErrorMessage={setErrorMessage}
-        setErrorModalOpen={setErrorModalOpen}
-        setNewToken={setNewToken}
-      />
-    );
-
-    const emailInput = screen.getByLabelText(/email/i);
-    const nameInput = screen.getByLabelText(/name/i);
-    const passwordInput = screen.getByLabelText(/password/i);
-    const confirmPasswordInput = screen.getByLabelText(/confirm password/i);
-
-    fireEvent.change(emailInput, { target: { value: 'test@gmail.com' } });
-    fireEvent.change(nameInput, { target: { value: 'Mark' } });
-    fireEvent.change(passwordInput, { target: { value: 'test1234567890' } });
-    fireEvent.change(confirmPasswordInput, {
-      target: { value: 'test1234567890' },
-    });
+    const { setIsLoggedIn } = registerSetup();
 
     fireEvent.click(screen.getByRole('button', { name: /register/i }));
-
-    console.log((axiosHelpers.makeRequest as jest.Mock).mock.calls);
 
     await waitFor(() => {
       expect(setIsLoggedIn).toHaveBeenCalledWith(true);
