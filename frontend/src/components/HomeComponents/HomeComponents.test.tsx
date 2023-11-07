@@ -1,25 +1,57 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import HomeProfileMenu from './HomeProfileMenu';
 import React from 'react';
+import * as axiosHelpers from '../../utils/axiosHelper';
+import NavBar from './NavBar';
+import { BrowserRouter } from 'react-router-dom';
+
+jest.mock('../../utils/axiosHelper', () => ({
+  makeRequest: jest.fn(),
+}));
 
 describe('Home Components Not Logged In', () => {
-  const mockOpenLoginModal = jest.fn();
-  const mockOpenRegisterModal = jest.fn();
-  const mockHandleLogout = jest.fn();
-  const mockNavigateHostedListings = jest.fn();
+  const navbarSetup = (isLoggedIn: boolean) => {
+    const setIsLoggedIn = jest.fn();
+    const setErrorModalOpen = jest.fn();
+    const setErrorMessage = jest.fn();
 
-  const setup = () => {
+    render(
+      <BrowserRouter>
+        <NavBar
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+          setErrorMessage={setErrorMessage}
+          setErrorModalOpen={setErrorModalOpen}
+        />
+      </BrowserRouter>
+    );
+    return { setIsLoggedIn, setErrorMessage, setErrorModalOpen, isLoggedIn };
+  };
+
+  const profileIconSetup = (isLoggedIn: boolean) => {
+    const openLoginModal = jest.fn();
+    const openRegisterModal = jest.fn();
+    const handleLogout = jest.fn();
+    const navigateHostedListings = jest.fn();
     render(
       <HomeProfileMenu
-        openLoginModal={mockOpenLoginModal}
-        openRegisterModal={mockOpenRegisterModal}
-        isLoggedIn={false}
-        handleLogout={mockHandleLogout}
-        navigateHostedListings={mockNavigateHostedListings}
+        openLoginModal={openLoginModal}
+        openRegisterModal={openRegisterModal}
+        isLoggedIn={isLoggedIn}
+        handleLogout={handleLogout}
+        navigateHostedListings={navigateHostedListings}
       />
     );
     const profileButton = screen.getByRole('button', { name: /profile icon/i });
     fireEvent.click(profileButton);
+
+    return {
+      openLoginModal,
+      openRegisterModal,
+      handleLogout,
+      navigateHostedListings,
+      isLoggedIn,
+    };
   };
 
   beforeEach(() => {
@@ -27,7 +59,7 @@ describe('Home Components Not Logged In', () => {
   });
 
   it('Opening profile icon menu', async () => {
-    setup();
+    profileIconSetup(false);
 
     await waitFor(() => {
       expect(
@@ -40,16 +72,23 @@ describe('Home Components Not Logged In', () => {
   });
 
   it('Opening sign up modal', () => {
-    setup();
+    const { openRegisterModal } = profileIconSetup(false);
     const signUpButton = screen.getByRole('menuitem', { name: /Sign up/i });
     fireEvent.click(signUpButton);
-    expect(mockOpenRegisterModal).toHaveBeenCalled();
+    expect(openRegisterModal).toHaveBeenCalled();
   });
 
   it('Opening log in modal', () => {
-    setup();
+    const { openLoginModal } = profileIconSetup(false);
     const loginButton = screen.getByRole('menuitem', { name: /Login/i });
     fireEvent.click(loginButton);
-    expect(mockOpenLoginModal).toHaveBeenCalled();
+    expect(openLoginModal).toHaveBeenCalled();
+  });
+
+  it('Log out', () => {
+    const { handleLogout } = profileIconSetup(true);
+    const logoutButton = screen.getByRole('menuitem', { name: /log out/i });
+    fireEvent.click(logoutButton);
+    expect(handleLogout).toHaveBeenCalled();
   });
 });
