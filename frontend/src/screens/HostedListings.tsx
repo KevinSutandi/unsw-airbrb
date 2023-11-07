@@ -4,7 +4,7 @@ import { getEmail, getToken } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { HostedListingsProps, ListingsReturn } from '../types/types';
 
-export default function HostedListngs ({
+export default function HostedListngs({
   setErrorMessage,
   setErrorModalOpen,
 }: HostedListingsProps) {

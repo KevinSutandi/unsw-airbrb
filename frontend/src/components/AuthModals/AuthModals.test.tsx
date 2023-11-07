@@ -14,10 +14,6 @@ afterAll(() => {
   delete (globalThis as any).ResizeObserver;
 });
 
-// Mock the axios module
-// jest.mock('axios');
-// const mockedAxios = axios as jest.Mocked<typeof axios>;
-
 jest.mock('../../utils/axiosHelper', () => ({
   makeRequest: jest.fn(),
 }));
@@ -127,6 +123,56 @@ describe('Auth Modals', () => {
     await waitFor(() => {
       expect(setErrorModalOpen).toHaveBeenCalledWith(true);
       expect(setErrorMessage).toHaveBeenCalledWith('Register failed');
+    });
+  });
+
+  it('Register successful', async () => {
+    (axiosHelpers.makeRequest as jest.Mock).mockResolvedValue({
+      data: {
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q',
+      },
+    });
+
+    const setIsLoggedIn = jest.fn();
+    const openLoginModal = jest.fn();
+    const onClose = jest.fn();
+    const setRegisterModalOpen = jest.fn();
+    const setErrorMessage = jest.fn();
+    const setErrorModalOpen = jest.fn();
+    const setNewToken = jest.fn();
+
+    render(
+      <RegisterModal
+        open={true}
+        setIsLoggedIn={setIsLoggedIn}
+        openLoginModal={openLoginModal}
+        onClose={onClose}
+        setRegisterModalOpen={setRegisterModalOpen}
+        setErrorMessage={setErrorMessage}
+        setErrorModalOpen={setErrorModalOpen}
+        setNewToken={setNewToken}
+      />
+    );
+
+    const emailInput = screen.getByLabelText(/email/i);
+    const nameInput = screen.getByLabelText(/name/i);
+    const passwordInput = screen.getByLabelText(/password/i);
+    const confirmPasswordInput = screen.getByLabelText(/confirm password/i);
+
+    fireEvent.change(emailInput, { target: { value: 'test@gmail.com' } });
+    fireEvent.change(nameInput, { target: { value: 'Mark' } });
+    fireEvent.change(passwordInput, { target: { value: 'test1234567890' } });
+    fireEvent.change(confirmPasswordInput, {
+      target: { value: 'test1234567890' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /register/i }));
+
+    console.log((axiosHelpers.makeRequest as jest.Mock).mock.calls);
+
+    await waitFor(() => {
+      expect(setIsLoggedIn).toHaveBeenCalledWith(true);
     });
   });
 });
