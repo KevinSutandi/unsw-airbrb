@@ -26,7 +26,7 @@ export default function LoginModal ({
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await makeRequest<AuthReturn>('POST', 'AUTH_LOGIN', formData);
+      const res = await makeRequest<AuthReturn>('POST', 'user/auth/login', formData);
       setToken(res.data.token);
       setEmail(formData.email);
       setIsLoggedIn(true);

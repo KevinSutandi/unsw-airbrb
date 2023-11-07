@@ -5,6 +5,7 @@ import NavBar from './components/HomeComponents/NavBar';
 import './input.css';
 import HostedListings from './screens/HostedListings';
 import ErrorModal from './components/ErrorModal';
+import CreateListing from './screens/CreateListing';
 
 function App () {
   document.title = 'AirBRB';
@@ -21,6 +22,7 @@ function App () {
         <Routes>
           <Route path='/' element={<HomePage isLoggedIn={isLoggedIn}/>} />
           <Route path='/listings' element={<HostedListings setErrorMessage={setErrorMessage} setErrorModalOpen={setErrorModalOpen} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path='/listings/create' element={<CreateListing/>}/>
         </Routes>
       </Router>
 

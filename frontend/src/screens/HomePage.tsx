@@ -5,8 +5,8 @@ import { getToken } from '../utils/auth';
 import { HomePageProps, ListingsReturn, Product } from '../types/types';
 
 // Function to generate star icons based on the average rating
-const generateStarIcons = (averageStars: number) => {
-  const starIcons = [];
+const generateStarIcons = (averageStars: number): JSX.Element[] => {
+  const starIcons: JSX.Element[] = [];
   const maxRating = 5;
 
   for (let i = 1; i <= maxRating; i++) {
@@ -26,7 +26,7 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
   useEffect(() => {
     const token = getToken();
     if (token) {
-      makeRequest<ListingsReturn>('GET', 'LISTINGS', { token })
+      makeRequest<ListingsReturn>('GET', 'listings', { token })
         .then((response) => {
           setProducts(response.data.listings);
         })
@@ -80,7 +80,6 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
                       <span className="font-semibold">{product.title}</span>
                     </a>
                   </h3>
-                  <p className="mt-1 text-sm text-gray-500">{product.color}</p>
                 </div>
                 <p className="text-sm font-bold text-gray-900 underline underline-offset-2">
                   ${product.price}
