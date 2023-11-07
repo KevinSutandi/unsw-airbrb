@@ -101,6 +101,17 @@ describe('Auth Modals', () => {
     fireEvent.click(screen.getByRole('button', { name: /register/i }));
   };
 
+  const submitLoginForm = () => {
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'test@gmail.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: 'passtest' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -148,12 +159,50 @@ describe('Auth Modals', () => {
       },
     });
 
-    const { setIsLoggedIn } = registerSetup();
-
-    fireEvent.click(screen.getByRole('button', { name: /register/i }));
+    const { setIsLoggedIn, setNewToken } = registerSetup();
+    submitRegisterForm();
 
     await waitFor(() => {
       expect(setIsLoggedIn).toHaveBeenCalledWith(true);
+      expect(setNewToken).toHaveBeenCalledWith(
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q'
+      );
+    });
+  });
+
+  it('Login fails', async () => {
+    (axiosHelpers.makeRequest as jest.Mock).mockRejectedValue({
+      response: {
+        data: {
+          error: 'Invalid input',
+        },
+      },
+      isAxiosError: true,
+    });
+    const { setErrorModalOpen, setErrorMessage, setIsLoggedIn } = loginSetup();
+    submitLoginForm();
+
+    await waitFor(() => {
+      expect(setErrorModalOpen).toHaveBeenCalledWith(true);
+      expect(setErrorMessage).toHaveBeenCalledWith('Invalid input');
+      expect(setIsLoggedIn).not.toHaveBeenCalled();
+    });
+  });
+
+  it('Login successful', async () => {
+    (axiosHelpers.makeRequest as jest.Mock).mockResolvedValue({
+      data: {
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q',
+      },
+    });
+    const { setIsLoggedIn, setNewToken } = loginSetup();
+    submitLoginForm();
+    await waitFor(() => {
+      expect(setIsLoggedIn).toHaveBeenCalledWith(true);
+      expect(setNewToken).toHaveBeenCalledWith(
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q'
+      );
     });
   });
 });
