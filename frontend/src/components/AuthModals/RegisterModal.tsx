@@ -43,11 +43,11 @@ export default function RegisterModal ({
       if (axios.isAxiosError(err)) {
         if (err.response?.data) {
           setErrorMessage(err.response.data.error);
-          console.error('Login failed:', err.response.data.error);
+          console.error('Register failed:', err.response.data.error);
         }
       } else {
         setErrorMessage('An unexpected error occurred.');
-        console.error('Login failed:', err);
+        console.error('Register failed:', err);
       }
     }
   };
