@@ -123,6 +123,17 @@ export interface NumberFormProps {
   name: string;
   id: string;
   min?: number;
+  max?: number
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+}
+
+export interface Bed {
+  name: string;
+  id: string;
+}
+
+export interface BedroomFormState {
+  numBedrooms: number;
+  beds: Bed[];
 }

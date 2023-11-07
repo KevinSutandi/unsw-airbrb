@@ -52,21 +52,22 @@ export default function NavBar ({
     e.preventDefault();
     try {
       if (token) {
-        await makeRequest('POST', 'AUTH_LOGOUT', { token });
+        await makeRequest('POST', 'user/auth/logout', { token });
         setIsLoggedIn(false);
-        setToken(''); // Change null to ''
-        setEmail(''); // Change null to ''
+        setToken('');
+        setEmail('');
         navigate('/');
       }
     } catch (err) {
-      setErrorModalOpen(true);
       if (axios.isAxiosError(err)) {
         if (err.response?.data) {
           setErrorMessage(err.response.data.error);
+          setErrorModalOpen(true);
           console.error('Login failed:', err.response.data.error);
         }
       } else {
         setErrorMessage('An unexpected error occurred.');
+        setErrorModalOpen(true);
         console.error('Login failed:', err);
       }
     }
