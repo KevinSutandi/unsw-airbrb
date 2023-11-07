@@ -1,11 +1,10 @@
 import axios, { AxiosResponse, Method } from 'axios';
-import { PATHS } from './paths';
 import { URL } from '../config';
 import { RequestOptions } from '../types/types';
 
 export const makeRequest = async <T> (
   method: Method,
-  path: keyof typeof PATHS,
+  path: string,
   options: RequestOptions
 ): Promise<AxiosResponse<T>> => {
   try {
@@ -18,7 +17,7 @@ export const makeRequest = async <T> (
       headers.Authorization = 'Bearer ' + token;
     }
 
-    const url = `${URL}${PATHS[path]}`;
+    const url = `${URL}${path}`;
 
     switch (method) {
       case 'GET':

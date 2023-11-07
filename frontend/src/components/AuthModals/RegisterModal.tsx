@@ -30,7 +30,7 @@ export default function RegisterModal ({
     try {
       const res = await makeRequest<AuthReturn>(
         'POST',
-        'AUTH_REGISTER',
+        'user/auth/register',
         formData
       );
       setToken(res.data.token);
