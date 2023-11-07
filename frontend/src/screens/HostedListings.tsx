@@ -130,6 +130,10 @@ export default function HostedListngs ({
     }
   }, []);
 
+  const navigateCreate = () => {
+    navigate('/listings/create')
+  }
+
   return (
     <>
       <div className='mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-15 lg:max-w-7xl lg:px-8'>
@@ -139,6 +143,7 @@ export default function HostedListngs ({
           </h2>
           <button
             type='button'
+            onClick={navigateCreate}
             className='inline-flex items-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
           >
             Add New Listing
@@ -210,23 +215,6 @@ export default function HostedListngs ({
                   >
                     Delete Listing
                   </button>
-                  {/* {person.lastSeen
-                    ? (
-                    <p className='mt-1 text-xs leading-5 text-gray-500'>
-                      Last seen{' '}
-                      <time dateTime={person.lastSeenDateTime}>
-                        {person.lastSeen}
-                      </time>
-                    </p>
-                      )
-                    : (
-                    <div className='mt-1 flex items-center gap-x-1.5'>
-                      <div className='flex-none rounded-full bg-emerald-500/20 p-1'>
-                        <div className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
-                      </div>
-                      <p className='text-xs leading-5 text-gray-500'>Online</p>
-                    </div>
-                      )} */}
                 </div>
               </li>
             ))}

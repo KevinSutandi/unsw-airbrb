@@ -112,3 +112,17 @@ export type LoginModalProps = {
   setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setNewToken: React.Dispatch<React.SetStateAction<string>>;
 };
+
+export interface TextFormProps {
+  name: string;
+  id: string;
+  autoComplete?: string;
+}
+
+export interface NumberFormProps {
+  name: string;
+  id: string;
+  min?: number;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
+}
