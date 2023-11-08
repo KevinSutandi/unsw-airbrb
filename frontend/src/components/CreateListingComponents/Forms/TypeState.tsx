@@ -1,29 +1,24 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { PropertyType, StateListProps } from '../../../types/types';
 
-type PropertyType = {
-  id: string;
-  name: string;
-};
-
-const propertyTypes: PropertyType[] = [
-  { id: 'entirePlace', name: 'Entire Place' },
-  { id: 'room', name: 'Room' },
-  { id: 'sharedRoom', name: 'Shared Room' },
+const stateTypes: PropertyType[] = [
+  { id: 'ACT', name: 'Australian Capital Territory' },
+  { id: 'NSW', name: 'New South Wales' },
+  { id: 'NT', name: 'Northern Territory' },
+  { id: 'QLD', name: 'Queensland' },
+  { id: 'SA', name: 'South Australia' },
+  { id: 'TAS', name: 'Tasmania' },
+  { id: 'WA', name: 'Western Australia' },
 ];
 
-const TypeList: React.FC = () => {
-  const defaultSelection: PropertyType = { id: '', name: 'Select a type' };
-  const [selectedType, setSelectedType] = useState(defaultSelection);
-
+const TypeState: React.FC<StateListProps> = ({ selectedState, setSelectedState }) => {
   return (
-    <Listbox value={selectedType as PropertyType} onChange={setSelectedType}>
-      <div className='relative mt-1'>
-        <Listbox.Button className='relative w-full cursor-default ring-1 shadow-sm ring-inset ring-gray-300 rounded-lg bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm'>
-          <span className='block truncate'>
-            {selectedType ? selectedType.name : ''}
-          </span>{' '}
+    <Listbox value={selectedState} onChange={setSelectedState}>
+      <div className='relative mt-1 z-20'>
+        <Listbox.Button className='relative w-full cursor-default shadow-sm ring-1 ring-inset ring-gray-300 rounded-lg bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-600 sm:text-sm'>
+          <span className='block truncate'>{selectedState ? selectedState.name : ''}</span>{' '}
           <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'>
             <ChevronUpDownIcon
               className='h-5 w-5 text-gray-400'
@@ -38,7 +33,7 @@ const TypeList: React.FC = () => {
           leaveTo='opacity-0'
         >
           <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm'>
-            {propertyTypes.map((type) => (
+            {stateTypes.map((type) => (
               <Listbox.Option
                 key={type.id}
                 className={({ active }) =>
@@ -75,4 +70,4 @@ const TypeList: React.FC = () => {
   );
 };
 
-export default TypeList;
+export default TypeState;

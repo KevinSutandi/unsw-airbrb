@@ -34,9 +34,9 @@ export type SingleDetailListing = {
   metadata: {
     propertyType: string; // You can specify the data type of propertyType here
     amenities: string[]
-    bedrooms: number
-    beds: number
-    bathrooms: number
+    numBedrooms: number
+    beds: { [key: string]: string };
+    numBathrooms: number
     imageList: ImageData[]
   };
   reviews: Review[];
@@ -45,6 +45,7 @@ export type SingleDetailListing = {
   postedOn: Date;
   averageStars: number;
   numReviews: number;
+  totalBeds: number;
 };
 
 export type DetailListing = {
@@ -56,6 +57,11 @@ export type HostedListingsProps = {
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export type CreateListingProps = {
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type ListingsReturn = {
@@ -116,14 +122,18 @@ export type LoginModalProps = {
 export interface TextFormProps {
   name: string;
   id: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Add this line
   autoComplete?: string;
 }
 
 export interface NumberFormProps {
   name: string;
   id: string;
+  value?: number;
   min?: number;
   max?: number
+  autoComplete?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 }
@@ -137,3 +147,56 @@ export interface BedroomFormState {
   numBedrooms: number;
   beds: Bed[];
 }
+
+export type PropertyType = {
+  id: string;
+  name: string;
+};
+
+export type Country = {
+  name: string;
+};
+
+export interface TypeListProps {
+  selectedType: PropertyType;
+  setSelectedType: React.Dispatch<React.SetStateAction<PropertyType>>;
+}
+
+export interface CountryListProps {
+  selectedCountry: Country | null;
+  setSelectedCountry: React.Dispatch<React.SetStateAction<Country | null>>;
+}
+
+export interface StateListProps {
+  selectedState: PropertyType | null;
+  setSelectedState: React.Dispatch<React.SetStateAction<PropertyType>>;
+}
+
+export type PropertyListing = {
+  title: string;
+  address: {
+    streetAddress: string;
+    city: string;
+    state: string;
+    country: string | undefined;
+    postalCode: string;
+  };
+  price: number;
+  thumbnail: string; // Assuming it's a base64-encoded image
+  metadata: {
+    propertyType: string;
+    numBathrooms: number;
+    numBedrooms: number;
+    beds: { [key: string]: string };
+    propertyAmenities: string[]; // Assuming it's an array of property amenities
+  };
+};
+
+export type DeleteListingProps = {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  listingId: number;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setRunEffect: React.Dispatch<React.SetStateAction<boolean>>;
+};

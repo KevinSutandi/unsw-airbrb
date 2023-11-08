@@ -1,20 +1,103 @@
-import React, { useState, Fragment, ChangeEvent } from 'react';
-import TextForm from '../components/CreateListingComponents/TextForm';
-import NumberForm from '../components/CreateListingComponents/NumberForm';
+import React, { useState, ChangeEvent, useEffect } from 'react';
+import TextForm from '../components/CreateListingComponents/Forms/TextForm';
+import NumberForm from '../components/CreateListingComponents/Forms/NumberForm';
 import BedIcon from '../assets/double-bed-icon.svg';
 import { PhotoIcon } from '@heroicons/react/24/solid';
-import { BedroomFormState } from '../types/types';
-import TypeList from '../components/CreateListingComponents/TypeList';
-import TypeCountry from '../components/CreateListingComponents/TypeCountry';
-import TypeState from '../components/CreateListingComponents/TypeState';
+import { BedroomFormState, Country, CreateListingProps, PropertyListing, PropertyType } from '../types/types';
+import TypeList from '../components/CreateListingComponents/Forms/TypeList';
+import TypeCountry from '../components/CreateListingComponents/Forms/TypeCountry';
+import TypeState from '../components/CreateListingComponents/Forms/TypeState';
+import fileToBase64 from '../utils/fileToData';
+import { makeRequest } from '../utils/axiosHelper';
+import { useNavigate } from 'react-router-dom';
+import { getToken } from '../utils/auth';
 
-export default function CreateListing () {
+export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: CreateListingProps) {
+  // For Property Type
+  const defaultSelection: PropertyType = { id: '', name: 'Select a type' };
+  const [selectedType, setSelectedType] = useState(defaultSelection);
+
+  // For Country
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+
+  // For State
+  const defaultSelectionState: PropertyType = {
+    id: '',
+    name: 'Select a State',
+  };
+  const [selectedState, setSelectedState] = useState<PropertyType>(
+    defaultSelectionState
+  );
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const [state, setState] = useState<BedroomFormState>({
     numBedrooms: 0,
     beds: [],
   });
+
+  const [formValues, setFormValues] = useState({
+    listingTitle: '',
+    streetAddress: '',
+    propertyAmenities: [] as string[],
+    city: '',
+    postalCode: '',
+    price: 0,
+    numBathrooms: 0,
+    beds: {} as { [key: string]: string },
+  });
+
+  const [formErrors, setFormErrors] = useState({
+    listingTitle: '',
+    streetAddress: '',
+    propertyAmenities: '',
+    selectedType: '',
+    selectedCountry: '',
+    selectedState: '',
+    city: '',
+    postalCode: '',
+    price: '',
+    numBathrooms: '',
+    numBedrooms: '',
+    beds: {} as { [key: string]: string },
+    uploadImage: ''
+  });
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (token === 'null') {
+      navigate('/');
+      setErrorMessage("Cannot access 'My Listings' Page when not logged in");
+      setErrorModalOpen(true);
+    }
+  }, [])
+
+  function scrollToTop () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  const handleSubmitBackend = (body: PropertyListing) => {
+    const token = getToken() as string
+    if (token !== 'null') {
+      console.log(body);
+
+      makeRequest('POST', 'listings/new', { token, ...body })
+        .then(() => {
+          navigate('/listings')
+        })
+        .catch((error) => {
+          setErrorMessage('Error creating listing: ' + error);
+          setErrorModalOpen(true);
+        });
+    } else {
+      navigate('/')
+      setErrorMessage('Cannot create new listing when not logged in');
+      setErrorModalOpen(true);
+    }
+  }
 
   const handleNumBedroomsChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value, 10);
@@ -26,11 +109,165 @@ export default function CreateListing () {
         id: `bed_${index + 1}`,
       })),
     });
+
+    // Create an object for bed-related errors
+    const bedErrors: { [key: string]: string } = {};
+    state.beds.forEach((bed) => {
+      bedErrors[bed.id] = '';
+    });
+
+    setFormErrors({
+      ...formErrors,
+      numBedrooms: '', // Clear the error for numBedrooms
+      beds: bedErrors, // Reset bed-related errors
+    });
+
+    handleInputChange(event);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     setSelectedFile(file || null);
+  };
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, id, value } = event.target;
+
+    if (id.includes('bed')) {
+      // Handle bed-related input
+      setFormValues({
+        ...formValues,
+        beds: {
+          ...formValues.beds,
+          [id]: value,
+        },
+      });
+    } else if (name === 'propertyAmenities') {
+      const amenitiesArray = value.split(',').map((amenity) => amenity.trim());
+
+      setFormValues({
+        ...formValues,
+        propertyAmenities: amenitiesArray,
+      });
+    } else {
+      setFormValues({
+        ...formValues,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    // Input validation logic goes here
+    const errors = {
+      listingTitle: '',
+      streetAddress: '',
+      propertyAmenities: '',
+      selectedType: '',
+      selectedCountry: '',
+      selectedState: '',
+      city: '',
+      postalCode: '',
+      price: '',
+      numBathrooms: '',
+      numBedrooms: '',
+      beds: {} as { [key: string]: string },
+      uploadImage: ''
+    };
+
+    // Check for errors in bed-related inputs
+    state.beds.forEach((bed) => {
+      if (!formValues.beds[bed.id]) {
+        errors.beds[bed.id] = 'error';
+      }
+    });
+
+    // Check for errors in other regular inputs
+    if (!formValues.listingTitle) {
+      errors.listingTitle = 'Listing Title is required.';
+    }
+    if (!formValues.streetAddress) {
+      errors.streetAddress = 'Street Address is required.';
+    }
+    if (!formValues.city) {
+      errors.city = 'City is required.';
+    }
+    if (formValues.propertyAmenities.length === 0) {
+      errors.propertyAmenities = 'Property Amenities is required.';
+    }
+    if (selectedType.id === '') {
+      errors.selectedType = 'Property Type is required.';
+    }
+    if (selectedCountry === null) {
+      errors.selectedCountry = 'Country is required.';
+    }
+    if (selectedState.id === '') {
+      errors.selectedState = 'State is required.';
+    }
+    if (!formValues.postalCode) {
+      errors.postalCode = 'Postal Code is required.';
+    }
+    if (!formValues.price) {
+      errors.price = 'Price is required.';
+    }
+    if (!formValues.numBathrooms) {
+      errors.numBathrooms = 'Number of Bathrooms is required';
+    }
+    if (!state.numBedrooms) {
+      errors.numBedrooms = 'Number of Bedrooms is required';
+    }
+    if (selectedFile === null) {
+      errors.uploadImage = 'Image is required.';
+    }
+
+    // Check if there are errors in bed-related inputs
+    const bedErrors = Object.values(errors.beds);
+    const hasBedErrors = bedErrors.some((error) => error !== '');
+
+    // Check if there are any errors in regular inputs
+    const regularErrors = Object.values(errors).slice(0, 2); // Modify the slice range according to your regular input fields
+    const hasRegularErrors = regularErrors.some((error) => error !== '');
+
+    if (hasBedErrors || hasRegularErrors) {
+      // There are errors; set the errors state and scroll to the top
+      setFormErrors(errors);
+      console.log(errors);
+
+      scrollToTop();
+    } else {
+      // No errors, proceed with form submission
+      setFormErrors(errors); // Clear any previous errors
+      // Create the body of the request
+      if (selectedFile !== null) {
+        fileToBase64(selectedFile).then((base64) => {
+          const body = {
+            title: formValues.listingTitle,
+            address: {
+              streetAddress: formValues.streetAddress,
+              city: formValues.city,
+              state: selectedState.name,
+              country: selectedCountry?.name,
+              postalCode: formValues.postalCode,
+            },
+            price: formValues.price,
+            thumbnail: base64,
+            metadata: {
+              propertyType: selectedType.name,
+              numBathrooms: formValues.numBathrooms,
+              numBedrooms: state.numBedrooms,
+              beds: formValues.beds,
+              propertyAmenities: formValues.propertyAmenities,
+            },
+          }
+          handleSubmitBackend(body)
+        }).catch((error) => {
+          setErrorMessage(error.toString());
+          setErrorModalOpen(true);
+        });
+      }
+    }
   };
 
   return (
@@ -42,7 +279,10 @@ export default function CreateListing () {
           </h2>
         </div>
       </div>
-      <form className='mx-auto max-w-4xl px-4 sm:px-12 lg:px-24'>
+      <form
+        className='mx-auto max-w-4xl px-4 sm:px-12 lg:px-24'
+        onSubmit={handleFormSubmit}
+      >
         <div className='space-y-12'>
           <div className='border-b border-gray-900/10 pb-4'>
             <div className='mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6'>
@@ -54,8 +294,16 @@ export default function CreateListing () {
                   Listing Title
                 </label>
                 <div className='mt-2'>
-                  <TextForm name='listing-title' id='listing-title' />
+                  <TextForm
+                    name='listingTitle'
+                    id='listing-title'
+                    value={formValues.listingTitle}
+                    onChange={(e) => handleInputChange(e)}
+                  />
                 </div>
+                {formErrors.listingTitle && (
+                  <p className='text-red-600 text-sm'>{formErrors.listingTitle}</p>
+                )}
               </div>
 
               <div className='sm:col-span-2'>
@@ -66,8 +314,33 @@ export default function CreateListing () {
                   Property Type
                 </label>
                 <div className='mt-2'>
-                  <TypeList />
+                  <TypeList
+                    selectedType={selectedType}
+                    setSelectedType={setSelectedType}
+                  />
                 </div>
+                {formErrors.selectedType && (
+                  <p className='text-red-600 text-sm'>{formErrors.selectedType}</p>
+                )}
+              </div>
+
+              <div className='col-span-full'>
+                <label
+                  htmlFor='street-address'
+                  className='block text-sm font-medium leading-6 text-gray-900'
+                >
+                  Property Amenities <span className='text-gray-500 text-xs font-normal'>(separated by commas)</span>
+                </label>
+                <div className='mt-2'>
+                  <TextForm
+                    name='propertyAmenities'
+                    id='property-amenities'
+                    onChange={(e) => handleInputChange(e)}
+                  />
+                </div>
+                {formErrors.propertyAmenities && (
+                  <p className='text-red-600 text-sm'>{formErrors.propertyAmenities}</p>
+                )}
               </div>
 
               <div className='col-span-full'>
@@ -78,26 +351,17 @@ export default function CreateListing () {
                   Street address
                 </label>
                 <div className='mt-2'>
-                  <input
-                    type='text'
-                    name='street-address'
+                  <TextForm
+                    name='streetAddress'
                     id='street-address'
                     autoComplete='street-address'
-                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    value={formValues.streetAddress}
+                    onChange={(e) => handleInputChange(e)}
                   />
                 </div>
-              </div>
-
-              <div className='sm:col-span-3'>
-                <label
-                  htmlFor='country'
-                  className='block text-sm font-medium leading-6 text-gray-900'
-                >
-                  Country
-                </label>
-                <div className='mt-2'>
-                  <TypeCountry />
-                </div>
+                {formErrors.streetAddress && (
+                  <p className='text-red-600 text-sm'>{formErrors.streetAddress}</p>
+                )}
               </div>
 
               <div className='sm:col-span-2 sm:col-start-1'>
@@ -108,14 +372,17 @@ export default function CreateListing () {
                   City
                 </label>
                 <div className='mt-2'>
-                  <input
-                    type='text'
+                  <TextForm
                     name='city'
                     id='city'
                     autoComplete='address-level2'
-                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    value={formValues.city}
+                    onChange={(e) => handleInputChange(e)}
                   />
                 </div>
+                {formErrors.city && (
+                  <p className='text-red-600 text-sm'>{formErrors.city}</p>
+                )}
               </div>
 
               <div className='sm:col-span-2'>
@@ -126,8 +393,14 @@ export default function CreateListing () {
                   State / Province
                 </label>
                 <div className='mt-2'>
-                  <TypeState />
+                  <TypeState
+                    selectedState={selectedState}
+                    setSelectedState={setSelectedState}
+                  />
                 </div>
+                {formErrors.selectedState && (
+                  <p className='text-red-600 text-sm'>{formErrors.city}</p>
+                )}
               </div>
 
               <div className='sm:col-span-2'>
@@ -138,17 +411,38 @@ export default function CreateListing () {
                   ZIP / Postal code
                 </label>
                 <div className='mt-2'>
-                  <input
-                    type='text'
-                    name='postal-code'
+                  <TextForm
+                    name='postalCode'
                     id='postal-code'
                     autoComplete='postal-code'
-                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    value={formValues.postalCode}
+                    onChange={(e) => handleInputChange(e)}
                   />
                 </div>
+                {formErrors.postalCode && (
+                  <p className='text-red-600 text-sm'>{formErrors.postalCode}</p>
+                )}
               </div>
 
-              <div className='sm:col-span-2'>
+              <div className='sm:col-span-3'>
+                <label
+                  htmlFor='country'
+                  className='block text-sm font-medium leading-6 text-gray-900'
+                >
+                  Country
+                </label>
+                <div className='mt-2'>
+                  <TypeCountry
+                    selectedCountry={selectedCountry}
+                    setSelectedCountry={setSelectedCountry}
+                  />
+                </div>
+                {formErrors.selectedCountry && (
+                  <p className='text-red-600 text-sm'>{formErrors.selectedCountry}</p>
+                )}
+              </div>
+
+              <div className='sm:col-span-2 sm:col-start-1'>
                 <label
                   htmlFor='price'
                   className='block text-sm font-medium leading-6 text-gray-900'
@@ -163,20 +457,32 @@ export default function CreateListing () {
                     name='price'
                     id='price'
                     min={1}
+                    onChange={(event) => handleInputChange(event)}
                     className='[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
                   />
                 </div>
+                {formErrors.price && (
+                  <p className='text-red-600 text-sm'>{formErrors.price}</p>
+                )}
               </div>
               <div className='sm:col-span-2'>
                 <label
-                  htmlFor='price'
+                  htmlFor='numBathroomsc'
                   className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   Number of Bathrooms
                 </label>
                 <div className='flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 sm:max-w-md'>
-                  <NumberForm name='bathroom' id='bathroom' min={0} />
+                  <NumberForm
+                    name='numBathrooms'
+                    id='numBathrooms'
+                    min={0}
+                    onChange={(event) => handleInputChange(event)}
+                  />
                 </div>
+                {formErrors.numBathrooms && (
+                  <p className='text-red-600 text-sm'>{formErrors.numBathrooms}</p>
+                )}
               </div>
               <div className='sm:col-span-2'>
                 <label
@@ -194,10 +500,13 @@ export default function CreateListing () {
                     onChange={handleNumBedroomsChange}
                   />
                 </div>
+                {formErrors.numBedrooms && (
+                  <p className='text-red-600 text-sm'>{formErrors.numBedrooms}</p>
+                )}
               </div>
 
               <div className='col-span-full'>
-              <label
+                <label
                   htmlFor='numBedrooms'
                   className='block text-sm font-medium leading-6 text-gray-900 mb-2'
                 >
@@ -228,12 +537,18 @@ export default function CreateListing () {
                       >
                         {'Number of beds'}
                       </label>
-                      <div className='flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md'>
-                        <input
-                          type='text'
+                      <div>
+                        <NumberForm
                           name={bed.name}
                           id={bed.id}
-                          className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
+                          min={0}
+                          max={50}
+                          className={`[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                            formErrors.beds[bed.id] === 'error'
+                              ? 'ring-red-600'
+                              : 'ring-gray-300'
+                          } placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6`}
+                          onChange={(e) => handleInputChange(e)} // Pass the input name as an argument
                         />
                       </div>
                     </div>
@@ -247,7 +562,13 @@ export default function CreateListing () {
                 >
                   Thumbnail
                 </label>
-                <div className='mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10'>
+                <div
+                  className={`mt-2 flex justify-center rounded-lg border border-dashed ${
+                    !formErrors.uploadImage
+                      ? ' border-gray-900/25'
+                      : 'border-red-600'
+                  } px-6 py-10`}
+                >
                   <div className='text-center'>
                     <PhotoIcon
                       className='mx-auto h-12 w-12 text-gray-300'
@@ -268,13 +589,22 @@ export default function CreateListing () {
                         />
                       </label>
                     </div>
-                    <p className='text-xs leading-5 text-gray-600'>
-                      {selectedFile
-                        ? `Selected file: ${selectedFile.name}`
-                        : 'PNG, JPG, up to 10MB'}
-                    </p>
+                    {selectedFile
+                      ? (
+                      <p className='text-xs leading-5 text-gray-600'>
+                        Selected file: {selectedFile.name}
+                      </p>
+                        )
+                      : (
+                      <p className='text-xs leading-5 text-gray-600'>
+                        PNG, JPG, up to 10MB
+                      </p>
+                        )}
                   </div>
                 </div>
+                {formErrors.uploadImage && (
+                  <p className='text-red-600 text-sm'>{formErrors.uploadImage}</p>
+                )}
               </div>
             </div>
           </div>

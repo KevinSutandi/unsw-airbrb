@@ -22,7 +22,7 @@ function App () {
         <Routes>
           <Route path='/' element={<HomePage isLoggedIn={isLoggedIn}/>} />
           <Route path='/listings' element={<HostedListings setErrorMessage={setErrorMessage} setErrorModalOpen={setErrorModalOpen} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
-            <Route path='/listings/create' element={<CreateListing/>}/>
+            <Route path='/listings/create' element={<CreateListing setErrorMessage={setErrorMessage} setErrorModalOpen={setErrorModalOpen}/>}/>
         </Routes>
       </Router>
 

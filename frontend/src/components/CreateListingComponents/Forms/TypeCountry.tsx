@@ -2,14 +2,10 @@ import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Combobox, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/24/solid';
+import { Country, CountryListProps } from '../../../types/types';
 
-type Country = {
-  name: string;
-};
-
-const CountryList: React.FC = () => {
+const CountryList: React.FC<CountryListProps> = ({ selectedCountry, setSelectedCountry }) => {
   const [countries, setCountries] = useState<Country[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [query, setQuery] = useState<string>('');
 
   const filteredCountries = query
@@ -38,8 +34,8 @@ const CountryList: React.FC = () => {
 
   return (
     <Combobox value={selectedCountry} onChange={setSelectedCountry}>
-      <div className="relative mt-1 z-40">
-        <div className="relative w-full cursor-default overflow-hidden shadow-sm rounded-lg ring-1 ring-gray-300 bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+      <div className="relative mt-1 z-10">
+        <div className="relative w-full cursor-default overflow-hidden shadow-sm rounded-lg ring-1 ring-gray-300 bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-500 sm:text-sm">
           <Combobox.Input
             className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
             displayValue={(country: Country | null) =>
