@@ -1,14 +1,15 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import TextForm from '../components/CreateListingComponents/Forms/TextForm';
-import TypeList from '../components/CreateListingComponents/Forms/TypeList';
-import TypeState from '../components/CreateListingComponents/Forms/TypeState';
-import TypeCountry from '../components/CreateListingComponents/Forms/TypeCountry';
+import TypeList, { propertyTypes } from '../components/CreateListingComponents/Forms/TypeList';
+import TypeState, { stateTypes } from '../components/CreateListingComponents/Forms/TypeState';
+import TypeCountry, { CountryList } from '../components/CreateListingComponents/Forms/TypeCountry';
 import NumberForm from '../components/CreateListingComponents/Forms/NumberForm';
 import {
   BedroomFormState,
   Country,
   CreateListingProps,
+  GetSingleListingReturn,
   PropertyListing,
   PropertyType,
 } from '../types/types';
@@ -84,12 +85,50 @@ export default function EditListing ({
       navigate('/');
       setErrorMessage("Cannot access 'My Listings' Page when not logged in");
       setErrorModalOpen(true);
+    } else {
+      getListingData(token as string).then((res) => {
+        const data = res.data.listing;
+        console.log(data);
+        setFormValues((prev) => ({
+          ...prev,
+          listingTitle: data.title,
+          streetAddress: data.address.streetAddress,
+          propertyAmenities: data.metadata.propertyAmenities,
+          city: data.address.city,
+          postalCode: data.address.postalCode,
+          price: data.price,
+          numBathrooms: data.metadata.numBathrooms,
+          beds: data.metadata.beds
+        }));
+
+        const fetchedType = propertyTypes.find(prop => prop.name === data.metadata.propertyType)
+        if (fetchedType) {
+          setSelectedType(fetchedType);
+        }
+
+        const fetchedState = stateTypes.find(state => state.name === data.address.state)
+        if (fetchedState) {
+          setSelectedState(fetchedState)
+        }
+
+        setState(prev => ({ ...prev, numBedrooms: data.metadata.numBedrooms }))
+      });
     }
   }, []);
 
   function scrollToTop () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  const getListingData = async (token: string) => {
+    const res = await makeRequest<GetSingleListingReturn>(
+      'GET',
+      `listings/${id}`,
+      { token }
+    );
+
+    return res;
+  };
 
   const handleSubmitBackend = (body: PropertyListing) => {
     const token = getToken() as string;
@@ -289,7 +328,7 @@ export default function EditListing ({
       <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24">
         <div className="flex flex-row justify-between">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Create Listing
+            Edit Listing
           </h2>
         </div>
       </div>
@@ -356,6 +395,7 @@ export default function EditListing ({
                   <TextForm
                     name="propertyAmenities"
                     id="property-amenities"
+                    value={formValues.propertyAmenities.join(', ')}
                     onChange={(e) => handleInputChange(e)}
                   />
                 </div>
@@ -486,6 +526,7 @@ export default function EditListing ({
                     name="price"
                     id="price"
                     min={1}
+                    value={formValues.price}
                     onChange={(event) => handleInputChange(event)}
                     className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
@@ -506,6 +547,7 @@ export default function EditListing ({
                     name="numBathrooms"
                     id="numBathrooms"
                     min={0}
+                    value={formValues.numBathrooms}
                     onChange={(event) => handleInputChange(event)}
                   />
                 </div>
@@ -528,6 +570,7 @@ export default function EditListing ({
                     id="numBedrooms"
                     min={0}
                     max={50}
+                    value={state.numBedrooms}
                     onChange={handleNumBedroomsChange}
                   />
                 </div>

@@ -33,11 +33,11 @@ export type SingleDetailListing = {
   thumbnail: string;
   metadata: {
     propertyType: string; // You can specify the data type of propertyType here
-    amenities: string[]
-    numBedrooms: number
+    amenities: string[];
+    numBedrooms: number;
     beds: { [key: string]: string };
-    numBathrooms: number
-    imageList: ImageData[]
+    numBathrooms: number;
+    imageList: ImageData[];
   };
   reviews: Review[];
   availability: Availability[];
@@ -50,7 +50,7 @@ export type SingleDetailListing = {
 
 export type DetailListing = {
   listing: SingleDetailListing;
-}
+};
 
 export type HostedListingsProps = {
   isLoggedIn: boolean;
@@ -132,7 +132,7 @@ export interface NumberFormProps {
   id: string;
   value?: number;
   min?: number;
-  max?: number
+  max?: number;
   autoComplete?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
@@ -199,4 +199,16 @@ export type DeleteListingProps = {
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setRunEffect: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export type SingleListing = PropertyListing & {
+  owner: string;
+  reviews: Review[];
+  availability: Availability[];
+  published: boolean;
+  postedOn: string;
+};
+
+export type GetSingleListingReturn = {
+  listing: SingleListing;
 };
