@@ -9,6 +9,7 @@ import {
   SingleDetailListing,
 } from '../types/types';
 import { StarIcon } from '@heroicons/react/20/solid';
+import DeleteListing from '../components/CreateListingComponents/Modals/DeleteListingModal';
 
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
   const starIcons: JSX.Element[] = [];
@@ -60,16 +61,14 @@ export default function HostedListngs ({
   setErrorModalOpen,
 }: HostedListingsProps) {
   const [myListings, setMyListings] = useState<SingleDetailListing[]>([]);
+  const [open, setOpen] = useState(false);
+  const [selectedListingId, setSelectedListingId] = useState<number>(0);
+  const [runEffect, setRunEffect] = useState(false);
 
-  const deleteListing = async (token: string, listingId: number) => {
-    try {
-      await makeRequest<Record<string, never>>('DELETE', `listings/${listingId}`, { token })
-    } catch (error) {
-      console.error('Error deleting listing detail:', error)
-      setErrorMessage('Deleting Listing Detail Error' + error);
-      setErrorModalOpen(true);
-    }
-  }
+  const openDeleteListingModal = (listingId: number) => {
+    setSelectedListingId(listingId);
+    setOpen(true)
+  };
 
   const navigate = useNavigate();
 
@@ -102,14 +101,25 @@ export default function HostedListngs ({
               0
             );
 
-            listingDetail.averageStars = totalStars / reviews.length;
+            const beds = listingDetail.metadata.beds;
+
+            // Calculate the total number of beds
+            let totalBeds = 0;
+
+            for (const bedKey in beds) {
+              totalBeds += parseInt(beds[bedKey] as string);
+            }
+
+            listingDetail.averageStars = reviews.length !== 0 ? totalStars / reviews.length : 0;
             listingDetail.numReviews = reviews.length;
+            listingDetail.totalBeds = totalBeds;
 
             fetchedListings.push(listingDetail);
           }
         });
 
         setMyListings(fetchedListings);
+        setRunEffect(false);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -128,7 +138,7 @@ export default function HostedListngs ({
     if (token && userEmail !== null) {
       fetchUserListingsAndDetails(token, userEmail);
     }
-  }, []);
+  }, [runEffect]);
 
   const navigateCreate = () => {
     navigate('/listings/create')
@@ -185,13 +195,13 @@ export default function HostedListngs ({
                       <span className='font-bold text-gray-500'>
                         Number of Beds:&nbsp;
                       </span>
-                      {listings.metadata.beds}
+                      {listings.totalBeds}
                     </p>
                     <p className='mt-1 truncate text-xs leading-5 text-black font-bold'>
                       <span className='font-bold text-gray-500'>
                         Number of Bathrooms:&nbsp;
                       </span>
-                      {listings.metadata.bathrooms}
+                      {listings.metadata.numBathrooms}
                     </p>
                     <p className='mt-1 truncate text-xs leading-5 text-black font-bold'>
                       <span className='font-bold text-gray-500'>
@@ -202,15 +212,16 @@ export default function HostedListngs ({
                     </p>
                   </div>
                 </div>
-                <div className='hidden shrink-0 gap-3 sm:flex sm:flex-col sm:items-end'>
+                <div className='hidden shrink-0 gap-3 sm:flex sm:justify-center sm:flex-col sm:items-end'>
                   <button
                     type='button'
-                    className='inline-flex items-center rounded-md outline outline-blue-500 px-3 py-2 text-sm font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+                    className='inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-sm font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600'
                   >
                     Edit Listing
                   </button>
                   <button
                     type='button'
+                    onClick={() => openDeleteListingModal(listings.id)}
                     className='inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600'
                   >
                     Delete Listing
@@ -221,6 +232,7 @@ export default function HostedListngs ({
           </ul>
         </div>
       </div>
+      <DeleteListing open={open} setOpen={setOpen} listingId={selectedListingId} setErrorMessage={setErrorMessage} setErrorModalOpen={setErrorModalOpen} setRunEffect={setRunEffect} />
     </>
   );
 }
