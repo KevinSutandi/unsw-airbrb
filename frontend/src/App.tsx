@@ -47,7 +47,15 @@ function App () {
               />
             }
           />
-          <Route path="/listings/edit/:id" element={<EditListing />} />
+          <Route
+            path="/listings/edit/:id"
+            element={
+              <EditListing
+                setErrorMessage={setErrorMessage}
+                setErrorModalOpen={setErrorModalOpen}
+              />
+            }
+          />
         </Routes>
       </Router>
 
