@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { getEmail, getToken } from '../utils/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import {
   DetailListing,
   HostedListingsProps,
@@ -17,9 +17,9 @@ const generateStarIcons = (averageStars: number): JSX.Element[] => {
 
   for (let i = 1; i <= maxRating; i++) {
     if (i <= averageStars) {
-      starIcons.push(<StarIcon key={i} className='text-yellow-300 w-4 h-4' />);
+      starIcons.push(<StarIcon key={i} className="text-yellow-300 w-4 h-4" />);
     } else {
-      starIcons.push(<StarIcon key={i} className='text-gray-300 w-4 h-4' />);
+      starIcons.push(<StarIcon key={i} className="text-gray-300 w-4 h-4" />);
     }
   }
 
@@ -67,7 +67,7 @@ export default function HostedListngs ({
 
   const openDeleteListingModal = (listingId: number) => {
     setSelectedListingId(listingId);
-    setOpen(true)
+    setOpen(true);
   };
 
   const navigate = useNavigate();
@@ -110,7 +110,8 @@ export default function HostedListngs ({
               totalBeds += parseInt(beds[bedKey] as string);
             }
 
-            listingDetail.averageStars = reviews.length !== 0 ? totalStars / reviews.length : 0;
+            listingDetail.averageStars =
+              reviews.length !== 0 ? totalStars / reviews.length : 0;
             listingDetail.numReviews = reviews.length;
             listingDetail.totalBeds = totalBeds;
 
@@ -141,88 +142,93 @@ export default function HostedListngs ({
   }, [runEffect]);
 
   const navigateCreate = () => {
-    navigate('/listings/create')
-  }
+    navigate('/listings/create');
+  };
+
+  const navigateEdit = () => {
+    navigate('/listings');
+  };
 
   return (
     <>
-      <div className='mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-15 lg:max-w-7xl lg:px-8'>
-        <div className='flex flex-row justify-between'>
-          <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
+      <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-15 lg:max-w-7xl lg:px-8">
+        <div className="flex flex-row justify-between">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             My Listings
           </h2>
           <button
-            type='button'
+            type="button"
             onClick={navigateCreate}
-            className='inline-flex items-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+            className="inline-flex items-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Add New Listing
           </button>
         </div>
-        <div className='my-3'>
+        <div className="my-3">
           <hr />
-          <ul role='list' className='divide-y divide-gray-100'>
+          <ul role="list" className="divide-y divide-gray-100">
             {myListings.map((listings) => (
               <li
                 key={listings.id}
-                className='flex justify-between gap-x-6 py-5'
+                className="flex justify-between gap-x-6 py-5"
               >
-                <div className='flex min-w-0 gap-x-4'>
+                <div className="flex min-w-0 gap-x-4">
                   <img
-                    className='h-12 w-12 flex-none rounded-full bg-gray-50'
+                    className="h-12 w-12 flex-none rounded-full bg-gray-50"
                     src={listings.thumbnail}
-                    alt=''
+                    alt=""
                   />
-                  <div className='min-w-0 flex-auto'>
-                    <p className='text-sm font-semibold leading-6 text-gray-900 flex flex-row space-x-3 align-middle'>
+                  <div className="min-w-0 flex-auto">
+                    <p className="text-sm font-semibold leading-6 text-gray-900 flex flex-row space-x-3 align-middle">
                       <span>{listings.title}</span>
-                      <span className='flex flex-row items-center'>
+                      <span className="flex flex-row items-center">
                         {generateStarIcons(listings.averageStars)}
-                        <span className='text-gray-400 font-medium'>
+                        <span className="text-gray-400 font-medium">
                           &nbsp;{listings.averageStars.toFixed(1)}&nbsp;&nbsp;(
                           {listings.numReviews} Reviews)
                         </span>
                       </span>
                     </p>
 
-                    <p className='mt-1 truncate text-xs leading-5 text-black font-bold'>
-                      <span className='font-bold text-gray-500'>
+                    <p className="mt-1 truncate text-xs leading-5 text-black font-bold">
+                      <span className="font-bold text-gray-500">
                         Property Type:&nbsp;
                       </span>
                       {listings.metadata.propertyType}
                     </p>
-                    <p className='mt-1 truncate text-xs leading-5 text-black font-bold'>
-                      <span className='font-bold text-gray-500'>
+                    <p className="mt-1 truncate text-xs leading-5 text-black font-bold">
+                      <span className="font-bold text-gray-500">
                         Number of Beds:&nbsp;
                       </span>
                       {listings.totalBeds}
                     </p>
-                    <p className='mt-1 truncate text-xs leading-5 text-black font-bold'>
-                      <span className='font-bold text-gray-500'>
+                    <p className="mt-1 truncate text-xs leading-5 text-black font-bold">
+                      <span className="font-bold text-gray-500">
                         Number of Bathrooms:&nbsp;
                       </span>
                       {listings.metadata.numBathrooms}
                     </p>
-                    <p className='mt-1 truncate text-xs leading-5 text-black font-bold'>
-                      <span className='font-bold text-gray-500'>
+                    <p className="mt-1 truncate text-xs leading-5 text-black font-bold">
+                      <span className="font-bold text-gray-500">
                         Current Price:&nbsp;
                       </span>
-                      <span className='underline'>${listings.price}</span> per
+                      <span className="underline">${listings.price}</span> per
                       night
                     </p>
                   </div>
                 </div>
-                <div className='hidden shrink-0 gap-3 sm:flex sm:justify-center sm:flex-col sm:items-end'>
-                  <button
-                    type='button'
-                    className='inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-sm font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600'
+                <div className="hidden shrink-0 gap-3 sm:flex sm:justify-center sm:flex-col sm:items-end">
+                  <NavLink
+                    to={`/listings/edit/${listings.id}`}
+                    type="button"
+                    className="inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-sm font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600"
                   >
                     Edit Listing
-                  </button>
+                  </NavLink>
                   <button
-                    type='button'
+                    type="button"
                     onClick={() => openDeleteListingModal(listings.id)}
-                    className='inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600'
+                    className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                   >
                     Delete Listing
                   </button>
@@ -232,7 +238,14 @@ export default function HostedListngs ({
           </ul>
         </div>
       </div>
-      <DeleteListing open={open} setOpen={setOpen} listingId={selectedListingId} setErrorMessage={setErrorMessage} setErrorModalOpen={setErrorModalOpen} setRunEffect={setRunEffect} />
+      <DeleteListing
+        open={open}
+        setOpen={setOpen}
+        listingId={selectedListingId}
+        setErrorMessage={setErrorMessage}
+        setErrorModalOpen={setErrorModalOpen}
+        setRunEffect={setRunEffect}
+      />
     </>
   );
 }
