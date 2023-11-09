@@ -226,3 +226,22 @@ export type FormValues = {
   numBathrooms: number;
   beds: { [key: string]: string };
 };
+
+export type EditPropertyListing = {
+  title: string;
+  address: {
+    streetAddress: string;
+    city: string;
+    state: string;
+    country: string | undefined;
+    postalCode: string;
+  };
+  price: number;
+  metadata: {
+    propertyType: string;
+    numBathrooms: number;
+    numBedrooms: number;
+    beds: { [key: string]: string };
+    propertyAmenities: string[]; // Assuming it's an array of property amenities
+  };
+};

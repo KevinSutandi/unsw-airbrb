@@ -13,6 +13,7 @@ import {
   BedroomFormState,
   Country,
   CreateListingProps,
+  EditPropertyListing,
   FormValues,
   GetSingleListingReturn,
   PropertyListing,
@@ -31,7 +32,10 @@ export default function EditListing ({
   setErrorModalOpen,
 }: CreateListingProps) {
   const { id } = useParams();
-  const [isDataChanged, setIsDataChanged] = useState(false);
+  const [isFormChanged, setIsFormChanged] = useState(false);
+  const [isDataChanged, setIsDataChanged] = useState(false)
+
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   // For Property Type
   const defaultSelection: PropertyType = { id: '', name: 'Select a type' };
@@ -169,9 +173,14 @@ export default function EditListing ({
         };
         setSelectedImage(data.thumbnail);
         initialSelectedImage.current = data.thumbnail;
+
+        // Set the button to be disabled
+        setIsSubmitted(false)
+        setIsFormChanged(false)
+        setIsDataChanged(false)
       });
     }
-  }, []);
+  }, [isSubmitted]);
 
   useEffect(() => {
     setIsDataChanged(hasDataChanged())
@@ -186,7 +195,7 @@ export default function EditListing ({
     const hasStateChanged = !_.isEqual(selectedState, initialSelectedState.current)
     const hasCountryChanged = !(selectedCountry?.name === initialSelectedCountry.current?.name)
 
-    console.log(selectedState, initialSelectedState.current)
+    // console.log(selectedState, initialSelectedState.current)
 
     console.log(hasTypeChanged || hasCountryChanged)
 
@@ -203,14 +212,15 @@ export default function EditListing ({
     return res;
   };
 
-  const handleSubmitBackend = (body: PropertyListing) => {
+  const handleSubmitBackend = (body: EditPropertyListing) => {
     const token = getToken() as string;
     if (token !== 'null') {
       console.log(body);
 
-      makeRequest('POST', 'listings/new', { token, ...body })
-        .then(() => {
-          navigate('/listings');
+      makeRequest('PUT', `listings/${id}`, { token, ...body })
+        .then((res) => {
+          setIsSubmitted(true)
+          console.log(res)
         })
         .catch((error) => {
           setErrorMessage('Error creating listing: ' + error);
@@ -218,7 +228,7 @@ export default function EditListing ({
         });
     } else {
       navigate('/');
-      setErrorMessage('Cannot create new listing when not logged in');
+      setErrorMessage('Cannot edit listing when not logged in');
       setErrorModalOpen(true);
     }
   };
@@ -272,14 +282,15 @@ export default function EditListing ({
       setFormValues((prev) => {
         const newValues = { ...prev, propertyAmenities: amenitiesArray };
         // Set save button status
-        setIsDataChanged(!_.isEqual(newValues, initialFormValues.current));
+        setIsFormChanged(!_.isEqual(newValues, initialFormValues.current));
         return newValues;
       });
     } else {
       setFormValues((prev) => {
         const newValues = { ...prev, [name]: value };
         // Set save button status
-        setIsDataChanged(!_.isEqual(newValues, initialFormValues.current));
+        setIsFormChanged(!_.isEqual(newValues, initialFormValues.current));
+        console.log(isFormChanged)
         return newValues;
       });
     }
@@ -346,9 +357,9 @@ export default function EditListing ({
     if (!state.numBedrooms) {
       errors.numBedrooms = 'Number of Bedrooms is required';
     }
-    if (selectedFile === null) {
-      errors.uploadImage = 'Image is required.';
-    }
+    // if (selectedFile === null) {
+    //   errors.uploadImage = 'Image is required.';
+    // }
 
     // Check if there are errors in bed-related inputs
     const bedErrors = Object.values(errors.beds);
@@ -368,38 +379,55 @@ export default function EditListing ({
       // No errors, proceed with form submission
       setFormErrors(errors); // Clear any previous errors
       // Create the body of the request
-      if (selectedFile !== null) {
-        fileToBase64(selectedFile)
-          .then((base64) => {
-            const body = {
-              title: formValues.listingTitle,
-              address: {
-                streetAddress: formValues.streetAddress,
-                city: formValues.city,
-                state: selectedState.name,
-                country: selectedCountry?.name,
-                postalCode: formValues.postalCode,
-              },
-              price: formValues.price,
-              thumbnail: base64,
-              metadata: {
-                propertyType: selectedType.name,
-                numBathrooms: formValues.numBathrooms,
-                numBedrooms: state.numBedrooms,
-                beds: formValues.beds,
-                propertyAmenities: formValues.propertyAmenities,
-              },
-            };
-            handleSubmitBackend(body);
-          })
-          .catch((error) => {
-            setErrorMessage(error.toString());
-            setErrorModalOpen(true);
-          });
-      }
+      // if (selectedFile !== null) {
+      //   fileToBase64(selectedFile)
+      //     .then((base64) => {
+      //       const body = {
+      //         title: formValues.listingTitle,
+      //         address: {
+      //           streetAddress: formValues.streetAddress,
+      //           city: formValues.city,
+      //           state: selectedState.name,
+      //           country: selectedCountry?.name,
+      //           postalCode: formValues.postalCode,
+      //         },
+      //         price: formValues.price,
+      //         thumbnail: base64,
+      //         metadata: {
+      //           propertyType: selectedType.name,
+      //           numBathrooms: formValues.numBathrooms,
+      //           numBedrooms: state.numBedrooms,
+      //           beds: formValues.beds,
+      //           propertyAmenities: formValues.propertyAmenities,
+      //         },
+      //       };
+      //       handleSubmitBackend(body);
+      //     })
+      //     .catch((error) => {
+      //       setErrorMessage(error.toString());
+      //       setErrorModalOpen(true);
+      //     });
+      const body = {
+        title: formValues.listingTitle,
+        address: {
+          streetAddress: formValues.streetAddress,
+          city: formValues.city,
+          state: selectedState.name,
+          country: selectedCountry?.name,
+          postalCode: formValues.postalCode,
+        },
+        price: formValues.price,
+        metadata: {
+          propertyType: selectedType.name,
+          numBathrooms: formValues.numBathrooms,
+          numBedrooms: state.numBedrooms,
+          beds: formValues.beds,
+          propertyAmenities: formValues.propertyAmenities,
+        },
+      };
+      handleSubmitBackend(body);
     }
-  };
-
+  }
   return (
     <>
       <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24">
@@ -767,10 +795,10 @@ export default function EditListing ({
           </div>
         </div>
         <button
-          disabled={!isDataChanged}
+          disabled={!isFormChanged && !isDataChanged}
           className="w-full my-3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md disabled:opacity-40 disabled:bg-blue-500"
         >
-          Create Listing
+          Save Changes
         </button>
       </form>
     </>
