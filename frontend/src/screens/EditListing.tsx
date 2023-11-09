@@ -49,9 +49,9 @@ export default function EditListing ({
     id: '',
     name: 'Select a State',
   };
-  const [selectedState, setSelectedState] = useState<PropertyType>(
-    defaultSelectionState
-  );
+  // const [selectedState, setSelectedState] = useState<PropertyType>(
+  //   defaultSelectionState
+  // );
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -68,6 +68,7 @@ export default function EditListing ({
     propertyAmenities: [] as string[],
     city: '',
     postalCode: '',
+    state: '',
     price: 0,
     numBathrooms: 0,
     beds: {} as { [key: string]: string },
@@ -119,6 +120,7 @@ export default function EditListing ({
           price: data.price,
           numBathrooms: data.metadata.numBathrooms,
           beds: data.metadata.beds,
+          state: data.address.state
         }));
         initialFormValues.current = {
           listingTitle: data.title,
@@ -137,14 +139,6 @@ export default function EditListing ({
         if (fetchedType) {
           setSelectedType(fetchedType);
           initialSelectedType.current = fetchedType;
-        }
-
-        const fetchedState = stateTypes.find(
-          (state) => state.name === data.address.state
-        );
-        if (fetchedState) {
-          setSelectedState(fetchedState);
-          initialSelectedState.current = fetchedState;
         }
 
         setState((prev) => ({
@@ -184,7 +178,7 @@ export default function EditListing ({
 
   useEffect(() => {
     setIsDataChanged(hasDataChanged())
-  }, [selectedType, selectedState, selectedCountry]);
+  }, [selectedType, selectedCountry]);
 
   function scrollToTop () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -192,12 +186,7 @@ export default function EditListing ({
 
   const hasDataChanged = () => {
     const hasTypeChanged = !_.isEqual(selectedType, initialSelectedType.current)
-    const hasStateChanged = !_.isEqual(selectedState, initialSelectedState.current)
     const hasCountryChanged = !(selectedCountry?.name === initialSelectedCountry.current?.name)
-
-    // console.log(selectedState, initialSelectedState.current)
-
-    console.log(hasTypeChanged || hasCountryChanged)
 
     return hasTypeChanged || hasCountryChanged
   }
@@ -269,12 +258,16 @@ export default function EditListing ({
 
     if (id.includes('bed')) {
       // Handle bed-related input
-      setFormValues({
-        ...formValues,
-        beds: {
-          ...formValues.beds,
-          [id]: value,
-        },
+      setFormValues(prev => {
+        const newValues = {
+          ...prev,
+          beds: {
+            ...prev.beds,
+            [id]: value,
+          }
+        }
+        setIsFormChanged(!_.isEqual(newValues.beds, initialFormValues.current?.beds));
+        return newValues
       });
     } else if (name === 'propertyAmenities') {
       const amenitiesArray = value.split(',').map((amenity) => amenity.trim());
@@ -342,7 +335,7 @@ export default function EditListing ({
     if (selectedCountry === null) {
       errors.selectedCountry = 'Country is required.';
     }
-    if (selectedState.id === '') {
+    if (!formValues.state) {
       errors.selectedState = 'State is required.';
     }
     if (!formValues.postalCode) {
@@ -412,7 +405,7 @@ export default function EditListing ({
         address: {
           streetAddress: formValues.streetAddress,
           city: formValues.city,
-          state: selectedState.name,
+          state: formValues.state,
           country: selectedCountry?.name,
           postalCode: formValues.postalCode,
         },
@@ -562,14 +555,19 @@ export default function EditListing ({
                 >
                   State / Province
                 </label>
-                <div className="mt-2">
-                  <TypeState
-                    selectedState={selectedState}
-                    setSelectedState={setSelectedState}
+                <div className='mt-2'>
+                  <TextForm
+                    name='state'
+                    id='state'
+                    autoComplete='state'
+                    value={formValues.state}
+                    onChange={(e) => handleInputChange(e)}
                   />
                 </div>
                 {formErrors.selectedState && (
-                  <p className="text-red-600 text-sm">{formErrors.city}</p>
+                  <p className='text-red-600 text-sm'>
+                  {formErrors.selectedState}
+                </p>
                 )}
               </div>
 
@@ -724,7 +722,7 @@ export default function EditListing ({
                           id={bed.id}
                           min={0}
                           max={50}
-                          value={parseInt(formValues.beds[bed.id] || '0')}
+                          value={parseInt(formValues.beds[bed.id] || '')}
                           className={`[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                             formErrors.beds[bed.id] === 'error'
                               ? 'ring-red-600'
