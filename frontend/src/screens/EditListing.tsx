@@ -111,7 +111,17 @@ export default function EditListing ({
           setSelectedState(fetchedState)
         }
 
-        setState(prev => ({ ...prev, numBedrooms: data.metadata.numBedrooms }))
+        setState(prev => ({
+          ...prev,
+          numBedrooms: data.metadata.numBedrooms,
+          beds: Object.keys(data.metadata.beds).map(key => {
+            const idx = key.split('_')[1]
+            const id = key
+            const name = `Bedroom ${idx}`
+            return { id, name }
+          })
+        }))
+        setSelectedCountry(prev => ({ ...prev, name: data.address.country }))
       });
     }
   }, []);
