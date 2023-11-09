@@ -629,6 +629,7 @@ export default function EditListing ({
                           id={bed.id}
                           min={0}
                           max={50}
+                          value={parseInt(formValues.beds[bed.id] || '0')}
                           className={`[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                             formErrors.beds[bed.id] === 'error'
                               ? 'ring-red-600'
