@@ -3,31 +3,31 @@ import TextForm from '../components/CreateListingComponents/Forms/TextForm';
 import NumberForm from '../components/CreateListingComponents/Forms/NumberForm';
 import BedIcon from '../assets/double-bed-icon.svg';
 import { PhotoIcon } from '@heroicons/react/24/solid';
-import { BedroomFormState, Country, CreateListingProps, PropertyListing, PropertyType } from '../types/types';
+import {
+  BedroomFormState,
+  Country,
+  CreateListingProps,
+  PropertyListing,
+  PropertyType,
+} from '../types/types';
 import TypeList from '../components/CreateListingComponents/Forms/TypeList';
 import TypeCountry from '../components/CreateListingComponents/Forms/TypeCountry';
-import TypeState from '../components/CreateListingComponents/Forms/TypeState';
 import fileToBase64 from '../utils/fileToData';
 import { makeRequest } from '../utils/axiosHelper';
 import { useNavigate } from 'react-router-dom';
 import { getToken } from '../utils/auth';
+import axios from 'axios';
 
-export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: CreateListingProps) {
+export default function CreateListing ({
+  setErrorMessage,
+  setErrorModalOpen,
+}: CreateListingProps) {
   // For Property Type
   const defaultSelection: PropertyType = { id: '', name: 'Select a type' };
   const [selectedType, setSelectedType] = useState(defaultSelection);
 
   // For Country
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
-
-  // For State
-  const defaultSelectionState: PropertyType = {
-    id: '',
-    name: 'Select a State',
-  };
-  const [selectedState, setSelectedState] = useState<PropertyType>(
-    defaultSelectionState
-  );
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -41,6 +41,7 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
     streetAddress: '',
     propertyAmenities: [] as string[],
     city: '',
+    state: '',
     postalCode: '',
     price: 0,
     numBathrooms: 0,
@@ -60,10 +61,10 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
     numBathrooms: '',
     numBedrooms: '',
     beds: {} as { [key: string]: string },
-    uploadImage: ''
+    uploadImage: '',
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = getToken();
@@ -73,31 +74,40 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
       setErrorMessage("Cannot access 'My Listings' Page when not logged in");
       setErrorModalOpen(true);
     }
-  }, [])
+  }, []);
 
   function scrollToTop () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   const handleSubmitBackend = (body: PropertyListing) => {
-    const token = getToken() as string
+    const token = getToken() as string;
     if (token !== 'null') {
       console.log(body);
 
       makeRequest('POST', 'listings/new', { token, ...body })
         .then(() => {
-          navigate('/listings')
+          navigate('/listings');
         })
         .catch((error) => {
-          setErrorMessage('Error creating listing: ' + error);
+          console.error(error);
+          if (axios.isAxiosError(error)) {
+            if (error.response?.data) {
+              setErrorMessage(
+                'Error creating listing: ' + error.response.data.error
+              );
+            }
+          } else {
+            setErrorMessage('An unexpected error occurred.');
+          }
           setErrorModalOpen(true);
         });
     } else {
-      navigate('/')
+      navigate('/');
       setErrorMessage('Cannot create new listing when not logged in');
       setErrorModalOpen(true);
     }
-  }
+  };
 
   const handleNumBedroomsChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value, 10);
@@ -174,7 +184,7 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
       numBathrooms: '',
       numBedrooms: '',
       beds: {} as { [key: string]: string },
-      uploadImage: ''
+      uploadImage: '',
     };
 
     // Check for errors in bed-related inputs
@@ -203,7 +213,7 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
     if (selectedCountry === null) {
       errors.selectedCountry = 'Country is required.';
     }
-    if (selectedState.id === '') {
+    if (formValues.state === '') {
       errors.selectedState = 'State is required.';
     }
     if (!formValues.postalCode) {
@@ -241,31 +251,33 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
       setFormErrors(errors); // Clear any previous errors
       // Create the body of the request
       if (selectedFile !== null) {
-        fileToBase64(selectedFile).then((base64) => {
-          const body = {
-            title: formValues.listingTitle,
-            address: {
-              streetAddress: formValues.streetAddress,
-              city: formValues.city,
-              state: selectedState.name,
-              country: selectedCountry?.name,
-              postalCode: formValues.postalCode,
-            },
-            price: formValues.price,
-            thumbnail: base64,
-            metadata: {
-              propertyType: selectedType.name,
-              numBathrooms: formValues.numBathrooms,
-              numBedrooms: state.numBedrooms,
-              beds: formValues.beds,
-              propertyAmenities: formValues.propertyAmenities,
-            },
-          }
-          handleSubmitBackend(body)
-        }).catch((error) => {
-          setErrorMessage(error.toString());
-          setErrorModalOpen(true);
-        });
+        fileToBase64(selectedFile)
+          .then((base64) => {
+            const body = {
+              title: formValues.listingTitle,
+              address: {
+                streetAddress: formValues.streetAddress,
+                city: formValues.city,
+                state: formValues.state,
+                country: selectedCountry?.name,
+                postalCode: formValues.postalCode,
+              },
+              price: formValues.price,
+              thumbnail: base64,
+              metadata: {
+                propertyType: selectedType.name,
+                numBathrooms: formValues.numBathrooms,
+                numBedrooms: state.numBedrooms,
+                beds: formValues.beds,
+                propertyAmenities: formValues.propertyAmenities,
+              },
+            };
+            handleSubmitBackend(body);
+          })
+          .catch((error) => {
+            setErrorMessage(error.toString());
+            setErrorModalOpen(true);
+          });
       }
     }
   };
@@ -302,7 +314,9 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   />
                 </div>
                 {formErrors.listingTitle && (
-                  <p className='text-red-600 text-sm'>{formErrors.listingTitle}</p>
+                  <p className='text-red-600 text-sm'>
+                    {formErrors.listingTitle}
+                  </p>
                 )}
               </div>
 
@@ -320,7 +334,9 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   />
                 </div>
                 {formErrors.selectedType && (
-                  <p className='text-red-600 text-sm'>{formErrors.selectedType}</p>
+                  <p className='text-red-600 text-sm'>
+                    {formErrors.selectedType}
+                  </p>
                 )}
               </div>
 
@@ -329,7 +345,10 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   htmlFor='street-address'
                   className='block text-sm font-medium leading-6 text-gray-900'
                 >
-                  Property Amenities <span className='text-gray-500 text-xs font-normal'>(separated by commas)</span>
+                  Property Amenities{' '}
+                  <span className='text-gray-500 text-xs font-normal'>
+                    (separated by commas)
+                  </span>
                 </label>
                 <div className='mt-2'>
                   <TextForm
@@ -339,7 +358,9 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   />
                 </div>
                 {formErrors.propertyAmenities && (
-                  <p className='text-red-600 text-sm'>{formErrors.propertyAmenities}</p>
+                  <p className='text-red-600 text-sm'>
+                    {formErrors.propertyAmenities}
+                  </p>
                 )}
               </div>
 
@@ -360,7 +381,9 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   />
                 </div>
                 {formErrors.streetAddress && (
-                  <p className='text-red-600 text-sm'>{formErrors.streetAddress}</p>
+                  <p className='text-red-600 text-sm'>
+                    {formErrors.streetAddress}
+                  </p>
                 )}
               </div>
 
@@ -393,13 +416,18 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   State / Province
                 </label>
                 <div className='mt-2'>
-                  <TypeState
-                    selectedState={selectedState}
-                    setSelectedState={setSelectedState}
+                  <TextForm
+                    name='state'
+                    id='state'
+                    autoComplete='state'
+                    value={formValues.state}
+                    onChange={(e) => handleInputChange(e)}
                   />
                 </div>
                 {formErrors.selectedState && (
-                  <p className='text-red-600 text-sm'>{formErrors.city}</p>
+                  <p className='text-red-600 text-sm'>
+                    {formErrors.selectedState}
+                  </p>
                 )}
               </div>
 
@@ -420,7 +448,9 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   />
                 </div>
                 {formErrors.postalCode && (
-                  <p className='text-red-600 text-sm'>{formErrors.postalCode}</p>
+                  <p className='text-red-600 text-sm'>
+                    {formErrors.postalCode}
+                  </p>
                 )}
               </div>
 
@@ -438,7 +468,9 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   />
                 </div>
                 {formErrors.selectedCountry && (
-                  <p className='text-red-600 text-sm'>{formErrors.selectedCountry}</p>
+                  <p className='text-red-600 text-sm'>
+                    {formErrors.selectedCountry}
+                  </p>
                 )}
               </div>
 
@@ -481,7 +513,9 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   />
                 </div>
                 {formErrors.numBathrooms && (
-                  <p className='text-red-600 text-sm'>{formErrors.numBathrooms}</p>
+                  <p className='text-red-600 text-sm'>
+                    {formErrors.numBathrooms}
+                  </p>
                 )}
               </div>
               <div className='sm:col-span-2'>
@@ -501,7 +535,9 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   />
                 </div>
                 {formErrors.numBedrooms && (
-                  <p className='text-red-600 text-sm'>{formErrors.numBedrooms}</p>
+                  <p className='text-red-600 text-sm'>
+                    {formErrors.numBedrooms}
+                  </p>
                 )}
               </div>
 
@@ -603,7 +639,9 @@ export default function CreateListing ({ setErrorMessage, setErrorModalOpen }: C
                   </div>
                 </div>
                 {formErrors.uploadImage && (
-                  <p className='text-red-600 text-sm'>{formErrors.uploadImage}</p>
+                  <p className='text-red-600 text-sm'>
+                    {formErrors.uploadImage}
+                  </p>
                 )}
               </div>
             </div>

@@ -212,3 +212,6 @@ export type SingleListing = PropertyListing & {
 export type GetSingleListingReturn = {
   listing: SingleListing;
 };
+export interface CountryReturn {
+  name: { common: string };
+}
