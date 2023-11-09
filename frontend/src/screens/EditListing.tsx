@@ -49,6 +49,8 @@ export default function EditListing ({
     beds: [],
   });
 
+  const [selectedImage, setSelectedImage] = useState('')
+
   const [formValues, setFormValues] = useState({
     listingTitle: '',
     streetAddress: '',
@@ -121,7 +123,9 @@ export default function EditListing ({
             return { id, name }
           })
         }))
+
         setSelectedCountry(prev => ({ ...prev, name: data.address.country }))
+        setSelectedImage(data.thumbnail)
       });
     }
   }, []);
@@ -657,11 +661,12 @@ export default function EditListing ({
                   } px-6 py-10`}
                 >
                   <div className="text-center">
-                    <PhotoIcon
-                      className="mx-auto h-12 w-12 text-gray-300"
+                    <img
+                      className="mx-auto h-full w-full text-gray-300"
                       aria-hidden="true"
+                      src={selectedImage}
                     />
-                    <div className="mt-4 text-sm leading-6 text-gray-600">
+                    {/* <div className="mt-4 text-sm leading-6 text-gray-600">
                       <label
                         htmlFor="file-upload"
                         className="relative cursor-pointer rounded-md bg-white font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500"
@@ -675,8 +680,8 @@ export default function EditListing ({
                           onChange={handleFileChange}
                         />
                       </label>
-                    </div>
-                    {selectedFile
+                    </div> */}
+                    {/* {selectedFile
                       ? (
                       <p className="text-xs leading-5 text-gray-600">
                         Selected file: {selectedFile.name}
@@ -686,7 +691,7 @@ export default function EditListing ({
                       <p className="text-xs leading-5 text-gray-600">
                         PNG, JPG, up to 10MB
                       </p>
-                        )}
+                        )} */}
                   </div>
                 </div>
                 {formErrors.uploadImage && (
