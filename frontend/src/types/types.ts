@@ -215,3 +215,14 @@ export type GetSingleListingReturn = {
 export interface CountryReturn {
   name: { common: string };
 }
+
+export type FormValues = {
+  listingTitle: string;
+  streetAddress: string;
+  propertyAmenities: string[];
+  city: string;
+  postalCode: string;
+  price: number;
+  numBathrooms: number;
+  beds: { [key: string]: string };
+};

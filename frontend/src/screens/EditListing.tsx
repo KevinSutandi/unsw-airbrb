@@ -1,14 +1,19 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import TextForm from '../components/CreateListingComponents/Forms/TextForm';
-import TypeList, { propertyTypes } from '../components/CreateListingComponents/Forms/TypeList';
-import TypeState, { stateTypes } from '../components/CreateListingComponents/Forms/TypeState';
-import TypeCountry, { CountryList } from '../components/CreateListingComponents/Forms/TypeCountry';
+import TypeList, {
+  propertyTypes,
+} from '../components/CreateListingComponents/Forms/TypeList';
+import TypeState, {
+  stateTypes,
+} from '../components/CreateListingComponents/Forms/TypeState';
+import TypeCountry from '../components/CreateListingComponents/Forms/TypeCountry';
 import NumberForm from '../components/CreateListingComponents/Forms/NumberForm';
 import {
   BedroomFormState,
   Country,
   CreateListingProps,
+  FormValues,
   GetSingleListingReturn,
   PropertyListing,
   PropertyType,
@@ -19,12 +24,14 @@ import BedIcon from '../assets/double-bed-icon.svg';
 import { makeRequest } from '../utils/axiosHelper';
 import { getToken } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
+import _ from 'lodash';
 
 export default function EditListing ({
   setErrorMessage,
   setErrorModalOpen,
 }: CreateListingProps) {
   const { id } = useParams();
+  const [isDataChanged, setIsDataChanged] = useState(false);
 
   // For Property Type
   const defaultSelection: PropertyType = { id: '', name: 'Select a type' };
@@ -49,7 +56,7 @@ export default function EditListing ({
     beds: [],
   });
 
-  const [selectedImage, setSelectedImage] = useState('')
+  const [selectedImage, setSelectedImage] = useState('');
 
   const [formValues, setFormValues] = useState({
     listingTitle: '',
@@ -80,6 +87,14 @@ export default function EditListing ({
 
   const navigate = useNavigate();
 
+  // Refs to store initial values when fetched
+  const initialFormValues = useRef<FormValues>();
+  const initialSelectedType = useRef<PropertyType>();
+  const initialSelectedState = useRef<PropertyType>();
+  const initialState = useRef<BedroomFormState>();
+  const initialSelectedCountry = useRef<Country>();
+  const initialSelectedImage = useRef<string>();
+
   useEffect(() => {
     const token = getToken();
 
@@ -90,7 +105,6 @@ export default function EditListing ({
     } else {
       getListingData(token as string).then((res) => {
         const data = res.data.listing;
-        console.log(data);
         setFormValues((prev) => ({
           ...prev,
           listingTitle: data.title,
@@ -100,32 +114,61 @@ export default function EditListing ({
           postalCode: data.address.postalCode,
           price: data.price,
           numBathrooms: data.metadata.numBathrooms,
-          beds: data.metadata.beds
+          beds: data.metadata.beds,
         }));
+        initialFormValues.current = {
+          listingTitle: data.title,
+          streetAddress: data.address.streetAddress,
+          propertyAmenities: data.metadata.propertyAmenities,
+          city: data.address.city,
+          postalCode: data.address.postalCode,
+          price: data.price,
+          numBathrooms: data.metadata.numBathrooms,
+          beds: data.metadata.beds,
+        };
 
-        const fetchedType = propertyTypes.find(prop => prop.name === data.metadata.propertyType)
+        const fetchedType = propertyTypes.find(
+          (prop) => prop.name === data.metadata.propertyType
+        );
         if (fetchedType) {
           setSelectedType(fetchedType);
+          initialSelectedType.current = fetchedType;
         }
 
-        const fetchedState = stateTypes.find(state => state.name === data.address.state)
+        const fetchedState = stateTypes.find(
+          (state) => state.name === data.address.state
+        );
         if (fetchedState) {
-          setSelectedState(fetchedState)
+          setSelectedState(fetchedState);
+          initialSelectedState.current = fetchedState;
         }
 
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           numBedrooms: data.metadata.numBedrooms,
-          beds: Object.keys(data.metadata.beds).map(key => {
-            const idx = key.split('_')[1]
-            const id = key
-            const name = `Bedroom ${idx}`
-            return { id, name }
-          })
-        }))
+          beds: Object.keys(data.metadata.beds).map((key) => {
+            const idx = key.split('_')[1];
+            const id = key;
+            const name = `Bedroom ${idx}`;
+            return { id, name };
+          }),
+        }));
+        initialState.current = {
+          numBedrooms: data.metadata.numBedrooms,
+          beds: Object.keys(data.metadata.beds).map((key) => {
+            const idx = key.split('_')[1];
+            const id = key;
+            const name = `Bedroom ${idx}`;
+            return { id, name };
+          }),
+        };
 
-        setSelectedCountry(prev => ({ ...prev, name: data.address.country }))
-        setSelectedImage(data.thumbnail)
+        setSelectedCountry((prev) => ({ ...prev, name: data.address.country }));
+        initialSelectedCountry.current = {
+          name: data.address.country as string,
+        };
+        setSelectedImage(data.thumbnail);
+        initialSelectedImage.current = data.thumbnail;
       });
     }
   }, []);
@@ -210,14 +253,18 @@ export default function EditListing ({
     } else if (name === 'propertyAmenities') {
       const amenitiesArray = value.split(',').map((amenity) => amenity.trim());
 
-      setFormValues({
-        ...formValues,
-        propertyAmenities: amenitiesArray,
+      setFormValues((prev) => {
+        const newValues = { ...prev, propertyAmenities: amenitiesArray };
+        // Set save button status
+        setIsDataChanged(!_.isEqual(newValues, initialFormValues.current));
+        return newValues;
       });
     } else {
-      setFormValues({
-        ...formValues,
-        [name]: value,
+      setFormValues((prev) => {
+        const newValues = { ...prev, [name]: value };
+        // Set save button status
+        setIsDataChanged(!_.isEqual(newValues, initialFormValues.current));
+        return newValues;
       });
     }
   };
@@ -703,7 +750,10 @@ export default function EditListing ({
             </div>
           </div>
         </div>
-        <button className="w-full my-3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md">
+        <button
+          disabled={!isDataChanged}
+          className="w-full my-3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md disabled:opacity-40 disabled:bg-blue-500"
+        >
           Create Listing
         </button>
       </form>
