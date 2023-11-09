@@ -173,8 +173,24 @@ export default function EditListing ({
     }
   }, []);
 
+  useEffect(() => {
+    setIsDataChanged(hasDataChanged())
+  }, [selectedType, selectedState, selectedCountry]);
+
   function scrollToTop () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  const hasDataChanged = () => {
+    const hasTypeChanged = !_.isEqual(selectedType, initialSelectedType.current)
+    const hasStateChanged = !_.isEqual(selectedState, initialSelectedState.current)
+    const hasCountryChanged = !(selectedCountry?.name === initialSelectedCountry.current?.name)
+
+    console.log(selectedState, initialSelectedState.current)
+
+    console.log(hasTypeChanged || hasCountryChanged)
+
+    return hasTypeChanged || hasCountryChanged
   }
 
   const getListingData = async (token: string) => {
