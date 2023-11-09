@@ -16,6 +16,7 @@ import fileToBase64 from '../utils/fileToData';
 import { makeRequest } from '../utils/axiosHelper';
 import { useNavigate } from 'react-router-dom';
 import { getToken } from '../utils/auth';
+import axios from 'axios';
 
 export default function CreateListing ({
   setErrorMessage,
@@ -89,7 +90,16 @@ export default function CreateListing ({
           navigate('/listings');
         })
         .catch((error) => {
-          setErrorMessage('Error creating listing: ' + error);
+          console.error(error);
+          if (axios.isAxiosError(error)) {
+            if (error.response?.data) {
+              setErrorMessage(
+                'Error creating listing: ' + error.response.data.error
+              );
+            }
+          } else {
+            setErrorMessage('An unexpected error occurred.');
+          }
           setErrorModalOpen(true);
         });
     } else {
