@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Combobox, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/24/solid';
-import { Country, CountryListProps } from '../../../types/types';
+import { Country, CountryListProps, CountryReturn } from '../../../types/types';
 
 const CountryList: React.FC<CountryListProps> = ({ selectedCountry, setSelectedCountry }) => {
   const [countries, setCountries] = useState<Country[]>([]);
@@ -18,7 +18,7 @@ const CountryList: React.FC<CountryListProps> = ({ selectedCountry, setSelectedC
     // Fetch the list of countries from the REST Countries API
     axios.get('https://restcountries.com/v3.1/all').then((response) => {
       const countryData = response.data;
-      const countryList: Country[] = countryData.map((country: any) => ({
+      const countryList: Country[] = countryData.map((country: CountryReturn) => ({
         name: country.name.common,
         id: country.name.common,
       }));

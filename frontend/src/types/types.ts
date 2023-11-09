@@ -200,3 +200,7 @@ export type DeleteListingProps = {
   setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setRunEffect: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+export interface CountryReturn {
+  name: { common: string };
+}
