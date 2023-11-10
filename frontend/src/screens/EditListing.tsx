@@ -39,8 +39,6 @@ export default function EditListing ({
   // For Country
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
 
-  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
   const [state, setState] = useState<BedroomFormState>({
     numBedrooms: 0,
     beds: [],
@@ -359,9 +357,6 @@ export default function EditListing ({
     if (!state.numBedrooms) {
       errors.numBedrooms = 'Number of Bedrooms is required';
     }
-    // if (selectedFile === null) {
-    //   errors.uploadImage = 'Image is required.';
-    // }
 
     // Check if there are errors in bed-related inputs
     const bedErrors = Object.values(errors.beds);
