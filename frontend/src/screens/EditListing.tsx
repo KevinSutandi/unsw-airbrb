@@ -33,9 +33,9 @@ export default function EditListing ({
 }: CreateListingProps) {
   const { id } = useParams();
   const [isFormChanged, setIsFormChanged] = useState(false);
-  const [isDataChanged, setIsDataChanged] = useState(false)
+  const [isDataChanged, setIsDataChanged] = useState(false);
 
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // For Property Type
   const defaultSelection: PropertyType = { id: '', name: 'Select a type' };
@@ -95,7 +95,6 @@ export default function EditListing ({
   // Refs to store initial values when fetched
   const initialFormValues = useRef<FormValues>();
   const initialSelectedType = useRef<PropertyType>();
-  const initialSelectedState = useRef<PropertyType>();
   const initialState = useRef<BedroomFormState>();
   const initialSelectedCountry = useRef<Country>();
   const initialSelectedImage = useRef<string>();
@@ -120,7 +119,7 @@ export default function EditListing ({
           price: data.price,
           numBathrooms: data.metadata.numBathrooms,
           beds: data.metadata.beds,
-          state: data.address.state
+          state: data.address.state,
         }));
         initialFormValues.current = {
           listingTitle: data.title,
@@ -131,7 +130,7 @@ export default function EditListing ({
           price: data.price,
           numBathrooms: data.metadata.numBathrooms,
           beds: data.metadata.beds,
-          state: data.address.state
+          state: data.address.state,
         };
 
         const fetchedType = propertyTypes.find(
@@ -170,15 +169,15 @@ export default function EditListing ({
         initialSelectedImage.current = data.thumbnail;
 
         // Set the button to be disabled
-        setIsSubmitted(false)
-        setIsFormChanged(false)
-        setIsDataChanged(false)
+        setIsSubmitted(false);
+        setIsFormChanged(false);
+        setIsDataChanged(false);
       });
     }
   }, [isSubmitted]);
 
   useEffect(() => {
-    setIsDataChanged(hasDataChanged())
+    setIsDataChanged(hasDataChanged());
   }, [selectedType, selectedCountry]);
 
   function scrollToTop () {
@@ -186,12 +185,16 @@ export default function EditListing ({
   }
 
   const hasDataChanged = () => {
-    const hasTypeChanged = !_.isEqual(selectedType, initialSelectedType.current)
-    const hasCountryChanged = !(selectedCountry?.name === initialSelectedCountry.current?.name)
-    console.log(hasTypeChanged, selectedType, initialSelectedType.current)
+    const hasTypeChanged = !_.isEqual(
+      selectedType,
+      initialSelectedType.current
+    );
+    const hasCountryChanged = !(
+      selectedCountry?.name === initialSelectedCountry.current?.name
+    );
 
-    return hasTypeChanged
-  }
+    return hasTypeChanged;
+  };
 
   const getListingData = async (token: string) => {
     const res = await makeRequest<GetSingleListingReturn>(
@@ -210,8 +213,8 @@ export default function EditListing ({
 
       makeRequest('PUT', `listings/${id}`, { token, ...body })
         .then((res) => {
-          setIsSubmitted(true)
-          console.log(res)
+          setIsSubmitted(true);
+          console.log(res);
         })
         .catch((error) => {
           setErrorMessage('Error creating listing: ' + error);
@@ -260,19 +263,24 @@ export default function EditListing ({
 
     if (id.includes('bed')) {
       // Handle bed-related input
-      setFormValues(prev => {
+      setFormValues((prev) => {
         const newValues = {
           ...prev,
           beds: {
             ...prev.beds,
             [id]: value,
-          }
-        }
-        setIsFormChanged(!_.isEqual(newValues.beds, initialFormValues.current?.beds));
-        return newValues
+          },
+        };
+        setIsFormChanged(
+          !_.isEqual(newValues.beds, initialFormValues.current?.beds)
+        );
+        return newValues;
       });
     } else if (name === 'propertyAmenities') {
-      const amenitiesArray = value.split(',').map((amenity) => amenity.trim());
+      const amenitiesArray = value
+        .split(',')
+        .map((amenity) => amenity.trim())
+        .filter((amenity) => amenity); // Removes empty string
 
       setFormValues((prev) => {
         const newValues = { ...prev, propertyAmenities: amenitiesArray };
@@ -285,11 +293,9 @@ export default function EditListing ({
         const newValues = { ...prev, [name]: value };
         // Set save button status
         setIsFormChanged(!_.isEqual(newValues, initialFormValues.current));
-        console.log(newValues, initialFormValues.current)
         return newValues;
       });
     }
-    // console.log(!isFormChanged, !isDataChanged, !isFormChanged && !isDataChanged)
   };
 
   const handleFormSubmit = (event: React.FormEvent) => {
@@ -423,7 +429,7 @@ export default function EditListing ({
       };
       handleSubmitBackend(body);
     }
-  }
+  };
   return (
     <>
       <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24">
@@ -558,19 +564,19 @@ export default function EditListing ({
                 >
                   State / Province
                 </label>
-                <div className='mt-2'>
+                <div className="mt-2">
                   <TextForm
-                    name='state'
-                    id='state'
-                    autoComplete='state'
+                    name="state"
+                    id="state"
+                    autoComplete="state"
                     value={formValues.state}
                     onChange={(e) => handleInputChange(e)}
                   />
                 </div>
                 {formErrors.selectedState && (
-                  <p className='text-red-600 text-sm'>
-                  {formErrors.selectedState}
-                </p>
+                  <p className="text-red-600 text-sm">
+                    {formErrors.selectedState}
+                  </p>
                 )}
               </div>
 
