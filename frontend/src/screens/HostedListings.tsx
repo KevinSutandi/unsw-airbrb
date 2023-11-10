@@ -260,7 +260,7 @@ export default function HostedListngs ({
       <PublishListingModal
         open={publishedListingOpen}
         setOpen={setPublishedListingOpen}
-        listingId={selectedListingId}
+        listingId={publishedListingId}
         setErrorMessage={setErrorMessage}
         setErrorModalOpen={setErrorModalOpen}
         setRunEffect={setRunEffect}

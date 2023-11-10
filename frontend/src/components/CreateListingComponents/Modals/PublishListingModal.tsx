@@ -1,16 +1,18 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { Availability, DeleteListingProps } from '../../../types/types';
 import { Dialog, Transition } from '@headlessui/react';
-import { TrashIcon } from '@heroicons/react/24/solid';
 import DateForm from '../Forms/DateForm';
+import { getToken } from '../../../utils/auth';
+import { makeRequest } from '../../../utils/axiosHelper';
+import axios from 'axios';
 
 export default function PublishListingModal ({
   open,
   setOpen,
-  // listingId,
-  // setErrorModalOpen,
-  // setErrorMessage,
-  // setRunEffect,
+  listingId,
+  setErrorModalOpen,
+  setErrorMessage,
+  setRunEffect,
 }: DeleteListingProps) {
   const cancelButtonRef = useRef(null);
 
@@ -18,19 +20,58 @@ export default function PublishListingModal ({
     { from: '', to: '' },
   ]);
 
-  const handleDateChange = (idx: number, field: 'from' | 'to', value: string) => {
-    setAvailability(prev => {
-      const newDates = [...prev]
+  // Reset the date input when modal is closed
+  useEffect(() => {
+    if (!open) {
+      setAvailability([{ from: '', to: '' }]);
+    }
+  }, [open]);
+
+  const handlePublishListing = async () => {
+    if (listingId) {
+      const token = getToken();
+      if (token) {
+        try {
+          await makeRequest('PUT', `listings/publish/${listingId}`, {
+            token,
+            availability,
+          });
+          setOpen(false);
+          setRunEffect(true);
+        } catch (err) {
+          setErrorModalOpen(true);
+          if (axios.isAxiosError(err)) {
+            if (err.response?.data) {
+              setErrorMessage(err.response.data.error);
+              console.error('Publish failed:', err.response.data.error);
+            }
+          } else {
+            setErrorMessage('An unexpected error occurred.');
+            console.error('Publish listing failed:', err);
+          }
+        }
+      }
+    }
+  };
+
+  const handleDateChange = (
+    idx: number,
+    field: 'from' | 'to',
+    value: string
+  ) => {
+    setAvailability((prev) => {
+      const newDates = [...prev];
       if (newDates[idx]) {
         newDates[idx] = { ...newDates[idx], [field]: value } as Availability;
       }
-      return newDates
-    })
-  }
+      return newDates;
+    });
+    console.log(availability);
+  };
 
   const removeAvailability = (idx: number) => {
-    setAvailability(prev => prev.filter((_, index) => index !== idx))
-  }
+    setAvailability((prev) => prev.filter((_, index) => index !== idx));
+  };
 
   const addAvailability = () => {
     setAvailability((prev) => [...prev, { from: '', to: '' }]);
@@ -87,7 +128,9 @@ export default function PublishListingModal ({
                           handleDateChange={handleDateChange}
                         />
                       ))}
-                      <button onClick={addAvailability}>+ Add availability</button>
+                      <button onClick={addAvailability}>
+                        + Add availability
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -95,7 +138,7 @@ export default function PublishListingModal ({
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
-                    // onClick={() => handleDelete()}
+                    onClick={handlePublishListing}
                   >
                     Publish
                   </button>
