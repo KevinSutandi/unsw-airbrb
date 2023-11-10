@@ -164,9 +164,9 @@ export default function EditListing ({
     setIsDataChanged(hasDataChanged());
   }, [selectedType, selectedCountry, selectedThumbnail]);
 
-  function scrollToTop () {
+  const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  };
 
   const hasDataChanged = () => {
     const hasTypeChanged = !_.isEqual(
@@ -398,6 +398,15 @@ export default function EditListing ({
   };
   return (
     <>
+      <div className="ml-40">
+        <span
+          className="cursor-pointer hover:underline hover:font-bold"
+          onClick={() => navigate('/listings')}
+        >
+          my listings
+        </span>
+        /<span>edit</span>
+      </div>
       <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24">
         <div className="flex flex-row justify-between">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
