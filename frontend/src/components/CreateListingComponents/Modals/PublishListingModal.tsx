@@ -18,6 +18,20 @@ export default function PublishListingModal ({
     { from: '', to: '' },
   ]);
 
+  const handleDateChange = (idx: number, field: 'from' | 'to', value: string) => {
+    setAvailability(prev => {
+      const newDates = [...prev]
+      if (newDates[idx]) {
+        newDates[idx] = { ...newDates[idx], [field]: value } as Availability;
+      }
+      return newDates
+    })
+  }
+
+  const removeAvailability = (idx: number) => {
+    setAvailability(prev => prev.filter((_, index) => index !== idx))
+  }
+
   const addAvailability = () => {
     setAvailability((prev) => [...prev, { from: '', to: '' }]);
   };
@@ -69,7 +83,8 @@ export default function PublishListingModal ({
                           fromValue={elem.from}
                           toValue={elem.to}
                           idx={idx}
-                          setAvailability={setAvailability}
+                          removeAvailability={removeAvailability}
+                          handleDateChange={handleDateChange}
                         />
                       ))}
                       <button onClick={addAvailability}>+ Add availability</button>
@@ -79,10 +94,10 @@ export default function PublishListingModal ({
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
                     // onClick={() => handleDelete()}
                   >
-                    Delete
+                    Publish
                   </button>
                   <button
                     type="button"

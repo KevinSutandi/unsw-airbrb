@@ -251,5 +251,6 @@ export type DateFormProps = {
   fromValue: string;
   toValue: string;
   idx: number
-  setAvailability: React.Dispatch<React.SetStateAction<Availability[]>>
+  removeAvailability: (idx: number) => void
+  handleDateChange: (idx: number, field: 'from' | 'to', value: string) => void
 };
