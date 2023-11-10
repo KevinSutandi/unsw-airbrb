@@ -1,5 +1,5 @@
 import React from 'react';
-import { NumberFormProps } from '../../../types/types';
+import { NumberFormProps } from '../../types/types';
 
 const NumberForm: React.FC<NumberFormProps> = ({ name, id, min, max, value, className, autoComplete, onChange }) => {
   // Define a function to handle input changes while respecting min and max limits

@@ -1,66 +1,19 @@
-import React, { useState } from 'react';
-import { Dialog } from '@headlessui/react';
+import React, { Fragment } from 'react';
+import TextForm from '../Forms/TextForm';
+import { Popover, Transition } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
-function SearchBar () {
-  const [isOpen, setIsOpen] = useState(false);
-  const openSearchDialog = () => setIsOpen(true);
-  const closeSearchDialog = () => setIsOpen(false);
-
-  const handleSearch = (query: string) => {
-    // Replace this with your search functionality
-    console.log(`Searching for: ${query}`);
-  };
-
+export default function SearchBar () {
   return (
-    <div className='relative'>
-      <button
-        className='bg-blue-500 text-white p-2 rounded-full'
-        onClick={openSearchDialog}
-      >
-        Search
-      </button>
-      <Dialog
-        as='div'
-        className='fixed inset-0 z-10 overflow-y-auto'
-        open={isOpen}
-        onClose={closeSearchDialog}
-      >
-        <div className='min-h-screen px-4 text-center'>
-          <Dialog.Overlay className='fixed inset-0 bg-black opacity-30' />
-
-          <div className='flex justify-center items-center min-h-screen'>
-            <div className='w-full max-w-md p-4'>
-              <Dialog.Title className='text-2xl font-semibold'>
-                Search
-              </Dialog.Title>
-              <div className='mt-4'>
-                <input
-                  type='text'
-                  placeholder='Search...'
-                  className='w-full px-4 py-2 rounded-md border'
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      const input = e.target as HTMLInputElement;
-                      handleSearch(input.value);
-                      closeSearchDialog();
-                    }
-                  }}
-                />
-              </div>
-              <div className='mt-4'>
-                <button
-                  onClick={closeSearchDialog}
-                  className='bg-red-500 text-white p-2 rounded-md'
-                >
-                  Close
-                </button>
-              </div>
-            </div>
+    <>
+      <div className='border-1 w-full md:w-auto py-2 rounded-full shadow-md hover:shadow-lg transition cursor-pointer'>
+        <div className='flex flex-row item-center justify-between'>
+          <div className='text-gray-900 text-xs md:text-base px-4'>
+            Search by Title / City
           </div>
         </div>
-      </Dialog>
-    </div>
+      </div>
+
+    </>
   );
 }
-
-export default SearchBar;

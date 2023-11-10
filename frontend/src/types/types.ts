@@ -123,6 +123,7 @@ export interface TextFormProps {
   name: string;
   id: string;
   value?: string;
+  placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Add this line
   autoComplete?: string;
 }

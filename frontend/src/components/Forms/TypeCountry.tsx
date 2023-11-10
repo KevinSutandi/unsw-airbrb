@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Combobox, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/24/solid';
-import { Country, CountryListProps, CountryReturn } from '../../../types/types';
+import { Country, CountryListProps, CountryReturn } from '../../types/types';
 
 export const CountryList: React.FC<CountryListProps> = ({ selectedCountry, setSelectedCountry }) => {
   const [countries, setCountries] = useState<Country[]>([]);

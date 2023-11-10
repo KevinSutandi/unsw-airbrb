@@ -1,5 +1,5 @@
 import React from 'react';
-import { DateFormProps } from '../../../types/types';
+import { DateFormProps } from '../../types/types';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
 export default function DateForm ({

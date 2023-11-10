@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import TextForm from '../components/CreateListingComponents/Forms/TextForm';
-import NumberForm from '../components/CreateListingComponents/Forms/NumberForm';
+import TextForm from '../components/Forms/TextForm';
+import NumberForm from '../components/Forms/NumberForm';
 import BedIcon from '../assets/double-bed-icon.svg';
 import { PhotoIcon } from '@heroicons/react/24/solid';
 import {
@@ -10,8 +10,8 @@ import {
   PropertyListing,
   PropertyType,
 } from '../types/types';
-import TypeList from '../components/CreateListingComponents/Forms/TypeList';
-import TypeCountry from '../components/CreateListingComponents/Forms/TypeCountry';
+import TypeList from '../components/Forms/TypeList';
+import TypeCountry from '../components/Forms/TypeCountry';
 import fileToBase64 from '../utils/fileToData';
 import { makeRequest } from '../utils/axiosHelper';
 import { useNavigate } from 'react-router-dom';

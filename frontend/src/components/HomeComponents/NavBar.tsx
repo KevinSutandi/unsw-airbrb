@@ -14,6 +14,7 @@ import HomeProfileMenu from './HomeProfileMenu';
 import { makeRequest } from '../../utils/axiosHelper';
 import { NavBarProps } from '../../types/types';
 import axios from 'axios';
+import SearchBar from './SearchBar';
 
 export default function NavBar ({
   isLoggedIn,
@@ -111,15 +112,7 @@ export default function NavBar ({
         </div>
 
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            We
-          </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            Love
-          </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            List your home
-          </a>
+          <SearchBar/>
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
           <MagnifyingGlassIcon className="h-6 w-6 mr-10 hover:text-gray-500 cursor-pointer" />

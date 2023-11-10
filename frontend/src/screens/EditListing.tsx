@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
-import TextForm from '../components/CreateListingComponents/Forms/TextForm';
+import TextForm from '../components/Forms/TextForm';
 import TypeList, {
   propertyTypes,
-} from '../components/CreateListingComponents/Forms/TypeList';
-import TypeCountry from '../components/CreateListingComponents/Forms/TypeCountry';
-import NumberForm from '../components/CreateListingComponents/Forms/NumberForm';
+} from '../components/Forms/TypeList';
+import TypeCountry from '../components/Forms/TypeCountry';
+import NumberForm from '../components/Forms/NumberForm';
 import {
   BedroomFormState,
   Country,
