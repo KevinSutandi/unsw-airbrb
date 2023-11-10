@@ -20,12 +20,20 @@ export default function PublishListingModal ({
     { from: '', to: '' },
   ]);
 
+  const [availabilityErrors, setAvailabilityErrors] = useState<string[]>([]);
+  const [disabled, setDisabled] = useState(false)
+
   // Reset the date input when modal is closed
   useEffect(() => {
     if (!open) {
       setAvailability([{ from: '', to: '' }]);
     }
   }, [open]);
+
+  // Check for publish button state
+  useEffect(() => {
+    setDisabled(checkForErrors())
+  }, [availabilityErrors])
 
   const handlePublishListing = async () => {
     if (listingId) {
@@ -61,20 +69,47 @@ export default function PublishListingModal ({
   ) => {
     setAvailability((prev) => {
       const newDates = [...prev];
+      const currentInput = newDates[idx];
+
+      if (currentInput) {
+        if (field === 'to' && new Date(value) < new Date(currentInput.from)) {
+          const newErrors = [...availabilityErrors];
+          newErrors[idx] = 'To date cannot be earlier than From date';
+          setAvailabilityErrors(newErrors);
+        } else if (
+          field === 'from' &&
+          new Date(value) > new Date(currentInput.from)
+        ) {
+          const newErrors = [...availabilityErrors];
+          newErrors[idx] = 'To date cannot be earlier than From date';
+          setAvailabilityErrors(newErrors);
+        } else {
+          const newErrors = [...availabilityErrors];
+          // Clear error if input is valid
+          newErrors[idx] = '';
+          setAvailabilityErrors(newErrors);
+        }
+      }
+
       if (newDates[idx]) {
         newDates[idx] = { ...newDates[idx], [field]: value } as Availability;
       }
       return newDates;
     });
-    console.log(availability);
   };
+
+  const checkForErrors = () => {
+    return availabilityErrors.some(err => err === 'To date cannot be earlier than From date')
+  }
 
   const removeAvailability = (idx: number) => {
     setAvailability((prev) => prev.filter((_, index) => index !== idx));
+    setAvailabilityErrors((prev) => prev.filter((_, index) => index !== idx));
   };
 
   const addAvailability = () => {
     setAvailability((prev) => [...prev, { from: '', to: '' }]);
+    setAvailabilityErrors((prev) => [...prev, '']);
   };
 
   return (
@@ -126,9 +161,13 @@ export default function PublishListingModal ({
                           idx={idx}
                           removeAvailability={removeAvailability}
                           handleDateChange={handleDateChange}
+                          errorMessage={availabilityErrors[idx] as string}
                         />
                       ))}
-                      <button onClick={addAvailability} className='text-blue-500 mt-2.5 text-sm hover:underline'>
+                      <button
+                        onClick={addAvailability}
+                        className="text-blue-500 mt-2.5 text-sm hover:underline"
+                      >
                         + Add availability
                       </button>
                     </div>
@@ -137,8 +176,9 @@ export default function PublishListingModal ({
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto disabled:opacity-50"
                     onClick={handlePublishListing}
+                    disabled={disabled}
                   >
                     Publish
                   </button>

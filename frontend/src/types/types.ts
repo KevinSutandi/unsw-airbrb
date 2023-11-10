@@ -253,4 +253,5 @@ export type DateFormProps = {
   idx: number
   removeAvailability: (idx: number) => void
   handleDateChange: (idx: number, field: 'from' | 'to', value: string) => void
+  errorMessage: string
 };
