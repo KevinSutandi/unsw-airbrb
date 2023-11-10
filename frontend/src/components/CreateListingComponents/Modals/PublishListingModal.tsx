@@ -128,7 +128,7 @@ export default function PublishListingModal ({
                           handleDateChange={handleDateChange}
                         />
                       ))}
-                      <button onClick={addAvailability}>
+                      <button onClick={addAvailability} className='text-blue-500 mt-2.5 text-sm hover:underline'>
                         + Add availability
                       </button>
                     </div>
