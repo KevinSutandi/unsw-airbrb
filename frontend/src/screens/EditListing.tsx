@@ -398,7 +398,8 @@ export default function EditListing ({
   };
   return (
     <>
-      <div className="ml-40">
+      <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24 relative">
+      <div className='mb-2 absolute top-0 left-[-30px]'>
         <span
           className="cursor-pointer hover:underline hover:font-bold"
           onClick={() => navigate('/listings')}
@@ -407,7 +408,6 @@ export default function EditListing ({
         </span>
         /<span>edit</span>
       </div>
-      <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24">
         <div className="flex flex-row justify-between">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             Edit Listing
