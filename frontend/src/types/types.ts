@@ -225,7 +225,7 @@ export type FormValues = {
   price: number;
   numBathrooms: number;
   beds: { [key: string]: string };
-  state: string
+  state: string;
 };
 
 export type EditPropertyListing = {
@@ -245,4 +245,11 @@ export type EditPropertyListing = {
     beds: { [key: string]: string };
     propertyAmenities: string[]; // Assuming it's an array of property amenities
   };
+};
+
+export type DateFormProps = {
+  fromValue: string;
+  toValue: string;
+  idx: number
+  setAvailability: React.Dispatch<React.SetStateAction<Availability[]>>
 };

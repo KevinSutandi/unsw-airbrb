@@ -10,6 +10,7 @@ import {
 } from '../types/types';
 import { StarIcon } from '@heroicons/react/20/solid';
 import DeleteListing from '../components/CreateListingComponents/Modals/DeleteListingModal';
+import PublishListingModal from '../components/CreateListingComponents/Modals/PublishListingModal';
 
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
   const starIcons: JSX.Element[] = [];
@@ -65,9 +66,17 @@ export default function HostedListngs ({
   const [selectedListingId, setSelectedListingId] = useState<number>(0);
   const [runEffect, setRunEffect] = useState(false);
 
+  const [publishedListingId, setPublishedListingId] = useState(0);
+  const [publishedListingOpen, setPublishedListingOpen] = useState(false);
+
   const openDeleteListingModal = (listingId: number) => {
     setSelectedListingId(listingId);
     setOpen(true);
+  };
+
+  const openPublishListingModal = (listingId: number) => {
+    setPublishedListingId(listingId);
+    setPublishedListingOpen(true);
   };
 
   const navigate = useNavigate();
@@ -222,6 +231,12 @@ export default function HostedListngs ({
                     Edit Listing
                   </NavLink>
                   <button
+                    onClick={() => openPublishListingModal(listings.id)}
+                    className="inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-sm font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600"
+                  >
+                    Publish Listing
+                  </button>
+                  <button
                     type="button"
                     onClick={() => openDeleteListingModal(listings.id)}
                     className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
@@ -237,6 +252,14 @@ export default function HostedListngs ({
       <DeleteListing
         open={open}
         setOpen={setOpen}
+        listingId={selectedListingId}
+        setErrorMessage={setErrorMessage}
+        setErrorModalOpen={setErrorModalOpen}
+        setRunEffect={setRunEffect}
+      />
+      <PublishListingModal
+        open={publishedListingOpen}
+        setOpen={setPublishedListingOpen}
         listingId={selectedListingId}
         setErrorMessage={setErrorMessage}
         setErrorModalOpen={setErrorModalOpen}
