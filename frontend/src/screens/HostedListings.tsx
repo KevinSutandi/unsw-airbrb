@@ -232,9 +232,12 @@ export default function HostedListngs ({
                   </NavLink>
                   <button
                     onClick={() => openPublishListingModal(listings.id)}
-                    className="inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-sm font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600"
+                    disabled={listings.availability.length !== 0}
+                    className="inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-sm font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600 disabled:opacity-40"
                   >
-                    Publish Listing
+                    {listings.availability.length === 0
+                      ? 'Publish Listing'
+                      : 'Published'}
                   </button>
                   <button
                     type="button"
