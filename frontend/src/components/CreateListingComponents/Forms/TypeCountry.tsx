@@ -4,7 +4,7 @@ import { Combobox, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/24/solid';
 import { Country, CountryListProps, CountryReturn } from '../../../types/types';
 
-const CountryList: React.FC<CountryListProps> = ({ selectedCountry, setSelectedCountry }) => {
+export const CountryList: React.FC<CountryListProps> = ({ selectedCountry, setSelectedCountry }) => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [query, setQuery] = useState<string>('');
 

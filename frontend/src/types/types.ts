@@ -33,11 +33,11 @@ export type SingleDetailListing = {
   thumbnail: string;
   metadata: {
     propertyType: string; // You can specify the data type of propertyType here
-    amenities: string[]
-    numBedrooms: number
+    amenities: string[];
+    numBedrooms: number;
     beds: { [key: string]: string };
-    numBathrooms: number
-    imageList: ImageData[]
+    numBathrooms: number;
+    imageList: ImageData[];
   };
   reviews: Review[];
   availability: Availability[];
@@ -50,7 +50,7 @@ export type SingleDetailListing = {
 
 export type DetailListing = {
   listing: SingleDetailListing;
-}
+};
 
 export type HostedListingsProps = {
   isLoggedIn: boolean;
@@ -132,7 +132,7 @@ export interface NumberFormProps {
   id: string;
   value?: number;
   min?: number;
-  max?: number
+  max?: number;
   autoComplete?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
@@ -201,6 +201,57 @@ export type DeleteListingProps = {
   setRunEffect: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+export type SingleListing = PropertyListing & {
+  owner: string;
+  reviews: Review[];
+  availability: Availability[];
+  published: boolean;
+  postedOn: string;
+};
+
+export type GetSingleListingReturn = {
+  listing: SingleListing;
+};
 export interface CountryReturn {
   name: { common: string };
 }
+
+export type FormValues = {
+  listingTitle: string;
+  streetAddress: string;
+  propertyAmenities: string[];
+  city: string;
+  postalCode: string;
+  price: number;
+  numBathrooms: number;
+  beds: { [key: string]: string };
+  state: string;
+};
+
+export type EditPropertyListing = {
+  title: string;
+  address: {
+    streetAddress: string;
+    city: string;
+    state: string;
+    country: string | undefined;
+    postalCode: string;
+  };
+  price: number;
+  metadata: {
+    propertyType: string;
+    numBathrooms: number;
+    numBedrooms: number;
+    beds: { [key: string]: string };
+    propertyAmenities: string[]; // Assuming it's an array of property amenities
+  };
+};
+
+export type DateFormProps = {
+  fromValue: string;
+  toValue: string;
+  idx: number
+  removeAvailability: (idx: number) => void
+  handleDateChange: (idx: number, field: 'from' | 'to', value: string) => void
+  errorMessage: string
+};

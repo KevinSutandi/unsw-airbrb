@@ -3,7 +3,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { PropertyType, TypeListProps } from '../../../types/types';
 
-const propertyTypes: PropertyType[] = [
+export const propertyTypes: PropertyType[] = [
   { id: 'entirePlace', name: 'Entire Place' },
   { id: 'room', name: 'Room' },
   { id: 'sharedRoom', name: 'Shared Room' },

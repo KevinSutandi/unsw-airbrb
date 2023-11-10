@@ -3,7 +3,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { PropertyType, StateListProps } from '../../../types/types';
 
-const stateTypes: PropertyType[] = [
+export const stateTypes: PropertyType[] = [
   { id: 'ACT', name: 'Australian Capital Territory' },
   { id: 'NSW', name: 'New South Wales' },
   { id: 'NT', name: 'Northern Territory' },
