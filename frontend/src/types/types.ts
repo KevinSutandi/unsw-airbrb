@@ -225,6 +225,7 @@ export type FormValues = {
   price: number;
   numBathrooms: number;
   beds: { [key: string]: string };
+  state: string
 };
 
 export type EditPropertyListing = {

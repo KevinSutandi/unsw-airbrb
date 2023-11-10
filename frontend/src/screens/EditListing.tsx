@@ -131,6 +131,7 @@ export default function EditListing ({
           price: data.price,
           numBathrooms: data.metadata.numBathrooms,
           beds: data.metadata.beds,
+          state: data.address.state
         };
 
         const fetchedType = propertyTypes.find(
@@ -187,8 +188,9 @@ export default function EditListing ({
   const hasDataChanged = () => {
     const hasTypeChanged = !_.isEqual(selectedType, initialSelectedType.current)
     const hasCountryChanged = !(selectedCountry?.name === initialSelectedCountry.current?.name)
+    console.log(hasTypeChanged, selectedType, initialSelectedType.current)
 
-    return hasTypeChanged || hasCountryChanged
+    return hasTypeChanged
   }
 
   const getListingData = async (token: string) => {
@@ -283,10 +285,11 @@ export default function EditListing ({
         const newValues = { ...prev, [name]: value };
         // Set save button status
         setIsFormChanged(!_.isEqual(newValues, initialFormValues.current));
-        console.log(isFormChanged)
+        console.log(newValues, initialFormValues.current)
         return newValues;
       });
     }
+    // console.log(!isFormChanged, !isDataChanged, !isFormChanged && !isDataChanged)
   };
 
   const handleFormSubmit = (event: React.FormEvent) => {
