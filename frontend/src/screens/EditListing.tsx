@@ -4,9 +4,6 @@ import TextForm from '../components/CreateListingComponents/Forms/TextForm';
 import TypeList, {
   propertyTypes,
 } from '../components/CreateListingComponents/Forms/TypeList';
-import TypeState, {
-  stateTypes,
-} from '../components/CreateListingComponents/Forms/TypeState';
 import TypeCountry from '../components/CreateListingComponents/Forms/TypeCountry';
 import NumberForm from '../components/CreateListingComponents/Forms/NumberForm';
 import {
@@ -16,11 +13,9 @@ import {
   EditPropertyListing,
   FormValues,
   GetSingleListingReturn,
-  PropertyListing,
   PropertyType,
 } from '../types/types';
 import fileToBase64 from '../utils/fileToData';
-import { PhotoIcon } from '@heroicons/react/24/solid';
 import BedIcon from '../assets/double-bed-icon.svg';
 import { makeRequest } from '../utils/axiosHelper';
 import { getToken } from '../utils/auth';
@@ -44,16 +39,7 @@ export default function EditListing ({
   // For Country
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
 
-  // For State
-  const defaultSelectionState: PropertyType = {
-    id: '',
-    name: 'Select a State',
-  };
-  // const [selectedState, setSelectedState] = useState<PropertyType>(
-  //   defaultSelectionState
-  // );
-
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const [state, setState] = useState<BedroomFormState>({
     numBedrooms: 0,
@@ -97,7 +83,7 @@ export default function EditListing ({
   const initialSelectedType = useRef<PropertyType>();
   const initialState = useRef<BedroomFormState>();
   const initialSelectedCountry = useRef<Country>();
-  const initialSelectedImage = useRef<string>();
+  const initialSelectedThumbnail = useRef<string>();
 
   useEffect(() => {
     const token = getToken();
@@ -166,7 +152,7 @@ export default function EditListing ({
           name: data.address.country as string,
         };
         setSelectedThumbnail(data.thumbnail);
-        initialSelectedImage.current = data.thumbnail;
+        initialSelectedThumbnail.current = data.thumbnail;
 
         // Set the button to be disabled
         setIsSubmitted(false);
@@ -178,7 +164,7 @@ export default function EditListing ({
 
   useEffect(() => {
     setIsDataChanged(hasDataChanged());
-  }, [selectedType, selectedCountry]);
+  }, [selectedType, selectedCountry, selectedThumbnail]);
 
   function scrollToTop () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -189,11 +175,13 @@ export default function EditListing ({
       selectedType,
       initialSelectedType.current
     );
-    const hasCountryChanged = !(
-      selectedCountry?.name === initialSelectedCountry.current?.name
-    );
+    const hasCountryChanged =
+      selectedCountry?.name !== initialSelectedCountry.current?.name;
 
-    return hasTypeChanged;
+    const hasThumbnailChanged =
+      selectedThumbnail !== initialSelectedThumbnail.current;
+
+    return hasTypeChanged || hasThumbnailChanged || hasCountryChanged;
   };
 
   const getListingData = async (token: string) => {
@@ -209,12 +197,9 @@ export default function EditListing ({
   const handleSubmitBackend = (body: EditPropertyListing) => {
     const token = getToken() as string;
     if (token !== 'null') {
-      console.log(body);
-
       makeRequest('PUT', `listings/${id}`, { token, ...body })
-        .then((res) => {
+        .then(() => {
           setIsSubmitted(true);
-          console.log(res);
         })
         .catch((error) => {
           setErrorMessage('Error creating listing: ' + error);
@@ -253,13 +238,24 @@ export default function EditListing ({
     handleInputChange(event);
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
-      const res = await fileToBase64(file)
-      setSelectedThumbnail(res)
+      try {
+        const res = await fileToBase64(file);
+        setSelectedThumbnail(res);
+      } catch (error) {
+        if (error instanceof Error) {
+          setErrorMessage(error.message);
+        } else {
+          setErrorMessage(String(error));
+        }
+        setErrorModalOpen(true);
+      }
     }
-    setSelectedFile(file || null);
+    // setSelectedFile(file || null);
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -378,41 +374,11 @@ export default function EditListing ({
     if (hasBedErrors || hasRegularErrors) {
       // There are errors; set the errors state and scroll to the top
       setFormErrors(errors);
-      console.log(errors);
-
       scrollToTop();
     } else {
       // No errors, proceed with form submission
       setFormErrors(errors); // Clear any previous errors
       // Create the body of the request
-      // if (selectedFile !== null) {
-      //   fileToBase64(selectedFile)
-      //     .then((base64) => {
-      //       const body = {
-      //         title: formValues.listingTitle,
-      //         address: {
-      //           streetAddress: formValues.streetAddress,
-      //           city: formValues.city,
-      //           state: selectedState.name,
-      //           country: selectedCountry?.name,
-      //           postalCode: formValues.postalCode,
-      //         },
-      //         price: formValues.price,
-      //         thumbnail: base64,
-      //         metadata: {
-      //           propertyType: selectedType.name,
-      //           numBathrooms: formValues.numBathrooms,
-      //           numBedrooms: state.numBedrooms,
-      //           beds: formValues.beds,
-      //           propertyAmenities: formValues.propertyAmenities,
-      //         },
-      //       };
-      //       handleSubmitBackend(body);
-      //     })
-      //     .catch((error) => {
-      //       setErrorMessage(error.toString());
-      //       setErrorModalOpen(true);
-      //     });
       const body = {
         title: formValues.listingTitle,
         address: {
@@ -430,6 +396,7 @@ export default function EditListing ({
           beds: formValues.beds,
           propertyAmenities: formValues.propertyAmenities,
         },
+        thumbnail: selectedThumbnail,
       };
       handleSubmitBackend(body);
     }
@@ -749,23 +716,28 @@ export default function EditListing ({
                 </div>
               </div>
               <div className="col-span-full">
-                <div className='flex justify-between'>
-                <label
-                  htmlFor="thumbnail"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Thumbnail
-                </label>
-                <div>
-                  <label htmlFor='file-upload' className='cursor-pointer text-blue-500'>Change Thumbnail</label>
-                  <input
-                    id="file-upload"
-                    name="file-upload"
-                    type="file"
-                    className="sr-only"
-                    onChange={handleFileChange}
-                  />
-                </div>
+                <div className="flex justify-between">
+                  <label
+                    htmlFor="thumbnail"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Thumbnail
+                  </label>
+                  <div>
+                    <label
+                      htmlFor="file-upload"
+                      className="cursor-pointer text-blue-500 text-sm font-medium"
+                    >
+                      Change Thumbnail
+                    </label>
+                    <input
+                      id="file-upload"
+                      name="file-upload"
+                      type="file"
+                      className="sr-only"
+                      onChange={handleFileChange}
+                    />
+                  </div>
                 </div>
                 <div
                   className={`mt-2 flex justify-center rounded-lg border border-dashed ${
@@ -780,32 +752,6 @@ export default function EditListing ({
                       aria-hidden="true"
                       src={selectedThumbnail}
                     />
-                    {/* <div className="mt-4 text-sm leading-6 text-gray-600">
-                      <label
-                        htmlFor="file-upload"
-                        className="relative cursor-pointer rounded-md bg-white font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500"
-                      >
-                        <span>Upload a file</span>
-                        <input
-                          id="file-upload"
-                          name="file-upload"
-                          type="file"
-                          className="sr-only"
-                          onChange={handleFileChange}
-                        />
-                      </label>
-                    </div> */}
-                    {/* {selectedFile
-                      ? (
-                      <p className="text-xs leading-5 text-gray-600">
-                        Selected file: {selectedFile.name}
-                      </p>
-                        )
-                      : (
-                      <p className="text-xs leading-5 text-gray-600">
-                        PNG, JPG, up to 10MB
-                      </p>
-                        )} */}
                   </div>
                 </div>
                 {formErrors.uploadImage && (
