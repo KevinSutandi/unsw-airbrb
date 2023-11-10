@@ -60,7 +60,7 @@ export default function EditListing ({
     beds: [],
   });
 
-  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedThumbnail, setSelectedThumbnail] = useState('');
 
   const [formValues, setFormValues] = useState({
     listingTitle: '',
@@ -165,7 +165,7 @@ export default function EditListing ({
         initialSelectedCountry.current = {
           name: data.address.country as string,
         };
-        setSelectedImage(data.thumbnail);
+        setSelectedThumbnail(data.thumbnail);
         initialSelectedImage.current = data.thumbnail;
 
         // Set the button to be disabled
@@ -253,8 +253,12 @@ export default function EditListing ({
     handleInputChange(event);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    if (file) {
+      const res = await fileToBase64(file)
+      setSelectedThumbnail(res)
+    }
     setSelectedFile(file || null);
   };
 
@@ -745,12 +749,24 @@ export default function EditListing ({
                 </div>
               </div>
               <div className="col-span-full">
+                <div className='flex justify-between'>
                 <label
                   htmlFor="thumbnail"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   Thumbnail
                 </label>
+                <div>
+                  <label htmlFor='file-upload' className='cursor-pointer text-blue-500'>Change Thumbnail</label>
+                  <input
+                    id="file-upload"
+                    name="file-upload"
+                    type="file"
+                    className="sr-only"
+                    onChange={handleFileChange}
+                  />
+                </div>
+                </div>
                 <div
                   className={`mt-2 flex justify-center rounded-lg border border-dashed ${
                     !formErrors.uploadImage
@@ -762,7 +778,7 @@ export default function EditListing ({
                     <img
                       className="mx-auto h-full w-full text-gray-300"
                       aria-hidden="true"
-                      src={selectedImage}
+                      src={selectedThumbnail}
                     />
                     {/* <div className="mt-4 text-sm leading-6 text-gray-600">
                       <label
