@@ -80,10 +80,6 @@ export default function Dropdown () {
     ],
   });
 
-  const [selectedCategory, setSelectedCategory] = useState(
-    Object.keys(categories)[0]
-  );
-
   return (
     <div>
       <Popover className='relative'>
@@ -106,7 +102,7 @@ export default function Dropdown () {
                 >
                   {open
                     ? (
-                    <div className='fixed z-10 inset-0 bg-gray-500 bg-opacity-50 transition-opacity' />
+                    <div className='fixed z-40 inset-0 bg-gray-500 bg-opacity-50 transition-opacity' />
                       )
                     : (
                     <div />
@@ -123,20 +119,19 @@ export default function Dropdown () {
               leaveFrom='opacity-100 translate-y-0'
               leaveTo='opacity-0 translate-y-1'
             >
-              <Popover.Panel className='absolute left-1/2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl'>
+              <Popover.Panel className='absolute left-1/2 z-50 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl'>
                 <Tab.Group>
-                  <Tab.List className='flex space-x-1 rounded-xl bg-gray-500/20 p-1'>
+                  <Tab.List className='flex space-x-1 rounded-xl bg-gray-500/90 p-1'>
                     {Object.keys(categories).map((category) => (
                       <Tab
                         key={category}
-                        onClick={() => setSelectedCategory(category)}
                         className={({ selected }) =>
                           classNames(
                             'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
                             'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                             selected
                               ? 'bg-white shadow text-blue-700'
-                              : 'text-gray-900 hover:bg-white/[0.12] hover:text-white'
+                              : 'text-gray-200 hover:bg-white/[0.12] hover:text-white'
                           )
                         }
                       >

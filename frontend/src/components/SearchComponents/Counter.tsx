@@ -18,10 +18,15 @@ const Counter: React.FC<CounterProps> = ({ count, setCount, min }) => {
     setCount(count - 1);
   };
 
+  // if min has changed value and the max has lower value than min, set max to min
+  if (min && count < min) {
+    setCount(min);
+  }
+
   return (
     <div className='flex flex-row justify-center items-center gap-5'>
       <button
-        className='bg-gray-500 px-5 py-2'
+        className='bg-gray-500 px-5 py-2 rounded-full text-white hover:bg-gray-700 disabled:bg-gray-500 disabled:opacity-50'
         onClick={decrement}
         disabled={count === 0 || count === min}
       >
@@ -31,11 +36,11 @@ const Counter: React.FC<CounterProps> = ({ count, setCount, min }) => {
         name='beds'
         id='beds'
         value={count}
-        className='[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block w-full rounded-md border-0 py-1.5 text-center text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-md sm:leading-6'
+        className='block w-75 rounded-md border-0 py-1.5 text-center text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-md sm:leading-6'
         disabled
       />
       <button
-        className='bg-gray-500 px-5 py-2'
+        className='bg-gray-500 px-5 py-2 rounded-full text-white hover:bg-gray-700 disabled:bg-gray-500 disabled:opacity-50'
         onClick={increment}
         disabled={count === 50}
       >
