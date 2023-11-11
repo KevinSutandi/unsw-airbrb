@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { StarIcon } from '@heroicons/react/24/solid';
-import { getToken } from '../utils/auth';
 import {
   GetSingleListingReturn,
   HomePageProps,
@@ -30,44 +29,40 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    const getSingleListingData = async (token: string, id: number) => {
+    const getSingleListingData = async (id: number) => {
       const res = await makeRequest<GetSingleListingReturn>(
         'GET',
-        `listings/${id}`,
-        { token }
+        `listings/${id}`
       );
 
       return res;
     };
 
-    const setAvailableProducts = async (token: string, listings: Product[]) => {
+    const setAvailableProducts = async (listings: Product[]) => {
       listings.forEach(async (listing) => {
-        const res = await getSingleListingData(token, listing.id);
+        const res = await getSingleListingData(listing.id);
         if (res.data.listing.availability.length !== 0) {
           setProducts((prev) => [...prev, listing]);
         }
       });
     };
 
-    const token = getToken();
-    if (token) {
-      makeRequest<ListingsReturn>('GET', 'listings', { token })
-        .then(async (response) => {
-          const listings = response.data.listings;
-          try {
-            await setAvailableProducts(token, listings);
-          } catch (err) {
-            if (err instanceof AxiosError) {
-              console.error('Error setting available products', err.message);
-            } else {
-              console.error('Error setting available products');
-            }
+    makeRequest<ListingsReturn>('GET', 'listings')
+      .then(async (response) => {
+        const listings = response.data.listings;
+        try {
+          await setAvailableProducts(listings);
+        } catch (err) {
+          if (err instanceof AxiosError) {
+            console.error('Error setting available products', err.message);
+          } else {
+            console.error('Error setting available products');
           }
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
-    }
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
   }, []);
 
   products.forEach((product) => {
