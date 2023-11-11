@@ -41,7 +41,7 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
     const setAvailableProducts = async (listings: Product[]) => {
       listings.forEach(async (listing) => {
         const res = await getSingleListingData(listing.id);
-        if (res.data.listing.availability.length !== 0) {
+        if (res.data.listing.published) {
           setProducts((prev) => [...prev, listing]);
         }
       });
