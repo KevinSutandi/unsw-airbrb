@@ -2,7 +2,6 @@ import { Popover, Tab, Transition } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import React, { Fragment, useState } from 'react';
 import SearchForm from './SearchComponents/SearchBar';
-import Counter from './SearchComponents/Counter';
 import MinMaxCounter from './SearchComponents/MinMaxCounter';
 
 export default function Dropdown () {
@@ -13,72 +12,12 @@ export default function Dropdown () {
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(0);
 
-  const [categories, setCategories] = useState({
-    'Title / Country': [
-      {
-        id: 1,
-        title: 'Does drinking coffee make you smarter?',
-        date: '5h ago',
-        commentCount: 5,
-        shareCount: 2,
-      },
-      {
-        id: 2,
-        title: "So you've bought coffee... now what?",
-        date: '2h ago',
-        commentCount: 3,
-        shareCount: 2,
-      },
-    ],
-    'Number of Bedrooms': [
-      {
-        id: 1,
-        title: 'Is tech making coffee better or worse?',
-        date: 'Jan 7',
-        commentCount: 29,
-        shareCount: 16,
-      },
-      {
-        id: 2,
-        title: 'The most innovative things happening in coffee',
-        date: 'Mar 19',
-        commentCount: 24,
-        shareCount: 12,
-      },
-    ],
-    'Check in / Check out': [
-      {
-        id: 1,
-        title: 'Ask Me Anything: 10 answers to your questions about coffee',
-        date: '2d ago',
-        commentCount: 9,
-        shareCount: 5,
-      },
-      {
-        id: 2,
-        title: "The worst advice we've ever heard about coffee",
-        date: '4d ago',
-        commentCount: 1,
-        shareCount: 2,
-      },
-    ],
-    Price: [
-      {
-        id: 1,
-        title: 'Ask Me Anything: 10 answers to your questions about coffee',
-        date: '2d ago',
-        commentCount: 9,
-        shareCount: 5,
-      },
-      {
-        id: 2,
-        title: "The worst advice we've ever heard about coffee",
-        date: '4d ago',
-        commentCount: 1,
-        shareCount: 2,
-      },
-    ],
-  });
+  const categories = {
+    'Title / Country': 'Title / Country',
+    Bedrooms: 'Bedrooms',
+    'Check In / Check Out': 'Check In / Check Out',
+    Price: 'Price'
+  }
 
   return (
     <div>
