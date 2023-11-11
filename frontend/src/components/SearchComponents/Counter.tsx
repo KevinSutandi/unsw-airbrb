@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import NumberForm from '../Forms/NumberForm';
 
-const Counter = () => {
-  const [count, setCount] = useState(0);
+interface CounterProps {
+  count: number;
+  setCount: React.Dispatch<React.SetStateAction<number>>;
+  min?: number;
+}
 
+const Counter: React.FC<CounterProps> = ({ count, setCount, min }) => {
   const increment = () => {
     if (count === 50) return;
     setCount(count + 1);
   };
 
   const decrement = () => {
-    if (count === 0) return;
+    if (count === 0 || count === min) return;
     setCount(count - 1);
   };
 
@@ -19,7 +23,7 @@ const Counter = () => {
       <button
         className='bg-gray-500 px-5 py-2'
         onClick={decrement}
-        disabled={count === 0}
+        disabled={count === 0 || count === min}
       >
         -
       </button>

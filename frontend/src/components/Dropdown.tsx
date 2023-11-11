@@ -3,11 +3,15 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import React, { Fragment, useState } from 'react';
 import SearchForm from './SearchComponents/SearchBar';
 import Counter from './SearchComponents/Counter';
+import MinMaxCounter from './SearchComponents/MinMaxCounter';
 
-export default function Example () {
+export default function Dropdown () {
   function classNames (...classes: string[]) {
     return classes.filter(Boolean).join(' ');
   }
+
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(0);
 
   const [categories, setCategories] = useState({
     'Title / Country': [
@@ -158,17 +162,7 @@ export default function Example () {
                         'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                       )}
                     >
-                      <div className='flex items-center justify-between'>
-                        <label
-                          htmlFor='beds'
-                          className='text-sm font-medium text-gray-700'
-                        >
-                          Minimum number of beds
-                        </label>
-
-                        <Counter />
-
-                      </div>
+                      <MinMaxCounter min={min} setMin={setMin} max={max} setMax={setMax} />
                     </Tab.Panel>
 
                     <Tab.Panel
