@@ -24,16 +24,13 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    const token = getToken();
-    if (token) {
-      makeRequest<ListingsReturn>('GET', 'listings', { token })
-        .then((response) => {
-          setProducts(response.data.listings);
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
-    }
+    makeRequest<ListingsReturn>('GET', 'listings', {})
+      .then((response) => {
+        setProducts(response.data.listings);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
   }, []);
 
   products.forEach((product) => {

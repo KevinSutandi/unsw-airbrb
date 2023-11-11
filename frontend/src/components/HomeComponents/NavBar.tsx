@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, Popover } from '@headlessui/react';
 import {
   Bars3Icon,
-  MagnifyingGlassIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { getToken, setEmail, setToken } from '../../utils/auth';
@@ -14,7 +13,7 @@ import HomeProfileMenu from './HomeProfileMenu';
 import { makeRequest } from '../../utils/axiosHelper';
 import { NavBarProps } from '../../types/types';
 import axios from 'axios';
-import SearchBar from './SearchBar';
+import Dropdown from '../Dropdown';
 
 export default function NavBar ({
   isLoggedIn,
@@ -95,11 +94,15 @@ export default function NavBar ({
           >
             <span className="sr-only">AirBRB</span>
             <img className="h-10 w-auto" src={logo} alt="" />
-            <span className="mx-3 my-auto text-2xl underline underline-offset-3">
+            <span className="hidden mx-3 my-auto text-2xl underline underline-offset-3 lg:block">
               AirBRB
             </span>
           </a>
         </div>
+
+        <Popover.Group className="lg:flex lg:gap-x-12">
+          <Dropdown/>
+        </Popover.Group>
         <div className="flex lg:hidden">
           <button
             type="button"
@@ -111,12 +114,7 @@ export default function NavBar ({
           </button>
         </div>
 
-        <Popover.Group className="hidden lg:flex lg:gap-x-12">
-          <SearchBar/>
-        </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
-          <MagnifyingGlassIcon className="h-6 w-6 mr-10 hover:text-gray-500 cursor-pointer" />
-
           <HomeProfileMenu
             openLoginModal={openLoginModal}
             openRegisterModal={openRegisterModal}
@@ -156,26 +154,6 @@ export default function NavBar ({
           </div>
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  We
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Love
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  List your home
-                </a>
-              </div>
               {isLoggedIn
                 ? (
                 <div className="py-6">

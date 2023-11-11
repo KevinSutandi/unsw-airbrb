@@ -135,6 +135,7 @@ export interface NumberFormProps {
   min?: number;
   max?: number;
   autoComplete?: string;
+  disabled?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 }
