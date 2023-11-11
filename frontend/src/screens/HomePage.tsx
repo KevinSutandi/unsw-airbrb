@@ -50,8 +50,9 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
     makeRequest<ListingsReturn>('GET', 'listings')
       .then(async (response) => {
         const listings = response.data.listings;
+        const sortedListings = listings.sort((a, b) => a.title.localeCompare(b.title))
         try {
-          await setAvailableProducts(listings);
+          await setAvailableProducts(sortedListings);
         } catch (err) {
           if (err instanceof AxiosError) {
             console.error('Error setting available products', err.message);
