@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { getToken } from '../utils/auth';
-import { HomePageProps, ListingsReturn, Product } from '../types/types';
+import {
+  GetSingleListingReturn,
+  HomePageProps,
+  ListingsReturn,
+  Product,
+} from '../types/types';
+import { AxiosError } from 'axios';
 
 // Function to generate star icons based on the average rating
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
@@ -24,11 +30,39 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
+    const getSingleListingData = async (token: string, id: number) => {
+      const res = await makeRequest<GetSingleListingReturn>(
+        'GET',
+        `listings/${id}`,
+        { token }
+      );
+
+      return res;
+    };
+
+    const setAvailableProducts = async (token: string, listings: Product[]) => {
+      listings.forEach(async (listing) => {
+        const res = await getSingleListingData(token, listing.id);
+        if (res.data.listing.availability.length !== 0) {
+          setProducts((prev) => [...prev, listing]);
+        }
+      });
+    };
+
     const token = getToken();
     if (token) {
       makeRequest<ListingsReturn>('GET', 'listings', { token })
-        .then((response) => {
-          setProducts(response.data.listings);
+        .then(async (response) => {
+          const listings = response.data.listings;
+          try {
+            await setAvailableProducts(token, listings);
+          } catch (err) {
+            if (err instanceof AxiosError) {
+              console.error('Error setting available products', err.message);
+            } else {
+              console.error('Error setting available products');
+            }
+          }
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
