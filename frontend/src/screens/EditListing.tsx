@@ -763,8 +763,8 @@ export default function EditListing ({
               </div>
               <div className="col-span-full">
                 <div className="flex justify-between">
-                  <label>Property Images</label>
-                  <label htmlFor="property-img-upload">+ Add Image</label>
+                  <label className='font-medium text-sm'>Property Images</label>
+                  <label htmlFor="property-img-upload" className='text-blue-500 text-sm font-medium cursor-pointer' >+ Add Image</label>
                   <input
                     type="file"
                     id="property-img-upload"
