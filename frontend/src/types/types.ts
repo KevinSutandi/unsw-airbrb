@@ -188,6 +188,7 @@ export type PropertyListing = {
     numBathrooms: number;
     numBedrooms: number;
     beds: { [key: string]: string };
+    propertyImages: string[]
     propertyAmenities: string[]; // Assuming it's an array of property amenities
   };
 };

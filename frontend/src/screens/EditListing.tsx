@@ -86,6 +86,7 @@ export default function EditListing ({
   const initialState = useRef<BedroomFormState>();
   const initialSelectedCountry = useRef<Country>();
   const initialSelectedThumbnail = useRef<string>();
+  const initialPropertyImages = useRef<string[]>();
 
   useEffect(() => {
     const token = getToken();
@@ -156,6 +157,8 @@ export default function EditListing ({
         setSelectedThumbnail(data.thumbnail);
         initialSelectedThumbnail.current = data.thumbnail;
 
+        setPropertyImages(data.metadata.propertyImages);
+
         // Set the button to be disabled
         setIsSubmitted(false);
         setIsFormChanged(false);
@@ -166,7 +169,7 @@ export default function EditListing ({
 
   useEffect(() => {
     setIsDataChanged(hasDataChanged());
-  }, [selectedType, selectedCountry, selectedThumbnail]);
+  }, [selectedType, selectedCountry, selectedThumbnail, propertyImages]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -183,7 +186,17 @@ export default function EditListing ({
     const hasThumbnailChanged =
       selectedThumbnail !== initialSelectedThumbnail.current;
 
-    return hasTypeChanged || hasThumbnailChanged || hasCountryChanged;
+    const hasPropertyImagesChanged = !_.isEqual(
+      propertyImages,
+      initialPropertyImages.current
+    );
+
+    return (
+      hasTypeChanged ||
+      hasThumbnailChanged ||
+      hasCountryChanged ||
+      hasPropertyImagesChanged
+    );
   };
 
   const getListingData = async (token: string) => {
@@ -418,6 +431,7 @@ export default function EditListing ({
           numBedrooms: state.numBedrooms,
           beds: formValues.beds,
           propertyAmenities: formValues.propertyAmenities,
+          propertyImages,
         },
         thumbnail: selectedThumbnail,
       };
@@ -767,7 +781,12 @@ export default function EditListing ({
                   } px-6 py-10`}
                 >
                   {propertyImages.map((image, idx) => (
-                    <PropertyImage key={idx} src={image} idx={idx} deletePropertyImage={deletePropertyImage}/>
+                    <PropertyImage
+                      key={idx}
+                      src={image}
+                      idx={idx}
+                      deletePropertyImage={deletePropertyImage}
+                    />
                   ))}
                 </div>
               </div>
