@@ -19,13 +19,13 @@ export default function MinMaxCounter ({
       <div className='flex items-center justify-between'>
         <label
           htmlFor='min'
-          className='text-sm font-medium text-gray-700 mr-3 sm:hidden'
+          className='text-sm font-medium text-gray-700 mr-3 lg:hidden'
         >
           Minimum
         </label>
         <label
           htmlFor='min'
-          className='hidden text-sm font-medium text-gray-700 mr-3 sm:block'
+          className='hidden text-md font-medium text-gray-700 mr-3 lg:block'
         >
           Minimum number of beds
         </label>
@@ -35,20 +35,21 @@ export default function MinMaxCounter ({
       <div className='flex items-center mt-10 justify-between'>
         <label
           htmlFor='max'
-          className='text-sm font-medium text-gray-700 mr-3 sm:hidden'
+          className='text-sm font-medium text-gray-700 mr-3 lg:hidden'
         >
           Maximum
         </label>
         <label
           htmlFor='max'
-          className='hidden text-sm font-medium text-gray-700 mr-3 sm:block'
+          className='hidden text-md font-medium text-gray-700 mr-3 lg:block'
         >
           Maximum number of beds
         </label>
 
         <Counter count={max} setCount={setMax} min={min} />
       </div>
-      <button className='w-full mt-8 mb-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md'>
+      <hr className='my-5 border-gray-200' />
+      <button className='w-full mb-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md'>
         Search
       </button>
     </>

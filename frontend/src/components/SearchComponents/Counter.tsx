@@ -36,7 +36,7 @@ const Counter: React.FC<CounterProps> = ({ count, setCount, min }) => {
         name='beds'
         id='beds'
         value={count}
-        className='block w-75 rounded-md border-0 py-1.5 text-center text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-md sm:leading-6'
+        className='block w-10 rounded-md border-0 py-1.5 text-center text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 lg:w-64 sm:text-md sm:leading-6'
         disabled
       />
       <button

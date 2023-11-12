@@ -78,6 +78,7 @@ export default function NavBar ({
   };
 
   const navigateHostedListings = () => {
+    setMobileMenuOpen(false)
     navigate('/listings');
   };
 

@@ -3,6 +3,9 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import React, { Fragment, useState } from 'react';
 import SearchForm from './SearchComponents/SearchBar';
 import MinMaxCounter from './SearchComponents/MinMaxCounter';
+import { differenceInCalendarDays, startOfToday } from 'date-fns';
+import CheckInOut from './SearchComponents/CheckInOut';
+import NumberForm from './Forms/NumberForm';
 
 export default function Dropdown () {
   function classNames (...classes: string[]) {
@@ -11,13 +14,23 @@ export default function Dropdown () {
 
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(0);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+  const today = startOfToday();
+  const [checkIn, setCheckIn] = useState<Date>(today);
+  const [checkOut, setCheckOut] = useState<Date>(today);
+
+  /**
+   * The difference in calendar days between checkOut and checkIn dates.
+   */
+  const difference = differenceInCalendarDays(checkOut, checkIn);
 
   const categories = {
     'Title / Country': 'Title / Country',
     Bedrooms: 'Bedrooms',
     'Check In / Check Out': 'Check In / Check Out',
-    Price: 'Price'
-  }
+    Price: 'Price',
+  };
 
   return (
     <div>
@@ -96,7 +109,12 @@ export default function Dropdown () {
                         'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                       )}
                     >
-                      <MinMaxCounter min={min} setMin={setMin} max={max} setMax={setMax} />
+                      <MinMaxCounter
+                        min={min}
+                        setMin={setMin}
+                        max={max}
+                        setMax={setMax}
+                      />
                     </Tab.Panel>
 
                     <Tab.Panel
@@ -106,7 +124,13 @@ export default function Dropdown () {
                         'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                       )}
                     >
-                      <div>Hello this is Check in / Check Out</div>
+                      <CheckInOut
+                        checkIn={checkIn}
+                        setCheckIn={setCheckIn}
+                        checkOut={checkOut}
+                        setCheckOut={setCheckOut}
+                        difference={difference}
+                      />
                     </Tab.Panel>
 
                     <Tab.Panel
@@ -116,7 +140,46 @@ export default function Dropdown () {
                         'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                       )}
                     >
-                      <div>Hello this is price</div>
+                      <div className='flex flex-col gap-5'>
+                        <div className='flex flex-row items-center justify-between'>
+                          Minimum Price
+                          <div className='flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 sm:w-64'>
+                            <span className='flex select-none items-center pl-3 text-gray-500 sm:text-sm'>
+                              $
+                            </span>
+                            <NumberForm
+                              name='minPrice'
+                              id='minPrice'
+                              min={0}
+                              onChange={(event) => {
+                                setMinPrice(parseInt(event.target.value));
+                              }}
+                              className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
+                            />
+                          </div>
+                        </div>
+                        <div className='flex flex-row items-center justify-between'>
+                          Maximum Price
+                          <div className='flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 sm:w-64'>
+                            <span className='flex select-none items-center pl-3 text-gray-500 sm:text-sm'>
+                              $
+                            </span>
+                            <NumberForm
+                              name='maxPrice'
+                              id='maxPrice'
+                              min={minPrice}
+                              onChange={(event) => {
+                                setMaxPrice(parseInt(event.target.value));
+                              }}
+                              className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <hr className='my-5 border-gray-200' />
+                      <button className='w-full mb-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md'>
+                        Search
+                      </button>
                     </Tab.Panel>
                   </Tab.Panels>
                 </Tab.Group>
