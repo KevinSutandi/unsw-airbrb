@@ -270,6 +270,7 @@ export default function CreateListing ({
                 numBedrooms: state.numBedrooms,
                 beds: formValues.beds,
                 propertyAmenities: formValues.propertyAmenities,
+                propertyImages: []
               },
             };
             handleSubmitBackend(body);

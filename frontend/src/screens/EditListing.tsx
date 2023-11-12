@@ -21,6 +21,7 @@ import { makeRequest } from '../utils/axiosHelper';
 import { getToken } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
+import PropertyImage from '../components/CreateListingComponents/Forms/PropertyImage';
 
 export default function EditListing ({
   setErrorMessage,
@@ -46,6 +47,8 @@ export default function EditListing ({
 
   const [selectedThumbnail, setSelectedThumbnail] = useState('');
 
+  const [propertyImages, setPropertyImages] = useState<string[]>([]);
+
   const [formValues, setFormValues] = useState({
     listingTitle: '',
     streetAddress: '',
@@ -55,6 +58,7 @@ export default function EditListing ({
     state: '',
     price: 0,
     numBathrooms: 0,
+    propertyImages: [],
     beds: {} as { [key: string]: string },
   });
 
@@ -82,6 +86,7 @@ export default function EditListing ({
   const initialState = useRef<BedroomFormState>();
   const initialSelectedCountry = useRef<Country>();
   const initialSelectedThumbnail = useRef<string>();
+  const initialPropertyImages = useRef<string[]>();
 
   useEffect(() => {
     const token = getToken();
@@ -152,6 +157,8 @@ export default function EditListing ({
         setSelectedThumbnail(data.thumbnail);
         initialSelectedThumbnail.current = data.thumbnail;
 
+        setPropertyImages(data.metadata.propertyImages);
+
         // Set the button to be disabled
         setIsSubmitted(false);
         setIsFormChanged(false);
@@ -162,7 +169,7 @@ export default function EditListing ({
 
   useEffect(() => {
     setIsDataChanged(hasDataChanged());
-  }, [selectedType, selectedCountry, selectedThumbnail]);
+  }, [selectedType, selectedCountry, selectedThumbnail, propertyImages]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -179,7 +186,17 @@ export default function EditListing ({
     const hasThumbnailChanged =
       selectedThumbnail !== initialSelectedThumbnail.current;
 
-    return hasTypeChanged || hasThumbnailChanged || hasCountryChanged;
+    const hasPropertyImagesChanged = !_.isEqual(
+      propertyImages,
+      initialPropertyImages.current
+    );
+
+    return (
+      hasTypeChanged ||
+      hasThumbnailChanged ||
+      hasCountryChanged ||
+      hasPropertyImagesChanged
+    );
   };
 
   const getListingData = async (token: string) => {
@@ -254,6 +271,30 @@ export default function EditListing ({
       }
     }
     // setSelectedFile(file || null);
+  };
+
+  const deletePropertyImage = (idxToRemove: number) => {
+    setPropertyImages((prev) => prev.filter((_, idx) => idx !== idxToRemove));
+  };
+
+  const handlePropertyImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      try {
+        const res = await fileToBase64(file);
+        // setSelectedThumbnail(res);
+        setPropertyImages((prev) => [...prev, res]);
+      } catch (error) {
+        if (error instanceof Error) {
+          setErrorMessage(error.message);
+        } else {
+          setErrorMessage(String(error));
+        }
+        setErrorModalOpen(true);
+      }
+    }
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -390,6 +431,7 @@ export default function EditListing ({
           numBedrooms: state.numBedrooms,
           beds: formValues.beds,
           propertyAmenities: formValues.propertyAmenities,
+          propertyImages,
         },
         thumbnail: selectedThumbnail,
       };
@@ -399,15 +441,15 @@ export default function EditListing ({
   return (
     <>
       <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24 relative">
-      <div className='mb-2 absolute top-0 left-[-30px]'>
-        <span
-          className="cursor-pointer hover:underline hover:font-bold"
-          onClick={() => navigate('/listings')}
-        >
-          my listings
-        </span>
-        /<span>edit</span>
-      </div>
+        <div className="mb-2 absolute top-0 left-[-30px]">
+          <span
+            className="cursor-pointer hover:underline hover:font-bold"
+            onClick={() => navigate('/listings')}
+          >
+            my listings
+          </span>
+          /<span>edit</span>
+        </div>
         <div className="flex flex-row justify-between">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             Edit Listing
@@ -716,6 +758,35 @@ export default function EditListing ({
                         />
                       </div>
                     </div>
+                  ))}
+                </div>
+              </div>
+              <div className="col-span-full">
+                <div className="flex justify-between">
+                  <label className='font-medium text-sm'>Property Images</label>
+                  <label htmlFor="property-img-upload" className='text-blue-500 text-sm font-medium cursor-pointer' >+ Add Image</label>
+                  <input
+                    type="file"
+                    id="property-img-upload"
+                    name="property-img-upload"
+                    className="sr-only"
+                    onChange={handlePropertyImageUpload}
+                  />
+                </div>
+                <div
+                  className={`mt-2 justify-center grid grid-cols-3 gap-3 rounded-lg border border-dashed overflow-hidden ${
+                    !formErrors.uploadImage
+                      ? ' border-gray-900/25'
+                      : 'border-red-600'
+                  } px-6 py-10`}
+                >
+                  {propertyImages.map((image, idx) => (
+                    <PropertyImage
+                      key={idx}
+                      src={image}
+                      idx={idx}
+                      deletePropertyImage={deletePropertyImage}
+                    />
                   ))}
                 </div>
               </div>
