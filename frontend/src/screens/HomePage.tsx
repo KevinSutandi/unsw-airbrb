@@ -8,6 +8,7 @@ import {
   Product,
 } from '../types/types';
 import { AxiosError } from 'axios';
+import { NavLink } from 'react-router-dom';
 
 // Function to generate star icons based on the average rating
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
@@ -50,7 +51,9 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
     makeRequest<ListingsReturn>('GET', 'listings')
       .then(async (response) => {
         const listings = response.data.listings;
-        const sortedListings = listings.sort((a, b) => a.title.localeCompare(b.title))
+        const sortedListings = listings.sort((a, b) =>
+          a.title.localeCompare(b.title)
+        );
         try {
           await setAvailableProducts(sortedListings);
         } catch (err) {
@@ -94,7 +97,7 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
 
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {products.map((product) => (
-            <div key={product.id} className="group relative">
+            <NavLink to={`/listings/view/${product.id}`} key={product.id} className="group relative">
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                 <img
                   src={product.thumbnail}
@@ -125,7 +128,7 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
                   ({product.numReviews})
                 </p>
               </div>
-            </div>
+            </NavLink>
           ))}
         </div>
       </div>

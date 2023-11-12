@@ -7,6 +7,7 @@ import HostedListings from './screens/HostedListings';
 import ErrorModal from './components/ErrorModal';
 import CreateListing from './screens/CreateListing';
 import EditListing from './screens/EditListing';
+import ViewListing from './screens/ViewListing';
 
 function App () {
   document.title = 'AirBRB';
@@ -56,6 +57,7 @@ function App () {
               />
             }
           />
+          <Route path="/listings/view/:listingId" element={<ViewListing />} />
         </Routes>
       </Router>
 
