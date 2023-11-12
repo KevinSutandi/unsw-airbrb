@@ -188,6 +188,7 @@ export type PropertyListing = {
     numBathrooms: number;
     numBedrooms: number;
     beds: { [key: string]: string };
+    propertyImages: string[]
     propertyAmenities: string[]; // Assuming it's an array of property amenities
   };
 };
@@ -250,8 +251,14 @@ export type EditPropertyListing = {
 export type DateFormProps = {
   fromValue: string;
   toValue: string;
+  idx: number;
+  removeAvailability: (idx: number) => void;
+  handleDateChange: (idx: number, field: 'from' | 'to', value: string) => void;
+  errorMessage: string;
+};
+
+export type PropertyImageProps = {
+  src: string;
   idx: number
-  removeAvailability: (idx: number) => void
-  handleDateChange: (idx: number, field: 'from' | 'to', value: string) => void
-  errorMessage: string
+  deletePropertyImage: (idxToRemove: number) => void
 };

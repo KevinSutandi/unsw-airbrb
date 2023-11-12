@@ -5,7 +5,7 @@ import { RequestOptions } from '../types/types';
 export const makeRequest = async <T> (
   method: Method,
   path: string,
-  options: RequestOptions
+  options: RequestOptions = {}
 ): Promise<AxiosResponse<T>> => {
   try {
     const { token, ...others } = options;

@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { StarIcon } from '@heroicons/react/24/solid';
-import { getToken } from '../utils/auth';
-import { HomePageProps, ListingsReturn, Product } from '../types/types';
+import {
+  GetSingleListingReturn,
+  HomePageProps,
+  ListingsReturn,
+  Product,
+} from '../types/types';
+import { AxiosError } from 'axios';
 
 // Function to generate star icons based on the average rating
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
@@ -24,16 +29,41 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    const token = getToken();
-    if (token) {
-      makeRequest<ListingsReturn>('GET', 'listings', { token })
-        .then((response) => {
-          setProducts(response.data.listings);
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
-    }
+    const getSingleListingData = async (id: number) => {
+      const res = await makeRequest<GetSingleListingReturn>(
+        'GET',
+        `listings/${id}`
+      );
+
+      return res;
+    };
+
+    const setAvailableProducts = async (listings: Product[]) => {
+      listings.forEach(async (listing) => {
+        const res = await getSingleListingData(listing.id);
+        if (res.data.listing.published) {
+          setProducts((prev) => [...prev, listing]);
+        }
+      });
+    };
+
+    makeRequest<ListingsReturn>('GET', 'listings')
+      .then(async (response) => {
+        const listings = response.data.listings;
+        const sortedListings = listings.sort((a, b) => a.title.localeCompare(b.title))
+        try {
+          await setAvailableProducts(sortedListings);
+        } catch (err) {
+          if (err instanceof AxiosError) {
+            console.error('Error setting available products', err.message);
+          } else {
+            console.error('Error setting available products');
+          }
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
   }, []);
 
   products.forEach((product) => {
