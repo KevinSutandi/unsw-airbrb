@@ -3,7 +3,6 @@ import { useParams } from 'react-router';
 import { makeRequest } from '../utils/axiosHelper';
 import { GetSingleListingReturn } from '../types/types';
 import { StarIcon } from '@heroicons/react/24/solid';
-import BedIcon from '../assets/double-bed-icon.svg';
 import BedCard from '../components/ViewListingComponents/BedCard';
 
 export default function ViewListing () {
@@ -22,6 +21,8 @@ export default function ViewListing () {
     thumbnail: '',
     propertyImages: [] as string[],
   });
+
+  const [featuredImg, setFeaturedImg] = useState('');
 
   const fetchListingDetails = async () => {
     const res = await makeRequest<GetSingleListingReturn>(
@@ -50,6 +51,7 @@ export default function ViewListing () {
         thumbnail: listing.thumbnail,
         propertyImages: listing.metadata.propertyImages,
       }));
+      setFeaturedImg(listing.thumbnail);
     };
 
     populateDetails();
@@ -62,6 +64,13 @@ export default function ViewListing () {
     );
   };
 
+  const handleClickPropertyImg = (
+    event: React.MouseEvent<HTMLImageElement>
+  ) => {
+    const image = event.currentTarget.src;
+    setFeaturedImg(image)
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24">
       <h3 className="font-bold text-4xl">{listingDetails.listingTitle}</h3>
@@ -69,7 +78,7 @@ export default function ViewListing () {
         <div>
           <img
             className="h-auto max-w-full rounded-lg"
-            src={listingDetails.thumbnail}
+            src={featuredImg}
             alt=""
           />
         </div>
@@ -78,12 +87,16 @@ export default function ViewListing () {
             <img
               className="h-auto max-w-full rounded-lg"
               src={listingDetails.thumbnail}
+              onClick={handleClickPropertyImg}
             />
           </button>
           {listingDetails.propertyImages.map((image, idx) => (
-            <button key={idx}>
-              <img className="h-auto max-w-full rounded-lg" src={image} />
-            </button>
+            <img
+              className="h-auto max-w-full rounded-lg cursor-pointer"
+              src={image}
+              key={idx}
+              onClick={handleClickPropertyImg}
+            />
           ))}
         </div>
       </div>
@@ -101,7 +114,7 @@ export default function ViewListing () {
         </div>
       </div>
       <section>
-        <h3 className='text-2xl font-medium'>Bedrooms</h3>
+        <h3 className="text-2xl font-medium">Bedrooms</h3>
         {Object.entries(listingDetails.beds).map(([key, value]) => (
           <BedCard key={key} bedroomName={key} bedTotal={value} />
         ))}
