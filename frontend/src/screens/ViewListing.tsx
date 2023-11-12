@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { makeRequest } from '../utils/axiosHelper';
 import { GetSingleListingReturn } from '../types/types';
+import { StarIcon } from '@heroicons/react/24/solid';
 
 export default function ViewListing () {
   const { listingId } = useParams();
@@ -54,18 +55,46 @@ export default function ViewListing () {
 
   const countBeds = (beds: { [key: string]: string }) => {
     return Object.values(beds).reduce(
-      (count, value) => count + parseInt(value), 0
+      (count, value) => count + parseInt(value),
+      0
     );
   };
 
   return (
-    <div>
-      <div>{listingDetails.listingTitle}</div>
-      <img src={listingDetails.thumbnail} />
-      <div>
+    <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24">
+      <h3 className="font-bold text-4xl">{listingDetails.listingTitle}</h3>
+      <div className="grid gap-4">
+        <div>
+          <img
+            className="h-auto max-w-full rounded-lg"
+            src={listingDetails.thumbnail}
+            alt=""
+          />
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+          <button>
+            <img
+              className="h-auto max-w-full rounded-lg"
+              src={listingDetails.thumbnail}
+            />
+          </button>
+          {listingDetails.propertyImages.map((image, idx) => (
+            <button key={idx}>
+              <img className="h-auto max-w-full rounded-lg" src={image} />
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="text-md font-medium">
         {Object.keys(listingDetails.beds).length} bedroom •{' '}
         {listingDetails.numBathrooms} bathroom •{' '}
         {countBeds(listingDetails.beds)} bed
+      </div>
+      <div className="w-full flex items-center gap-3">
+        <StarIcon className="w-5 h-5" />
+        <div className='flex gap-1'>
+          <div>5</div><div>•</div><div className='underline'> 90 reviews</div>
+        </div>
       </div>
     </div>
   );
