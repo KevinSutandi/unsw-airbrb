@@ -68,7 +68,7 @@ export default function ViewListing () {
     event: React.MouseEvent<HTMLImageElement>
   ) => {
     const image = event.currentTarget.src;
-    setFeaturedImg(image)
+    setFeaturedImg(image);
   };
 
   return (
@@ -83,22 +83,23 @@ export default function ViewListing () {
           />
         </div>
         <div className="grid grid-cols-4 gap-4">
-          <button>
+          <button className='hover: bg-gray-500 rounded-lg'>
             <img
-              className="h-auto max-w-full rounded-lg"
+              className="h-auto max-w-full rounded-lg hover:bg-gray-100 hover:opacity-25"
               src={listingDetails.thumbnail}
               onClick={handleClickPropertyImg}
-              alt='property image'
+              alt="property image"
             />
           </button>
           {listingDetails.propertyImages.map((image, idx) => (
-            <img
-              className="h-auto max-w-full rounded-lg cursor-pointer"
-              src={image}
-              key={idx}
-              onClick={handleClickPropertyImg}
-              alt='property image'
-            />
+            <button key={idx} className='hover: bg-gray-500 rounded-lg'>
+              <img
+                className="h-auto max-w-full rounded-lg cursor-pointer hover:opacity-25"
+                src={image}
+                onClick={handleClickPropertyImg}
+                alt="property image"
+              />
+            </button>
           ))}
         </div>
       </div>
