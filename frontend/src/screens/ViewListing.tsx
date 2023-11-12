@@ -3,6 +3,8 @@ import { useParams } from 'react-router';
 import { makeRequest } from '../utils/axiosHelper';
 import { GetSingleListingReturn } from '../types/types';
 import { StarIcon } from '@heroicons/react/24/solid';
+import BedIcon from '../assets/double-bed-icon.svg';
+import BedCard from '../components/ViewListingComponents/BedCard';
 
 export default function ViewListing () {
   const { listingId } = useParams();
@@ -92,10 +94,18 @@ export default function ViewListing () {
       </div>
       <div className="w-full flex items-center gap-3">
         <StarIcon className="w-5 h-5" />
-        <div className='flex gap-1'>
-          <div>5</div><div>•</div><div className='underline'> 90 reviews</div>
+        <div className="flex gap-1">
+          <div>5</div>
+          <div>•</div>
+          <div className="underline"> 90 reviews</div>
         </div>
       </div>
+      <section>
+        <h3 className='text-2xl font-medium'>Bedrooms</h3>
+        {Object.entries(listingDetails.beds).map(([key, value]) => (
+          <BedCard key={key} bedroomName={key} bedTotal={value} />
+        ))}
+      </section>
     </div>
   );
 }
