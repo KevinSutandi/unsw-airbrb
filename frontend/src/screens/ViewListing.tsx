@@ -79,7 +79,7 @@ export default function ViewListing () {
           <img
             className="h-auto max-w-full rounded-lg"
             src={featuredImg}
-            alt=""
+            alt="featured image"
           />
         </div>
         <div className="grid grid-cols-4 gap-4">
@@ -88,6 +88,7 @@ export default function ViewListing () {
               className="h-auto max-w-full rounded-lg"
               src={listingDetails.thumbnail}
               onClick={handleClickPropertyImg}
+              alt='property image'
             />
           </button>
           {listingDetails.propertyImages.map((image, idx) => (
@@ -96,6 +97,7 @@ export default function ViewListing () {
               src={image}
               key={idx}
               onClick={handleClickPropertyImg}
+              alt='property image'
             />
           ))}
         </div>
