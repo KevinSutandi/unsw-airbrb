@@ -1,5 +1,5 @@
 import React from 'react';
-import { PropertyImageProps } from '../../../types/types';
+import { PropertyImageProps } from '../../types/types';
 import { TrashIcon } from '@heroicons/react/24/solid';
 
 export default function PropertyImage ({
