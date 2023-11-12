@@ -25,9 +25,7 @@ const generateStarIcons = (averageStars: number): JSX.Element[] => {
   return starIcons;
 };
 
-export default function HomePage ({ isLoggedIn }: HomePageProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-
+export default function HomePage ({ isLoggedIn, products, setProducts }: HomePageProps) {
   useEffect(() => {
     const getSingleListingData = async (id: number) => {
       const res = await makeRequest<GetSingleListingReturn>(
@@ -46,24 +44,28 @@ export default function HomePage ({ isLoggedIn }: HomePageProps) {
         }
       });
     };
-
-    makeRequest<ListingsReturn>('GET', 'listings')
-      .then(async (response) => {
-        const listings = response.data.listings;
-        const sortedListings = listings.sort((a, b) => a.title.localeCompare(b.title))
-        try {
-          await setAvailableProducts(sortedListings);
-        } catch (err) {
-          if (err instanceof AxiosError) {
-            console.error('Error setting available products', err.message);
-          } else {
-            console.error('Error setting available products');
+    if (products.length === 0) {
+      makeRequest<ListingsReturn>('GET', 'listings')
+        .then(async (response) => {
+          const listings = response.data.listings;
+          const sortedListings = listings.sort((a, b) => a.title.localeCompare(b.title))
+          try {
+            await setAvailableProducts(sortedListings);
+          } catch (err) {
+            if (err instanceof AxiosError) {
+              console.error('Error setting available products', err.message);
+            } else {
+              console.error('Error setting available products');
+            }
           }
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    } else {
+      const sortedListings = products.sort((a, b) => a.title.localeCompare(b.title))
+      setAvailableProducts(sortedListings);
+    }
   }, []);
 
   products.forEach((product) => {

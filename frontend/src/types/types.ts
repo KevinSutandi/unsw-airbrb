@@ -70,6 +70,8 @@ export type ListingsReturn = {
 
 export type HomePageProps = {
   isLoggedIn: boolean;
+  products: Product[];
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
 };
 
 export type ErrorModalsProps = {
@@ -83,6 +85,8 @@ export type NavBarProps = {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  product: Product[];
+  setProduct: React.Dispatch<React.SetStateAction<Product[]>>;
 };
 
 export type HomeProfileMenuProps = {

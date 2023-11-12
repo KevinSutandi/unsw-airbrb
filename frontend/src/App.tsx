@@ -7,6 +7,7 @@ import HostedListings from './screens/HostedListings';
 import ErrorModal from './components/ErrorModal';
 import CreateListing from './screens/CreateListing';
 import EditListing from './screens/EditListing';
+import { Product } from './types/types';
 
 function App () {
   document.title = 'AirBRB';
@@ -15,6 +16,7 @@ function App () {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
 
   return (
     <>
@@ -24,9 +26,11 @@ function App () {
           setIsLoggedIn={setIsLoggedIn}
           setErrorMessage={setErrorMessage}
           setErrorModalOpen={setErrorModalOpen}
+          product={products}
+          setProduct={setProducts}
         />
         <Routes>
-          <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} />} />
+          <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} products={products} setProducts={setProducts} />} />
           <Route
             path="/listings"
             element={

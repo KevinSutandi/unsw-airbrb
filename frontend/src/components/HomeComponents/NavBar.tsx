@@ -20,6 +20,8 @@ export default function NavBar ({
   setIsLoggedIn,
   setErrorModalOpen,
   setErrorMessage,
+  product,
+  setProduct
 }: NavBarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -102,7 +104,7 @@ export default function NavBar ({
         </div>
 
         <Popover.Group className="lg:flex lg:gap-x-12">
-          <Dropdown/>
+          <Dropdown products={product} setProducts={setProduct}/>
         </Popover.Group>
         <div className="flex lg:hidden">
           <button
