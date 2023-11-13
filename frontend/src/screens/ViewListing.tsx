@@ -43,7 +43,6 @@ export default function ViewListing () {
       setListingDetails((prev) => ({
         ...prev,
         listingTitle: listing.title,
-        // streetAddress: listing.address.streetAddress,
         propertyAmenities: listing.metadata.propertyAmenities,
         address: {
           city: listing.address.city,
@@ -78,7 +77,7 @@ export default function ViewListing () {
   };
 
   return (
-    <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24">
+    <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24 w-full">
       <h3 className="font-bold text-4xl">{listingDetails.listingTitle}</h3>
       <div className="grid gap-4">
         <div>
@@ -147,7 +146,7 @@ export default function ViewListing () {
             </ul>
           </section>
         </div>
-        <BookingModal />
+        <BookingModal price={listingDetails.price}/>
       </section>
     </div>
   );
