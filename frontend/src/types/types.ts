@@ -28,7 +28,13 @@ export type SingleDetailListing = {
   id: number;
   title: string;
   owner: string;
-  address: unknown;
+  address: {
+    streetAddress: string;
+    city: string;
+    state: string;
+    country: string;
+    postalCode: string;
+  };
   price: number;
   thumbnail: string;
   metadata: {
@@ -70,6 +76,10 @@ export type ListingsReturn = {
 
 export type HomePageProps = {
   isLoggedIn: boolean;
+  products: SingleDetailListing[];
+  setProducts: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>;
+  isFiltered: boolean;
+  setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type ErrorModalsProps = {
@@ -83,6 +93,9 @@ export type NavBarProps = {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  product: SingleDetailListing[];
+  setProduct: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>;
+  setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type HomeProfileMenuProps = {
@@ -123,6 +136,7 @@ export interface TextFormProps {
   name: string;
   id: string;
   value?: string;
+  placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Add this line
   autoComplete?: string;
 }
@@ -134,6 +148,7 @@ export interface NumberFormProps {
   min?: number;
   max?: number;
   autoComplete?: string;
+  disabled?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 }
@@ -188,7 +203,7 @@ export type PropertyListing = {
     numBathrooms: number;
     numBedrooms: number;
     beds: { [key: string]: string };
-    propertyImages: string[];
+    propertyImages: string[];;
     propertyAmenities: string[]; // Assuming it's an array of property amenities
   };
 };
@@ -267,3 +282,8 @@ export type BedCardProps = {
   bedroomName: string;
   bedTotal: string;
 };
+
+export interface sortingOption {
+  name: string;
+  value: string;
+}

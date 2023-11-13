@@ -11,6 +11,7 @@ import ViewListing from './screens/ViewListing';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import { SingleDetailListing } from './types/types';
 
 function App () {
   document.title = 'AirBRB';
@@ -19,6 +20,8 @@ function App () {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [products, setProducts] = useState<SingleDetailListing[]>([]);
+  const [isFiltered, setIsFiltered] = useState(false);
 
   return (
     <>
@@ -28,9 +31,12 @@ function App () {
           setIsLoggedIn={setIsLoggedIn}
           setErrorMessage={setErrorMessage}
           setErrorModalOpen={setErrorModalOpen}
+          product={products}
+          setProduct={setProducts}
+          setIsFiltered={setIsFiltered}
         />
         <Routes>
-          <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} />} />
+          <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} products={products} setProducts={setProducts} isFiltered={isFiltered} setIsFiltered={setIsFiltered}/>} />
           <Route
             path="/listings"
             element={

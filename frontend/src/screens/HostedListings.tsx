@@ -175,7 +175,7 @@ export default function HostedListngs ({
             {myListings.map((listings) => (
               <li
                 key={listings.id}
-                className="flex justify-between gap-x-6 py-5"
+                className="flex flex-col gap-3 justify-between gap-x-6 py-5 sm:flex-row"
               >
                 <div className="flex min-w-0 gap-x-4">
                   <img
@@ -222,7 +222,7 @@ export default function HostedListngs ({
                     </p>
                   </div>
                 </div>
-                <div className="hidden shrink-0 gap-3 sm:flex sm:justify-center sm:flex-col sm:items-end">
+                <div className="flex flex-row   shrink-0 gap-3 justify-center items-end sm:flex-col">
                   <NavLink
                     to={`/listings/edit/${listings.id}`}
                     type="button"

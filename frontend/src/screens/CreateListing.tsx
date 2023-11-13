@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import TextForm from '../components/CreateListingComponents/Forms/TextForm';
-import NumberForm from '../components/CreateListingComponents/Forms/NumberForm';
+import TextForm from '../components/Forms/TextForm';
+import NumberForm from '../components/Forms/NumberForm';
 import BedIcon from '../assets/double-bed-icon.svg';
 import { PhotoIcon } from '@heroicons/react/24/solid';
 import {
@@ -10,8 +10,8 @@ import {
   PropertyListing,
   PropertyType,
 } from '../types/types';
-import TypeList from '../components/CreateListingComponents/Forms/TypeList';
-import TypeCountry from '../components/CreateListingComponents/Forms/TypeCountry';
+import TypeList from '../components/Forms/TypeList';
+import TypeCountry from '../components/Forms/TypeCountry';
 import fileToBase64 from '../utils/fileToData';
 import { makeRequest } from '../utils/axiosHelper';
 import { useNavigate } from 'react-router-dom';
@@ -491,7 +491,7 @@ export default function CreateListing ({
                     id='price'
                     min={1}
                     onChange={(event) => handleInputChange(event)}
-                    className='[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
+                    className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
                   />
                 </div>
                 {formErrors.price && (
@@ -580,7 +580,7 @@ export default function CreateListing ({
                           id={bed.id}
                           min={0}
                           max={50}
-                          className={`[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                          className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                             formErrors.beds[bed.id] === 'error'
                               ? 'ring-red-600'
                               : 'ring-gray-300'

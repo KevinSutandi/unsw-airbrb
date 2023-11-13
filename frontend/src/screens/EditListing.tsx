@@ -1,11 +1,9 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
-import TextForm from '../components/CreateListingComponents/Forms/TextForm';
-import TypeList, {
-  propertyTypes,
-} from '../components/CreateListingComponents/Forms/TypeList';
-import TypeCountry from '../components/CreateListingComponents/Forms/TypeCountry';
-import NumberForm from '../components/CreateListingComponents/Forms/NumberForm';
+import TextForm from '../components/Forms/TextForm';
+import TypeList, { propertyTypes } from '../components/Forms/TypeList';
+import TypeCountry from '../components/Forms/TypeCountry';
+import NumberForm from '../components/Forms/NumberForm';
 import {
   BedroomFormState,
   Country,
@@ -21,7 +19,7 @@ import { makeRequest } from '../utils/axiosHelper';
 import { getToken } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
-import PropertyImage from '../components/CreateListingComponents/Forms/PropertyImage';
+import PropertyImage from '../components/Forms/PropertyImage';
 
 export default function EditListing ({
   setErrorMessage,
@@ -440,263 +438,263 @@ export default function EditListing ({
   };
   return (
     <>
-      <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24 relative">
-        <div className="mb-2 absolute top-0 left-[-30px]">
+      <div className='mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24 relative'>
+        <div className='mb-2 absolute top-0 left-[-30px]'>
           <span
-            className="cursor-pointer hover:underline hover:font-bold"
+            className='cursor-pointer hover:underline hover:font-bold'
             onClick={() => navigate('/listings')}
           >
             my listings
           </span>
           /<span>edit</span>
         </div>
-        <div className="flex flex-row justify-between">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+        <div className='flex flex-row justify-between'>
+          <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
             Edit Listing
           </h2>
         </div>
       </div>
       <form
-        className="mx-auto max-w-4xl px-4 sm:px-12 lg:px-24"
+        className='mx-auto max-w-4xl px-4 sm:px-12 lg:px-24'
         onSubmit={handleFormSubmit}
       >
-        <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-4">
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-4">
+        <div className='space-y-12'>
+          <div className='border-b border-gray-900/10 pb-4'>
+            <div className='mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6'>
+              <div className='sm:col-span-4'>
                 <label
-                  htmlFor="listing-title"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='listing-title'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   Listing Title
                 </label>
-                <div className="mt-2">
+                <div className='mt-2'>
                   <TextForm
-                    name="listingTitle"
-                    id="listing-title"
+                    name='listingTitle'
+                    id='listing-title'
                     value={formValues.listingTitle}
                     onChange={(e) => handleInputChange(e)}
                   />
                 </div>
                 {formErrors.listingTitle && (
-                  <p className="text-red-600 text-sm">
+                  <p className='text-red-600 text-sm'>
                     {formErrors.listingTitle}
                   </p>
                 )}
               </div>
 
-              <div className="sm:col-span-2">
+              <div className='sm:col-span-2'>
                 <label
-                  htmlFor="listing-title"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='listing-title'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   Property Type
                 </label>
-                <div className="mt-2">
+                <div className='mt-2'>
                   <TypeList
                     selectedType={selectedType}
                     setSelectedType={setSelectedType}
                   />
                 </div>
                 {formErrors.selectedType && (
-                  <p className="text-red-600 text-sm">
+                  <p className='text-red-600 text-sm'>
                     {formErrors.selectedType}
                   </p>
                 )}
               </div>
 
-              <div className="col-span-full">
+              <div className='col-span-full'>
                 <label
-                  htmlFor="street-address"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='street-address'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   Property Amenities{' '}
-                  <span className="text-gray-500 text-xs font-normal">
+                  <span className='text-gray-500 text-xs font-normal'>
                     (separated by commas)
                   </span>
                 </label>
-                <div className="mt-2">
+                <div className='mt-2'>
                   <TextForm
-                    name="propertyAmenities"
-                    id="property-amenities"
+                    name='propertyAmenities'
+                    id='property-amenities'
                     value={formValues.propertyAmenities.join(', ')}
                     onChange={(e) => handleInputChange(e)}
                   />
                 </div>
                 {formErrors.propertyAmenities && (
-                  <p className="text-red-600 text-sm">
+                  <p className='text-red-600 text-sm'>
                     {formErrors.propertyAmenities}
                   </p>
                 )}
               </div>
 
-              <div className="col-span-full">
+              <div className='col-span-full'>
                 <label
-                  htmlFor="street-address"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='street-address'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   Street address
                 </label>
-                <div className="mt-2">
+                <div className='mt-2'>
                   <TextForm
-                    name="streetAddress"
-                    id="street-address"
-                    autoComplete="street-address"
+                    name='streetAddress'
+                    id='street-address'
+                    autoComplete='street-address'
                     value={formValues.streetAddress}
                     onChange={(e) => handleInputChange(e)}
                   />
                 </div>
                 {formErrors.streetAddress && (
-                  <p className="text-red-600 text-sm">
+                  <p className='text-red-600 text-sm'>
                     {formErrors.streetAddress}
                   </p>
                 )}
               </div>
 
-              <div className="sm:col-span-2 sm:col-start-1">
+              <div className='sm:col-span-2 sm:col-start-1'>
                 <label
-                  htmlFor="city"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='city'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   City
                 </label>
-                <div className="mt-2">
+                <div className='mt-2'>
                   <TextForm
-                    name="city"
-                    id="city"
-                    autoComplete="address-level2"
+                    name='city'
+                    id='city'
+                    autoComplete='address-level2'
                     value={formValues.city}
                     onChange={(e) => handleInputChange(e)}
                   />
                 </div>
                 {formErrors.city && (
-                  <p className="text-red-600 text-sm">{formErrors.city}</p>
+                  <p className='text-red-600 text-sm'>{formErrors.city}</p>
                 )}
               </div>
 
-              <div className="sm:col-span-2">
+              <div className='sm:col-span-2'>
                 <label
-                  htmlFor="region"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='region'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   State / Province
                 </label>
-                <div className="mt-2">
+                <div className='mt-2'>
                   <TextForm
-                    name="state"
-                    id="state"
-                    autoComplete="state"
+                    name='state'
+                    id='state'
+                    autoComplete='state'
                     value={formValues.state}
                     onChange={(e) => handleInputChange(e)}
                   />
                 </div>
                 {formErrors.selectedState && (
-                  <p className="text-red-600 text-sm">
+                  <p className='text-red-600 text-sm'>
                     {formErrors.selectedState}
                   </p>
                 )}
               </div>
 
-              <div className="sm:col-span-2">
+              <div className='sm:col-span-2'>
                 <label
-                  htmlFor="postal-code"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='postal-code'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   ZIP / Postal code
                 </label>
-                <div className="mt-2">
+                <div className='mt-2'>
                   <TextForm
-                    name="postalCode"
-                    id="postal-code"
-                    autoComplete="postal-code"
+                    name='postalCode'
+                    id='postal-code'
+                    autoComplete='postal-code'
                     value={formValues.postalCode}
                     onChange={(e) => handleInputChange(e)}
                   />
                 </div>
                 {formErrors.postalCode && (
-                  <p className="text-red-600 text-sm">
+                  <p className='text-red-600 text-sm'>
                     {formErrors.postalCode}
                   </p>
                 )}
               </div>
 
-              <div className="sm:col-span-3">
+              <div className='sm:col-span-3'>
                 <label
-                  htmlFor="country"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='country'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   Country
                 </label>
-                <div className="mt-2">
+                <div className='mt-2'>
                   <TypeCountry
                     selectedCountry={selectedCountry}
                     setSelectedCountry={setSelectedCountry}
                   />
                 </div>
                 {formErrors.selectedCountry && (
-                  <p className="text-red-600 text-sm">
+                  <p className='text-red-600 text-sm'>
                     {formErrors.selectedCountry}
                   </p>
                 )}
               </div>
 
-              <div className="sm:col-span-2 sm:col-start-1">
+              <div className='sm:col-span-2 sm:col-start-1'>
                 <label
-                  htmlFor="price"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='price'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   Price per night
                 </label>
-                <div className="flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 sm:max-w-md">
-                  <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
+                <div className='flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 sm:max-w-md'>
+                  <span className='flex select-none items-center pl-3 text-gray-500 sm:text-sm'>
                     $
                   </span>
                   <NumberForm
-                    name="price"
-                    id="price"
+                    name='price'
+                    id='price'
                     min={1}
                     value={formValues.price}
                     onChange={(event) => handleInputChange(event)}
-                    className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
                   />
                 </div>
                 {formErrors.price && (
-                  <p className="text-red-600 text-sm">{formErrors.price}</p>
+                  <p className='text-red-600 text-sm'>{formErrors.price}</p>
                 )}
               </div>
-              <div className="sm:col-span-2">
+              <div className='sm:col-span-2'>
                 <label
-                  htmlFor="numBathroomsc"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='numBathroomsc'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   Number of Bathrooms
                 </label>
-                <div className="flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 sm:max-w-md">
+                <div className='flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 sm:max-w-md'>
                   <NumberForm
-                    name="numBathrooms"
-                    id="numBathrooms"
+                    name='numBathrooms'
+                    id='numBathrooms'
                     min={0}
                     value={formValues.numBathrooms}
                     onChange={(event) => handleInputChange(event)}
                   />
                 </div>
                 {formErrors.numBathrooms && (
-                  <p className="text-red-600 text-sm">
+                  <p className='text-red-600 text-sm'>
                     {formErrors.numBathrooms}
                   </p>
                 )}
               </div>
-              <div className="sm:col-span-2">
+              <div className='sm:col-span-2'>
                 <label
-                  htmlFor="numBedrooms"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor='numBedrooms'
+                  className='block text-sm font-medium leading-6 text-gray-900'
                 >
                   Number of Bedrooms
                 </label>
-                <div className="flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                <div className='flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md'>
                   <NumberForm
-                    name="numBedrooms"
-                    id="numBedrooms"
+                    name='numBedrooms'
+                    id='numBedrooms'
                     min={0}
                     max={50}
                     value={state.numBedrooms}
@@ -704,41 +702,41 @@ export default function EditListing ({
                   />
                 </div>
                 {formErrors.numBedrooms && (
-                  <p className="text-red-600 text-sm">
+                  <p className='text-red-600 text-sm'>
                     {formErrors.numBedrooms}
                   </p>
                 )}
               </div>
 
-              <div className="col-span-full">
+              <div className='col-span-full'>
                 <label
-                  htmlFor="numBedrooms"
-                  className="block text-sm font-medium leading-6 text-gray-900 mb-2"
+                  htmlFor='numBedrooms'
+                  className='block text-sm font-medium leading-6 text-gray-900 mb-2'
                 >
                   Bed Number Selector
                 </label>
-                <div className="grid grid-cols-2 p-3 rounded-md border border-dashed border-gray-300 gap-4 h-72 overflow-y-scroll sm:col-span-full lg:grid-cols-4">
+                <div className='grid grid-cols-2 p-3 rounded-md border border-dashed border-gray-300 gap-4 h-72 overflow-y-scroll sm:col-span-full lg:grid-cols-4'>
                   {state.beds.map((bed) => (
                     <div
                       key={bed.id}
-                      className="rounded-md h-40 ring-1 ring-inset ring-gray-500 px-3 my-2 py-3"
+                      className='rounded-md h-40 ring-1 ring-inset ring-gray-500 px-3 my-2 py-3'
                     >
-                      <div className="flex items-center">
+                      <div className='flex items-center'>
                         <img
                           src={BedIcon}
-                          alt="Bed Icon"
-                          className="h-7 w-7 mr-2"
+                          alt='Bed Icon'
+                          className='h-7 w-7 mr-2'
                         />
                       </div>
                       <label
                         htmlFor={bed.id}
-                        className="block text-sm font-medium leading-6 text-gray-900"
+                        className='block text-sm font-medium leading-6 text-gray-900'
                       >
                         {`${bed.name}`}
                       </label>
                       <label
                         htmlFor={bed.id}
-                        className="mt-3 block text-sm font-medium leading-6 text-gray-900"
+                        className='mt-3 block text-sm font-medium leading-6 text-gray-900'
                       >
                         {'Number of beds'}
                       </label>
@@ -749,7 +747,7 @@ export default function EditListing ({
                           min={0}
                           max={50}
                           value={parseInt(formValues.beds[bed.id] || '')}
-                          className={`[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                          className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                             formErrors.beds[bed.id] === 'error'
                               ? 'ring-red-600'
                               : 'ring-gray-300'
@@ -761,15 +759,20 @@ export default function EditListing ({
                   ))}
                 </div>
               </div>
-              <div className="col-span-full">
-                <div className="flex justify-between">
+              <div className='col-span-full'>
+                <div className='flex justify-between'>
                   <label className='font-medium text-sm'>Property Images</label>
-                  <label htmlFor="property-img-upload" className='text-blue-500 text-sm font-medium cursor-pointer' >+ Add Image</label>
+                  <label
+                    htmlFor='property-img-upload'
+                    className='text-blue-500 text-sm font-medium cursor-pointer'
+                  >
+                    + Add Image
+                  </label>
                   <input
-                    type="file"
-                    id="property-img-upload"
-                    name="property-img-upload"
-                    className="sr-only"
+                    type='file'
+                    id='property-img-upload'
+                    name='property-img-upload'
+                    className='sr-only'
                     onChange={handlePropertyImageUpload}
                   />
                 </div>
@@ -790,26 +793,26 @@ export default function EditListing ({
                   ))}
                 </div>
               </div>
-              <div className="col-span-full">
-                <div className="flex justify-between">
+              <div className='col-span-full'>
+                <div className='flex justify-between'>
                   <label
-                    htmlFor="thumbnail"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    htmlFor='thumbnail'
+                    className='block text-sm font-medium leading-6 text-gray-900'
                   >
                     Thumbnail
                   </label>
                   <div>
                     <label
-                      htmlFor="file-upload"
-                      className="cursor-pointer text-blue-500 text-sm font-medium"
+                      htmlFor='file-upload'
+                      className='cursor-pointer text-blue-500 text-sm font-medium'
                     >
                       Change Thumbnail
                     </label>
                     <input
-                      id="file-upload"
-                      name="file-upload"
-                      type="file"
-                      className="sr-only"
+                      id='file-upload'
+                      name='file-upload'
+                      type='file'
+                      className='sr-only'
                       onChange={handleFileChange}
                     />
                   </div>
@@ -821,16 +824,16 @@ export default function EditListing ({
                       : 'border-red-600'
                   } px-6 py-10`}
                 >
-                  <div className="text-center">
+                  <div className='text-center'>
                     <img
-                      className="mx-auto h-full w-full text-gray-300"
-                      aria-hidden="true"
+                      className='mx-auto h-full w-full text-gray-300'
+                      aria-hidden='true'
                       src={selectedThumbnail}
                     />
                   </div>
                 </div>
                 {formErrors.uploadImage && (
-                  <p className="text-red-600 text-sm">
+                  <p className='text-red-600 text-sm'>
                     {formErrors.uploadImage}
                   </p>
                 )}
@@ -840,7 +843,7 @@ export default function EditListing ({
         </div>
         <button
           disabled={!isFormChanged && !isDataChanged}
-          className="w-full my-3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md disabled:opacity-40 disabled:bg-blue-500"
+          className='w-full my-3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md disabled:opacity-40 disabled:bg-blue-500'
         >
           Save Changes
         </button>
