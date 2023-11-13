@@ -106,9 +106,24 @@ export default function HomePage ({
   return (
     <div className='bg-white'>
       <div className='mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8'>
-        <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
-          Listings
-        </h2>
+        <div className='flex flex-row justify-between items-center'>
+          <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
+            Listings
+          </h2>
+          {isFiltered && (
+            <button
+              onClick={clearFilter}
+              type='button'
+              className='inline-flex items-center rounded-md ring-1 ring-gray-500 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-gray-600'
+            >
+              <AdjustmentsVerticalIcon
+                className='h-4 w-4 mr-1'
+                aria-hidden='true'
+              />
+              Reset Filters
+            </button>
+          )}
+        </div>
 
         <div className='mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8'>
           {products.length > 0
