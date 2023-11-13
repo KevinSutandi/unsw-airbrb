@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { StarIcon, AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import {
@@ -111,7 +111,7 @@ export default function HomePage ({
           <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
             Listings
           </h2>
-          <div className='flex flex-row'>
+          <div className='flex flex-row gap-3'>
           <SortDropdown products={products} setProducts={setProducts} getListings={getListings}/>
 
             {isFiltered && (
