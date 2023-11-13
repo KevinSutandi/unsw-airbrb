@@ -30,7 +30,7 @@ export default function BookingFooter ({
   };
 
   return (
-    <footer className="w-full border-t border-black xl:hidden flex justify-between p-5 items-center fixed bottom-0 bg-white left-0">
+    <footer className="w-full border-t border-black xl:hidden flex justify-between p-5 items-center sticky bottom-0 bg-white left-0">
       <div>
         <div className="font-bold text-2xl">${price} AUD</div>
         <button

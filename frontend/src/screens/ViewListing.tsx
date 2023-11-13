@@ -112,11 +112,11 @@ export default function ViewListing () {
         handleCheckoutChange,
       }}
     >
-      <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24 w-full">
-        <h3 className="font-bold text-4xl mb-7">
+      <div className="xl:mx-auto pt-3 sm:pt-9 xl:max-w-6xl w-full">
+        <h3 className="font-bold text-4xl mb-7 px-4">
           {listingDetails.listingTitle}
         </h3>
-        <div className="grid gap-4">
+        <div className="grid gap-4 px-4">
           <div>
             <img
               className="h-auto max-w-full rounded-lg"
@@ -137,9 +137,9 @@ export default function ViewListing () {
             ))}
           </div>
         </div>
-        <section className="flex xl:justify-between mt-10">
+        <section className="xl:flex xl:justify-between mt-10">
           <div>
-            <div className="text-md my-5">
+            <div className="text-md my-5 px-4">
               <h4 className="text-3xl font-medium">
                 {listingDetails.properyType} in {listingDetails.address.city},{' '}
                 {listingDetails.address.state}
@@ -148,7 +148,7 @@ export default function ViewListing () {
               {listingDetails.numBathrooms} bathroom •{' '}
               {countBeds(listingDetails.beds)} bed
             </div>
-            <div className="w-full flex items-center gap-3 text-lg">
+            <div className="w-full flex items-center gap-3 text-lg px-4">
               <StarIcon className="w-5 h-5" />
               <div className="flex gap-1">
                 <div>5</div>
@@ -156,7 +156,7 @@ export default function ViewListing () {
                 <div className="underline"> 90 reviews</div>
               </div>
             </div>
-            <div className="w-full flex items-center gap-3 mb-5 text-lg  border-b border-black pb-10">
+            <div className="w-full flex items-center gap-3 mb-5 text-lg px-4 border-b border-black pb-10">
               <MapPinIcon className="w-5 h-5" />
               <div>
                 {listingDetails.address.streetAddress},{' '}
@@ -164,13 +164,13 @@ export default function ViewListing () {
                 {listingDetails.address.city}, {listingDetails.address.state}
               </div>
             </div>
-            <section className="border-b border-b-black pb-10">
+            <section className="border-b border-b-black pb-10 px-4">
               <h3 className="text-2xl font-medium mb-5">Bedrooms</h3>
               {Object.entries(listingDetails.beds).map(([key, value]) => (
                 <BedCard key={key} bedroomName={key} bedTotal={value} />
               ))}
             </section>
-            <section>
+            <section className='px-4'>
               <h3>Amenities</h3>
               <ul className="list-disc">
                 {listingDetails.propertyAmenities.map((amenity, idx) => (
