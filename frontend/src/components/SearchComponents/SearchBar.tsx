@@ -1,38 +1,39 @@
 import React from 'react';
-import { Product, SingleDetailListing } from '../../types/types';
+import { SingleDetailListing } from '../../types/types';
 
 interface SearchFormProps {
-  getDetailedListings: () => void;
   detailedListings: SingleDetailListing[],
   setProducts: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>
   setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function SearchForm ({ getDetailedListings, detailedListings, setProducts, setIsFiltered }: SearchFormProps) {
+function SearchForm ({ detailedListings, setProducts, setIsFiltered }: SearchFormProps) {
+  const [showError, setShowError] = React.useState(false);
+
   async function filterTitleCity (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
-    await getDetailedListings()
-    const searchTerm = (document.getElementById('default-search') as HTMLInputElement)?.value;
-    searchTerm?.split(' ');
+    const searchTerm = (document.getElementById('default-search') as HTMLInputElement)?.value.trim();
+
+    if (!searchTerm) {
+      setShowError(true);
+      return;
+    }
+
+    const searchTermsArray = searchTerm.split(' ');
+
     const filteredProducts = detailedListings.filter((product) => {
-      const title = product.title;
-      const city = product.address.city;
+      const title = product.title.toLowerCase();
+      const city = product.address.city.toLowerCase();
 
-      console.log(title, city)
-
-      const titleLowerCase = title.toLowerCase();
-      const cityLowerCase = city.toLowerCase();
-
-      console.log()
-
-      return (
-        titleLowerCase.includes(searchTerm) ||
-        cityLowerCase.includes(searchTerm)
+      // Check if all search terms are included in the title or city
+      return searchTermsArray.every((term) =>
+        title.includes(term.toLowerCase()) || city.includes(term.toLowerCase())
       );
     });
 
     setProducts(filteredProducts);
-    setIsFiltered(true)
+    setShowError(false);
+    setIsFiltered(true);
   }
 
   return (
@@ -73,7 +74,13 @@ function SearchForm ({ getDetailedListings, detailedListings, setProducts, setIs
           Search
         </button>
       </div>
+      {showError && (
+      <div className="text-red-500 text-sm mt-2">
+        Please enter a search term
+      </div>
+      )}
     </form>
+
   );
 }
 

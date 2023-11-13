@@ -6,8 +6,14 @@ import MinMaxCounter from './SearchComponents/MinMaxCounter';
 import { differenceInCalendarDays, startOfToday } from 'date-fns';
 import CheckInOut from './SearchComponents/CheckInOut';
 import NumberForm from './Forms/NumberForm';
-import { DetailListing, HomePageProps, ListingsReturn, SingleDetailListing } from '../types/types';
+import {
+  DetailListing,
+  HomePageProps,
+  ListingsReturn,
+  SingleDetailListing,
+} from '../types/types';
 import { makeRequest } from '../utils/axiosHelper';
+import PriceFilter from './SearchComponents/PriceFilter';
 
 interface DropdownProps {
   products: HomePageProps['products'];
@@ -15,7 +21,11 @@ interface DropdownProps {
   setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Dropdown ({ products, setProducts, setIsFiltered }: DropdownProps) {
+export default function Dropdown ({
+  products,
+  setProducts,
+  setIsFiltered,
+}: DropdownProps) {
   function classNames (...classes: string[]) {
     return classes.filter(Boolean).join(' ');
   }
@@ -28,7 +38,9 @@ export default function Dropdown ({ products, setProducts, setIsFiltered }: Drop
   const [checkIn, setCheckIn] = useState<Date>(today);
   const [checkOut, setCheckOut] = useState<Date>(today);
 
-  const [detailedListings, setDetailedListings] = useState<SingleDetailListing[]>([]);
+  const [detailedListings, setDetailedListings] = useState<
+    SingleDetailListing[]
+  >([]);
 
   useEffect(() => {
     getDetailedListings();
@@ -41,7 +53,10 @@ export default function Dropdown ({ products, setProducts, setIsFiltered }: Drop
     const detailedListings: SingleDetailListing[] = [];
 
     listings.forEach(async (listing) => {
-      const res = await makeRequest<DetailListing>('GET', `listings/${listing.id}`);
+      const res = await makeRequest<DetailListing>(
+        'GET',
+        `listings/${listing.id}`
+      );
       detailedListings.push(res.data.listing);
     });
 
@@ -58,31 +73,12 @@ export default function Dropdown ({ products, setProducts, setIsFiltered }: Drop
 
   // Function for filtering products based on the number of bedrooms (Get number of bedrooms from the single listing)
   function filterBedrooms () {
-    getDetailedListings()
+    getDetailedListings();
     const filteredProducts = detailedListings.filter(
-      (product) => product.metadata.numBedrooms >= min && product.metadata.numBedrooms <= max
+      (product) =>
+        product.metadata.numBedrooms >= min &&
+        product.metadata.numBedrooms <= max
     );
-    setProducts(filteredProducts);
-  }
-
-  // Function for filtering products based on the check in and check out dates
-  function filterCheckInOut () {
-    getDetailedListings()
-    const filteredProducts = detailedListings.filter((product) => {
-      const availability = product.availability;
-
-      // Check if there is any availability range that overlaps with the selected check-in and check-out dates
-      return availability.some((range) => {
-        const rangeStart = new Date(range.from).getTime();
-        const rangeEnd = new Date(range.to).getTime();
-        const checkInDate = new Date(checkIn).getTime();
-        const checkOutDate = new Date(checkOut).getTime();
-
-        // Check if the selected check-in is before or equal to the range end and the selected check-out is after or equal to the range start
-        return checkInDate <= rangeEnd && checkOutDate >= rangeStart;
-      });
-    });
-
     setProducts(filteredProducts);
   }
 
@@ -92,7 +88,7 @@ export default function Dropdown ({ products, setProducts, setIsFiltered }: Drop
   const difference = differenceInCalendarDays(checkOut, checkIn);
 
   const categories = {
-    'Title / Country': 'Title / Country',
+    'Title / City': 'Title / City',
     Bedrooms: 'Bedrooms',
     'Check In / Check Out': 'Check In / Check Out',
     Price: 'Price',
@@ -165,7 +161,11 @@ export default function Dropdown ({ products, setProducts, setIsFiltered }: Drop
                         'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                       )}
                     >
-                      <SearchForm getDetailedListings={getDetailedListings} detailedListings={detailedListings} setProducts={setProducts} setIsFiltered={setIsFiltered}/>
+                      <SearchForm
+                        detailedListings={detailedListings}
+                        setProducts={setProducts}
+                        setIsFiltered={setIsFiltered}
+                      />
                     </Tab.Panel>
 
                     <Tab.Panel
@@ -180,6 +180,9 @@ export default function Dropdown ({ products, setProducts, setIsFiltered }: Drop
                         setMin={setMin}
                         max={max}
                         setMax={setMax}
+                        detailedListings={detailedListings}
+                        setProducts={setProducts}
+                        setIsFiltered={setIsFiltered}
                       />
                     </Tab.Panel>
 
@@ -196,6 +199,9 @@ export default function Dropdown ({ products, setProducts, setIsFiltered }: Drop
                         checkOut={checkOut}
                         setCheckOut={setCheckOut}
                         difference={difference}
+                        detailedListings={detailedListings}
+                        setProducts={setProducts}
+                        setIsFiltered={setIsFiltered}
                       />
                     </Tab.Panel>
 
@@ -206,46 +212,15 @@ export default function Dropdown ({ products, setProducts, setIsFiltered }: Drop
                         'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                       )}
                     >
-                      <div className='flex flex-col gap-5'>
-                        <div className='flex flex-row items-center justify-between'>
-                          Minimum Price
-                          <div className='flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 sm:w-64'>
-                            <span className='flex select-none items-center pl-3 text-gray-500 sm:text-sm'>
-                              $
-                            </span>
-                            <NumberForm
-                              name='minPrice'
-                              id='minPrice'
-                              min={0}
-                              onChange={(event) => {
-                                setMinPrice(parseInt(event.target.value));
-                              }}
-                              className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
-                            />
-                          </div>
-                        </div>
-                        <div className='flex flex-row items-center justify-between'>
-                          Maximum Price
-                          <div className='flex rounded-md mt-2 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 sm:w-64'>
-                            <span className='flex select-none items-center pl-3 text-gray-500 sm:text-sm'>
-                              $
-                            </span>
-                            <NumberForm
-                              name='maxPrice'
-                              id='maxPrice'
-                              min={minPrice}
-                              onChange={(event) => {
-                                setMaxPrice(parseInt(event.target.value));
-                              }}
-                              className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <hr className='my-5 border-gray-200' />
-                      <button className='w-full mb-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md'>
-                        Search
-                      </button>
+                      <PriceFilter
+                        minPrice={minPrice}
+                        setMinPrice={setMinPrice}
+                        maxPrice={maxPrice}
+                        setMaxPrice={setMaxPrice}
+                        detailedListings={detailedListings}
+                        setProducts={setProducts}
+                        setIsFiltered={setIsFiltered}
+                        />
                     </Tab.Panel>
                   </Tab.Panels>
                 </Tab.Group>

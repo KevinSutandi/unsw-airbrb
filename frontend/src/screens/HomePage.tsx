@@ -40,8 +40,14 @@ export default function HomePage ({
     // Use map to create an array of promises
     const requests = listings.map(async (listing) => {
       try {
-        const response = await makeRequest<DetailListing>('GET', `listings/${listing.id}`);
+        const response = await makeRequest<DetailListing>(
+          'GET',
+          `listings/${listing.id}`
+        );
         const product = response.data.listing;
+        if (product.published === false) {
+          return;
+        }
         product.id = listing.id;
         productsNew.push(product);
       } catch (error) {
@@ -76,7 +82,7 @@ export default function HomePage ({
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-  }
+  };
 
   useEffect(() => {
     getListings();
@@ -107,70 +113,9 @@ export default function HomePage ({
         </h2>
 
         <div className='mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8'>
-          {isFiltered
+          {products.length > 0
             ? (
-                products.length > 0
-                  ? (
-                      products.map((product) => (
-                <div key={product.id} className='group relative'>
-                  <div className='aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80'>
-                    <img
-                      src={product.thumbnail}
-                      alt={product.title}
-                      className='h-full w-full object-cover object-center lg:h-full lg:w-full'
-                    />
-                  </div>
-                  <div className='mt-4 flex justify-between'>
-                    <div>
-                      <h3 className='text-sm text-gray-700'>
-                        <a className='cursor-pointer'>
-                          <span
-                            aria-hidden='true'
-                            className='absolute inset-0'
-                          />
-                          <span className='font-semibold'>{product.title}</span>
-                        </a>
-                      </h3>
-                    </div>
-                    <p className='text-sm font-bold text-gray-900 underline underline-offset-2'>
-                      ${product.price}
-                      <span className='text-sm font-normal text-gray-500'>
-                        {' '}
-                        per night
-                      </span>
-                    </p>
-                  </div>
-                  <div className='flex items-center'>
-                    {generateStarIcons(product.averageStars)}
-                    <p className='text-gray-400 text-sm ml-1'>
-                      ({product.numReviews})
-                    </p>
-                  </div>
-                </div>
-                      ))
-                    )
-                  : (
-              <div className='col-span-full mx-auto text-center flex gap-3 flex-col'>
-                <h1 className='font-bold text-md underline text-gray-800'>
-                  No Results Found
-                </h1>
-                <button
-                  onClick={clearFilter}
-                  type='button'
-                  className='inline-flex items-center rounded-md ring-1 ring-gray-500 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-gray-600'
-                >
-                  <AdjustmentsVerticalIcon
-                    className='h-4 w-4 mr-1'
-                    aria-hidden='true'
-                    />
-                  Reset Filters
-                </button>
-              </div>
-                    )
-              )
-            : products.length > 0
-              ? (
-                  products.map((product) => (
+                products.map((product) => (
               <div key={product.id} className='group relative'>
                 <div className='aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80'>
                   <img
@@ -203,7 +148,26 @@ export default function HomePage ({
                   </p>
                 </div>
               </div>
-                  ))
+                ))
+              )
+            : isFiltered
+              ? (
+            <div className='col-span-full mx-auto text-center flex gap-3 flex-col'>
+              <h1 className='font-bold text-md underline text-gray-800'>
+                No Results Found
+              </h1>
+              <button
+                onClick={clearFilter}
+                type='button'
+                className='inline-flex items-center rounded-md ring-1 ring-gray-500 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-gray-600'
+              >
+                <AdjustmentsVerticalIcon
+                  className='h-4 w-4 mr-1'
+                  aria-hidden='true'
+                />
+                Reset Filters
+              </button>
+            </div>
                 )
               : (
             <div className='col-span-full mx-auto text-center'>

@@ -1,11 +1,15 @@
 import React from 'react';
 import Counter from './Counter';
+import { SingleDetailListing } from '../../types/types';
 
 interface MinMaxCounterProps {
   min: number;
   max: number;
   setMin: React.Dispatch<React.SetStateAction<number>>;
   setMax: React.Dispatch<React.SetStateAction<number>>;
+  detailedListings: SingleDetailListing[];
+  setProducts: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>;
+  setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function MinMaxCounter ({
@@ -13,7 +17,24 @@ export default function MinMaxCounter ({
   setMin,
   max,
   setMax,
+  detailedListings,
+  setProducts,
+  setIsFiltered,
 }: MinMaxCounterProps) {
+  // Search by minimum and maximum number of beds
+  function handleSearchByMinMax (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    event.preventDefault();
+
+    const filteredProducts = detailedListings.filter((product) => {
+      const numBedrooms = product.metadata.numBedrooms;
+
+      return numBedrooms >= min && numBedrooms <= max;
+    });
+
+    setProducts(filteredProducts);
+    setIsFiltered(true);
+  }
+
   return (
     <>
       <div className='flex items-center justify-between'>
@@ -49,7 +70,7 @@ export default function MinMaxCounter ({
         <Counter count={max} setCount={setMax} min={min} />
       </div>
       <hr className='my-5 border-gray-200' />
-      <button className='w-full mb-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md'>
+      <button onClick={handleSearchByMinMax} className='w-full mb-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md'>
         Search
       </button>
     </>

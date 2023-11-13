@@ -7,7 +7,7 @@ import HostedListings from './screens/HostedListings';
 import ErrorModal from './components/ErrorModal';
 import CreateListing from './screens/CreateListing';
 import EditListing from './screens/EditListing';
-import { Product, SingleDetailListing } from './types/types';
+import { SingleDetailListing } from './types/types';
 
 function App () {
   document.title = 'AirBRB';
