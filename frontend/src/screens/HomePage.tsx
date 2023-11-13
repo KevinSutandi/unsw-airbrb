@@ -136,7 +136,7 @@ export default function HomePage ({
           {products.length > 0
             ? (
                 products.map((product) => (
-              <div key={product.id} className='group relative'>
+              <NavLink to={`/listings/view/${product.id}`} key={product.id} className='group relative'>
                 <div className='aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80'>
                   <img
                     src={product.thumbnail}
@@ -167,7 +167,7 @@ export default function HomePage ({
                     ({product.numReviews})
                   </p>
                 </div>
-              </div>
+              </NavLink>
                 ))
               )
             : isFiltered
