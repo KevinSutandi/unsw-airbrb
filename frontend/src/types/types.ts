@@ -277,3 +277,8 @@ export type PropertyImageProps = {
   idx: number;
   deletePropertyImage: (idxToRemove: number) => void;
 };
+
+export interface sortingOption {
+  name: string;
+  value: string;
+}

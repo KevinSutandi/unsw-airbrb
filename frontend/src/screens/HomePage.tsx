@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { StarIcon, AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import {
@@ -9,6 +9,7 @@ import {
   SingleDetailListing,
 } from '../types/types';
 import { AxiosError } from 'axios';
+import SortDropdown from '../components/SearchComponents/SortDropdown';
 
 // Function to generate star icons based on the average rating
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
@@ -110,19 +111,24 @@ export default function HomePage ({
           <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
             Listings
           </h2>
-          {isFiltered && (
-            <button
-              onClick={clearFilter}
-              type='button'
-              className='inline-flex items-center rounded-md ring-1 ring-gray-500 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-gray-600'
-            >
-              <AdjustmentsVerticalIcon
-                className='h-4 w-4 mr-1'
-                aria-hidden='true'
-              />
-              Reset Filters
-            </button>
-          )}
+          <div className='flex flex-row'>
+          <SortDropdown products={products} setProducts={setProducts} getListings={getListings}/>
+
+            {isFiltered && (
+              <button
+                onClick={clearFilter}
+                type='button'
+                className='inline-flex items-center rounded-md ring-1 ring-gray-500 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-gray-600'
+              >
+                <AdjustmentsVerticalIcon
+                  className='h-4 w-4 mr-1'
+                  aria-hidden='true'
+                />
+                Reset Filters
+              </button>
+            )}
+
+          </div>
         </div>
 
         <div className='mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8'>
