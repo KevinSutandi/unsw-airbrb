@@ -28,6 +28,7 @@ export default function ViewListing () {
   });
 
   const [featuredImg, setFeaturedImg] = useState('');
+  const [combinedImg, setCombinedImg] = useState<string[]>([])
 
   const fetchListingDetails = async () => {
     const res = await makeRequest<GetSingleListingReturn>(
@@ -59,6 +60,7 @@ export default function ViewListing () {
         propertyImages: listing.metadata.propertyImages,
       }));
       setFeaturedImg(listing.thumbnail);
+      setCombinedImg([listing.thumbnail, ...listing.metadata.propertyImages])
     };
 
     populateDetails();
@@ -90,15 +92,7 @@ export default function ViewListing () {
           />
         </div>
         <div className="grid grid-cols-4 gap-4">
-          <button className="hover: bg-gray-500 rounded-lg">
-            <img
-              className="h-auto max-w-full rounded-lg hover:bg-gray-100 hover:opacity-25"
-              src={listingDetails.thumbnail}
-              onClick={handleClickPropertyImg}
-              alt="property image"
-            />
-          </button>
-          {listingDetails.propertyImages.map((image, idx) => (
+          {combinedImg.map((image, idx) => (
             <button key={idx} className="hover: bg-gray-500 rounded-lg">
               <img
                 className="h-auto max-w-full rounded-lg cursor-pointer hover:opacity-25"
