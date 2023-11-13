@@ -1,5 +1,6 @@
 import React from 'react';
 import { SingleDetailListing } from '../../types/types';
+import { useNavigate } from 'react-router-dom';
 
 interface SearchFormProps {
   detailedListings: SingleDetailListing[],
@@ -8,6 +9,8 @@ interface SearchFormProps {
 }
 
 function SearchForm ({ detailedListings, setProducts, setIsFiltered }: SearchFormProps) {
+  const navigate = useNavigate()
+
   const [showError, setShowError] = React.useState(false);
 
   async function filterTitleCity (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -33,6 +36,7 @@ function SearchForm ({ detailedListings, setProducts, setIsFiltered }: SearchFor
 
     setProducts(filteredProducts);
     setShowError(false);
+    navigate('/')
     setIsFiltered(true);
   }
 

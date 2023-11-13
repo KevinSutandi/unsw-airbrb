@@ -84,8 +84,10 @@ export default function HomePage ({
   };
 
   useEffect(() => {
-    getListings();
-  }, []);
+    if (isFiltered === false) {
+      getListings();
+    }
+  }, [isFiltered]);
 
   products.forEach((product) => {
     const reviews = product.reviews;
