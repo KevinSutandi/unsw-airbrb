@@ -11,6 +11,7 @@ import {
 import { StarIcon } from '@heroicons/react/20/solid';
 import DeleteListing from '../components/CreateListingComponents/Modals/DeleteListingModal';
 import PublishListingModal from '../components/CreateListingComponents/Modals/PublishListingModal';
+import HostedBreadcrumbs from '../components/HostedListingComponents/HostedListingBreadcrumbs';
 
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
   const starIcons: JSX.Element[] = [];
@@ -157,6 +158,7 @@ export default function HostedListngs ({
   return (
     <>
       <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-15 lg:max-w-7xl lg:px-8">
+        <HostedBreadcrumbs />
         <div className="flex flex-row justify-between">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             My Listings
