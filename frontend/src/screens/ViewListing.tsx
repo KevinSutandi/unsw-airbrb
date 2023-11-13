@@ -9,6 +9,7 @@ import BookingModal from '../components/ViewListingComponents/BookingModal';
 import BookingFooter from '../components/ViewListingComponents/BookingFooter';
 import DateModal from '../components/ViewListingComponents/DateModal';
 import DateContext from '../components/ViewListingComponents/DateContext';
+import { Nullable } from 'primereact/ts-helpers';
 
 export default function ViewListing () {
   const { listingId } = useParams();
@@ -34,8 +35,8 @@ export default function ViewListing () {
   const [combinedImg, setCombinedImg] = useState<string[]>([]);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
 
-  const [checkinDate, setCheckinDate] = useState('');
-  const [checkoutDate, setCheckoutDate] = useState('');
+  const [checkinDate, setCheckinDate] = useState<Nullable<Date>>(null);
+  const [checkoutDate, setCheckoutDate] = useState<Nullable<Date>>(null);
 
   const closeDateModal = () => {
     setIsDateModalOpen(false);
@@ -45,13 +46,13 @@ export default function ViewListing () {
     setIsDateModalOpen(true);
   };
 
-  const handleCheckinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckinDate(event.target.value);
-  };
+  // const handleCheckinChange = (event: { originalEvent: Event, value: Date | Date[] }) => {
+  //   setCheckinDate(event.value as Date);
+  // };
 
-  const handleCheckoutChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckoutDate(event.target.value);
-  };
+  // const handleCheckoutChange = (event: FormEvent<Date, React.SyntheticEvent<Element, Event>>) => {
+  //   setCheckoutDate(event.value as Date);
+  // };
 
   const fetchListingDetails = async () => {
     const res = await makeRequest<GetSingleListingReturn>(
@@ -107,9 +108,9 @@ export default function ViewListing () {
     <DateContext.Provider
       value={{
         checkinDate,
-        handleCheckinChange,
+        setCheckinDate,
         checkoutDate,
-        handleCheckoutChange,
+        setCheckoutDate,
       }}
     >
       <div className="xl:mx-auto pt-3 sm:pt-9 xl:max-w-6xl w-full">

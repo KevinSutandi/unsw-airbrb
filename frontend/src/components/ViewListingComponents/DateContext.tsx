@@ -1,10 +1,11 @@
 import React, { createContext } from 'react';
+import { Nullable } from 'primereact/ts-helpers';
 
 type DateContext = {
-  checkinDate: string,
-  checkoutDate: string
-  handleCheckinChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleCheckoutChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  checkinDate: Nullable<Date>,
+  checkoutDate: Nullable<Date>,
+  setCheckinDate: React.Dispatch<React.SetStateAction<Nullable<Date>>>
+  setCheckoutDate: React.Dispatch<React.SetStateAction<Nullable<Date>>>
 }
 
 const DateContext = createContext<DateContext | undefined>(undefined)

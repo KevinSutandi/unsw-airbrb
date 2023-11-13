@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import DateContext from './DateContext';
+import { Nullable } from 'primereact/ts-helpers';
 
 type BookingModalProps = {
   price: number;
@@ -18,10 +19,11 @@ export default function BookingFooter ({
 
   const { checkinDate, checkoutDate } = contextValue;
 
-  const formatDate = (dateString: string) => {
-    const parsedDate = new Date(dateString);
-
-    const formattedDate = parsedDate.toLocaleDateString('en-US', {
+  const formatDate = (dateString: Nullable<Date>) => {
+    if (!dateString) {
+      return;
+    }
+    const formattedDate = dateString.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
     });

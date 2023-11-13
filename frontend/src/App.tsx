@@ -8,6 +8,9 @@ import ErrorModal from './components/ErrorModal';
 import CreateListing from './screens/CreateListing';
 import EditListing from './screens/EditListing';
 import ViewListing from './screens/ViewListing';
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 
 function App () {
   document.title = 'AirBRB';
