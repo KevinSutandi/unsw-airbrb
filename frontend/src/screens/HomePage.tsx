@@ -11,6 +11,7 @@ import {
 import { AxiosError } from 'axios';
 import { NavLink } from 'react-router-dom';
 import SortDropdown from '../components/SearchComponents/SortDropdown';
+import { getEmail } from '../utils/auth';
 
 // Function to generate star icons based on the average rating
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
@@ -33,6 +34,7 @@ export default function HomePage ({
   setProducts,
   isFiltered,
   setIsFiltered,
+  isLoggedIn
 }: HomePageProps) {
   const setAvailableProducts = async (listings: Product[]) => {
     const productsNew: SingleDetailListing[] = [];
@@ -59,7 +61,9 @@ export default function HomePage ({
     await Promise.all(requests);
 
     // Set the state after all requests are complete
-    setProducts(productsNew);
+    // Set all products current user doesnt host
+    const email = getEmail()
+    setProducts(productsNew.filter(product => product.owner !== email));
   };
 
   const getListings = async () => {
@@ -88,7 +92,7 @@ export default function HomePage ({
     if (isFiltered === false) {
       getListings();
     }
-  }, [isFiltered]);
+  }, [isFiltered, isLoggedIn]);
 
   products.forEach((product) => {
     const reviews = product.reviews;
