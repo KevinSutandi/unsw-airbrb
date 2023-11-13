@@ -6,6 +6,8 @@ import { StarIcon } from '@heroicons/react/24/solid';
 import { MapPinIcon } from '@heroicons/react/20/solid';
 import BedCard from '../components/ViewListingComponents/BedCard';
 import BookingModal from '../components/ViewListingComponents/BookingModal';
+import BookingFooter from '../components/ViewListingComponents/BookingFooter';
+import DateModal from '../components/ViewListingComponents/DateModal';
 
 export default function ViewListing () {
   const { listingId } = useParams();
@@ -29,6 +31,15 @@ export default function ViewListing () {
 
   const [featuredImg, setFeaturedImg] = useState('');
   const [combinedImg, setCombinedImg] = useState<string[]>([])
+  const [isDateModalOpen, setIsDateModalOpen] = useState(false)
+
+  const closeDateModal = () => {
+    setIsDateModalOpen(false)
+  }
+
+  const openDateModal = () => {
+    setIsDateModalOpen(true)
+  }
 
   const fetchListingDetails = async () => {
     const res = await makeRequest<GetSingleListingReturn>(
@@ -82,7 +93,7 @@ export default function ViewListing () {
 
   return (
     <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24 w-full">
-      <h3 className="font-bold text-4xl">{listingDetails.listingTitle}</h3>
+      <h3 className="font-bold text-4xl mb-7">{listingDetails.listingTitle}</h3>
       <div className="grid gap-4">
         <div>
           <img
@@ -104,7 +115,7 @@ export default function ViewListing () {
           ))}
         </div>
       </div>
-      <section className="flex justify-between mt-10">
+      <section className="flex xl:justify-between mt-10">
         <div>
           <div className="text-md my-5">
             <h4 className="text-3xl font-medium">
@@ -148,6 +159,8 @@ export default function ViewListing () {
         </div>
         <BookingModal price={listingDetails.price} />
       </section>
+      <BookingFooter price={listingDetails.price} openDateModal={openDateModal}/>
+      <DateModal open={isDateModalOpen} onClose={closeDateModal}/>
     </div>
   );
 }
