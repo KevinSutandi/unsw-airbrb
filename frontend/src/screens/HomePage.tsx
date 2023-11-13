@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { StarIcon, AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import {
   DetailListing,
-  GetSingleListingReturn,
   HomePageProps,
   ListingsReturn,
   Product,
   SingleDetailListing,
-  SingleListing,
 } from '../types/types';
 import { AxiosError } from 'axios';
 

@@ -5,7 +5,6 @@ import SearchForm from './SearchComponents/SearchBar';
 import MinMaxCounter from './SearchComponents/MinMaxCounter';
 import { differenceInCalendarDays, startOfToday } from 'date-fns';
 import CheckInOut from './SearchComponents/CheckInOut';
-import NumberForm from './Forms/NumberForm';
 import {
   DetailListing,
   HomePageProps,
@@ -22,7 +21,6 @@ interface DropdownProps {
 }
 
 export default function Dropdown ({
-  products,
   setProducts,
   setIsFiltered,
 }: DropdownProps) {
@@ -61,25 +59,6 @@ export default function Dropdown ({
     });
 
     setDetailedListings(detailedListings);
-  }
-
-  // Function for filtering products based on the price range
-  function filterPriceRange () {
-    const filteredProducts = products.filter(
-      (product) => product.price >= minPrice && product.price <= maxPrice
-    );
-    setProducts(filteredProducts);
-  }
-
-  // Function for filtering products based on the number of bedrooms (Get number of bedrooms from the single listing)
-  function filterBedrooms () {
-    getDetailedListings();
-    const filteredProducts = detailedListings.filter(
-      (product) =>
-        product.metadata.numBedrooms >= min &&
-        product.metadata.numBedrooms <= max
-    );
-    setProducts(filteredProducts);
   }
 
   /**

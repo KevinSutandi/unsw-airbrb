@@ -1,9 +1,8 @@
 import React from 'react';
-import Counter from './Counter';
 import { SingleDetailListing } from '../../types/types';
 import NumberForm from '../Forms/NumberForm';
 
-interface MinMaxCounterProps {
+interface PriceFilterProps {
   minPrice: number;
   maxPrice: number;
   setMinPrice: React.Dispatch<React.SetStateAction<number>>;
@@ -21,8 +20,7 @@ export default function PriceFilter ({
   detailedListings,
   setProducts,
   setIsFiltered,
-}: MinMaxCounterProps) {
-  // Search by minimum and maximum number of beds
+}: PriceFilterProps) {
   function handleSearchByMinMax (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
