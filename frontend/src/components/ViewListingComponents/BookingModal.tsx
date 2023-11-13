@@ -12,7 +12,7 @@ export default function BookingModal ({ price }: BookingModalProps) {
         <div className="rounded-2xl bg-gray-50 py-5 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center shadow-xl px-10">
           <div className="mx-auto">
             <h3 className="font-bold text-left text-2xl font-semibol mb-5">
-              ${price} USD
+              ${price} AUD
             </h3>
             <DateForm />
             <a

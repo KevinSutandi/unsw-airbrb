@@ -24,6 +24,7 @@ export default function ViewListing () {
     beds: {} as { [key: string]: string },
     thumbnail: '',
     propertyImages: [] as string[],
+    properyType: '',
   });
 
   const [featuredImg, setFeaturedImg] = useState('');
@@ -44,6 +45,7 @@ export default function ViewListing () {
         ...prev,
         listingTitle: listing.title,
         propertyAmenities: listing.metadata.propertyAmenities,
+        properyType: listing.metadata.propertyType,
         address: {
           city: listing.address.city,
           state: listing.address.state,
@@ -110,12 +112,16 @@ export default function ViewListing () {
       </div>
       <section className="flex justify-between mt-10">
         <div>
-          <div className="text-md font-medium mt-5">
+          <div className="text-md my-5">
+            <h4 className="text-3xl font-medium">
+              {listingDetails.properyType} in {listingDetails.address.city},{' '}
+              {listingDetails.address.state}
+            </h4>
             {Object.keys(listingDetails.beds).length} bedroom •{' '}
             {listingDetails.numBathrooms} bathroom •{' '}
             {countBeds(listingDetails.beds)} bed
           </div>
-          <div className="w-full flex items-center gap-3">
+          <div className="w-full flex items-center gap-3 text-lg">
             <StarIcon className="w-5 h-5" />
             <div className="flex gap-1">
               <div>5</div>
@@ -123,7 +129,7 @@ export default function ViewListing () {
               <div className="underline"> 90 reviews</div>
             </div>
           </div>
-          <div className="w-full flex items-center gap-3">
+          <div className="w-full flex items-center gap-3 mb-5 text-lg  border-b border-black pb-10">
             <MapPinIcon className="w-5 h-5" />
             <div>
               {listingDetails.address.streetAddress},{' '}
@@ -131,8 +137,8 @@ export default function ViewListing () {
               , {listingDetails.address.state}
             </div>
           </div>
-          <section>
-            <h3 className="text-2xl font-medium">Bedrooms</h3>
+          <section className="border-b border-b-black pb-10">
+            <h3 className="text-2xl font-medium mb-5">Bedrooms</h3>
             {Object.entries(listingDetails.beds).map(([key, value]) => (
               <BedCard key={key} bedroomName={key} bedTotal={value} />
             ))}
@@ -146,7 +152,7 @@ export default function ViewListing () {
             </ul>
           </section>
         </div>
-        <BookingModal price={listingDetails.price}/>
+        <BookingModal price={listingDetails.price} />
       </section>
     </div>
   );
