@@ -28,7 +28,13 @@ export type SingleDetailListing = {
   id: number;
   title: string;
   owner: string;
-  address: unknown;
+  address: {
+    streetAddress: string;
+    city: string;
+    state: string;
+    country: string;
+    postalCode: string;
+  };
   price: number;
   thumbnail: string;
   metadata: {
@@ -70,8 +76,10 @@ export type ListingsReturn = {
 
 export type HomePageProps = {
   isLoggedIn: boolean;
-  products: Product[];
-  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+  products: SingleDetailListing[];
+  setProducts: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>;
+  isFiltered: boolean;
+  setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type ErrorModalsProps = {
@@ -85,8 +93,9 @@ export type NavBarProps = {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-  product: Product[];
-  setProduct: React.Dispatch<React.SetStateAction<Product[]>>;
+  product: SingleDetailListing[];
+  setProduct: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>;
+  setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type HomeProfileMenuProps = {
@@ -194,7 +203,7 @@ export type PropertyListing = {
     numBathrooms: number;
     numBedrooms: number;
     beds: { [key: string]: string };
-    propertyImages: string[]
+    propertyImages: string[];
     propertyAmenities: string[]; // Assuming it's an array of property amenities
   };
 };
@@ -265,6 +274,6 @@ export type DateFormProps = {
 
 export type PropertyImageProps = {
   src: string;
-  idx: number
-  deletePropertyImage: (idxToRemove: number) => void
+  idx: number;
+  deletePropertyImage: (idxToRemove: number) => void;
 };

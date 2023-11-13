@@ -1,6 +1,40 @@
 import React from 'react';
+import { Product, SingleDetailListing } from '../../types/types';
 
-function SearchForm () {
+interface SearchFormProps {
+  getDetailedListings: () => void;
+  detailedListings: SingleDetailListing[],
+  setProducts: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>
+  setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+function SearchForm ({ getDetailedListings, detailedListings, setProducts, setIsFiltered }: SearchFormProps) {
+  async function filterTitleCity (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    event.preventDefault();
+    await getDetailedListings()
+    const searchTerm = (document.getElementById('default-search') as HTMLInputElement)?.value;
+    searchTerm?.split(' ');
+    const filteredProducts = detailedListings.filter((product) => {
+      const title = product.title;
+      const city = product.address.city;
+
+      console.log(title, city)
+
+      const titleLowerCase = title.toLowerCase();
+      const cityLowerCase = city.toLowerCase();
+
+      console.log()
+
+      return (
+        titleLowerCase.includes(searchTerm) ||
+        cityLowerCase.includes(searchTerm)
+      );
+    });
+
+    setProducts(filteredProducts);
+    setIsFiltered(true)
+  }
+
   return (
     <form>
       <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
@@ -33,6 +67,7 @@ function SearchForm () {
         />
         <button
           type="submit"
+          onClick={(e) => { filterTitleCity(e) }}
           className="text-white absolute end-2.5 bottom-2.5 bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
         >
           Search

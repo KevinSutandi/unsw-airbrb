@@ -1,21 +1,21 @@
 import { Popover, Tab, Transition } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import SearchForm from './SearchComponents/SearchBar';
 import MinMaxCounter from './SearchComponents/MinMaxCounter';
 import { differenceInCalendarDays, startOfToday } from 'date-fns';
 import CheckInOut from './SearchComponents/CheckInOut';
 import NumberForm from './Forms/NumberForm';
-import { GetSingleListingReturn, HomePageProps, ListingsReturn } from '../types/types';
-import { AxiosError } from 'axios';
+import { DetailListing, HomePageProps, ListingsReturn, SingleDetailListing } from '../types/types';
 import { makeRequest } from '../utils/axiosHelper';
 
 interface DropdownProps {
   products: HomePageProps['products'];
   setProducts: HomePageProps['setProducts'];
+  setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Dropdown ({ products, setProducts }: DropdownProps) {
+export default function Dropdown ({ products, setProducts, setIsFiltered }: DropdownProps) {
   function classNames (...classes: string[]) {
     return classes.filter(Boolean).join(' ');
   }
@@ -28,40 +28,24 @@ export default function Dropdown ({ products, setProducts }: DropdownProps) {
   const [checkIn, setCheckIn] = useState<Date>(today);
   const [checkOut, setCheckOut] = useState<Date>(today);
 
-  const [filteredProducts, setFilteredProducts] = useState(products);
-  const [detailedListings, setDetailedListings] = useState<GetSingleListingReturn['data']['listing'][]>([]);
+  const [detailedListings, setDetailedListings] = useState<SingleDetailListing[]>([]);
 
-  function getAllListings () {
-    makeRequest<ListingsReturn>('GET', 'listings')
-      .then(async (response) => {
-        const listings = response.data.listings;
-        const sortedListings = listings.sort((a, b) => a.title.localeCompare(b.title))
-        try {
-          await setProducts(sortedListings);
-        } catch (err) {
-          if (err instanceof AxiosError) {
-            console.error('Error setting available products', err.message);
-          } else {
-            console.error('Error setting available products');
-          }
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }
+  useEffect(() => {
+    getDetailedListings();
+  }, []);
 
-  // Get Detailed Listings
-  function getDetailedListings () {
-    products.forEach(async (listing) => {
-      const res = await makeRequest<GetSingleListingReturn>(
-        'GET',
-        `listings/${listing.id}`
-      );
-      if (res.data.listing.published) {
-        setProducts((prev) => [...prev, listing]);
-      }
+  // Get all listings and with details
+  async function getDetailedListings () {
+    const res = await makeRequest<ListingsReturn>('GET', 'listings');
+    const listings = res.data.listings;
+    const detailedListings: SingleDetailListing[] = [];
+
+    listings.forEach(async (listing) => {
+      const res = await makeRequest<DetailListing>('GET', `listings/${listing.id}`);
+      detailedListings.push(res.data.listing);
     });
+
+    setDetailedListings(detailedListings);
   }
 
   // Function for filtering products based on the price range
@@ -69,15 +53,37 @@ export default function Dropdown ({ products, setProducts }: DropdownProps) {
     const filteredProducts = products.filter(
       (product) => product.price >= minPrice && product.price <= maxPrice
     );
-    setFilteredProducts(filteredProducts);
+    setProducts(filteredProducts);
   }
 
   // Function for filtering products based on the number of bedrooms (Get number of bedrooms from the single listing)
   function filterBedrooms () {
-    const filteredProducts = products.filter(
-      (product) => product.bedrooms >= min && product.bedrooms <= max
+    getDetailedListings()
+    const filteredProducts = detailedListings.filter(
+      (product) => product.metadata.numBedrooms >= min && product.metadata.numBedrooms <= max
     );
-    setFilteredProducts(filteredProducts);
+    setProducts(filteredProducts);
+  }
+
+  // Function for filtering products based on the check in and check out dates
+  function filterCheckInOut () {
+    getDetailedListings()
+    const filteredProducts = detailedListings.filter((product) => {
+      const availability = product.availability;
+
+      // Check if there is any availability range that overlaps with the selected check-in and check-out dates
+      return availability.some((range) => {
+        const rangeStart = new Date(range.from).getTime();
+        const rangeEnd = new Date(range.to).getTime();
+        const checkInDate = new Date(checkIn).getTime();
+        const checkOutDate = new Date(checkOut).getTime();
+
+        // Check if the selected check-in is before or equal to the range end and the selected check-out is after or equal to the range start
+        return checkInDate <= rangeEnd && checkOutDate >= rangeStart;
+      });
+    });
+
+    setProducts(filteredProducts);
   }
 
   /**
@@ -159,7 +165,7 @@ export default function Dropdown ({ products, setProducts }: DropdownProps) {
                         'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                       )}
                     >
-                      <SearchForm />
+                      <SearchForm getDetailedListings={getDetailedListings} detailedListings={detailedListings} setProducts={setProducts} setIsFiltered={setIsFiltered}/>
                     </Tab.Panel>
 
                     <Tab.Panel

@@ -4,7 +4,7 @@ import React from 'react';
 import * as axiosHelpers from '../../utils/axiosHelper';
 import NavBar from './NavBar';
 import { BrowserRouter } from 'react-router-dom';
-import { Product } from '../../types/types';
+import { Product, SingleDetailListing } from '../../types/types';
 
 jest.mock('../../utils/axiosHelper', () => ({
   makeRequest: jest.fn(),
@@ -16,7 +16,7 @@ describe('Home Components Not Logged In', () => {
     const setErrorModalOpen = jest.fn();
     const setErrorMessage = jest.fn();
     const setProducts = jest.fn();
-    const products: Product[] = [];
+    const products: SingleDetailListing[] = [];
 
     render(
       <BrowserRouter>
@@ -27,6 +27,7 @@ describe('Home Components Not Logged In', () => {
           setErrorModalOpen={setErrorModalOpen}
           product={products}
           setProduct={setProducts}
+          setIsFiltered={jest.fn()}
         />
       </BrowserRouter>
     );
