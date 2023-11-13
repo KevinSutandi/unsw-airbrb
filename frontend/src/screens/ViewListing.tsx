@@ -10,6 +10,19 @@ import BookingFooter from '../components/ViewListingComponents/BookingFooter';
 import DateModal from '../components/ViewListingComponents/DateModal';
 import DateContext from '../components/ViewListingComponents/DateContext';
 import { Nullable } from 'primereact/ts-helpers';
+import { getToken } from '../utils/auth';
+import { AxiosError } from 'axios';
+
+export const calculateDifferenceInDays = (
+  date1: Nullable<Date>,
+  date2: Nullable<Date>
+) => {
+  if (!date1 || !date2) {
+    return 0;
+  }
+  const differenceInMilliseconds = date2.getTime() - date1.getTime();
+  return Math.round(differenceInMilliseconds / (24 * 60 * 60 * 1000));
+};
 
 export default function ViewListing () {
   const { listingId } = useParams();
@@ -29,7 +42,7 @@ export default function ViewListing () {
     thumbnail: '',
     propertyImages: [] as string[],
     properyType: '',
-    availability: [] as Availability[]
+    availability: [] as Availability[],
   });
 
   const [featuredImg, setFeaturedImg] = useState('');
@@ -83,7 +96,7 @@ export default function ViewListing () {
         beds: listing.metadata.beds,
         thumbnail: listing.thumbnail,
         propertyImages: listing.metadata.propertyImages,
-        availability: listing.availability
+        availability: listing.availability,
       }));
       setFeaturedImg(listing.thumbnail);
       setCombinedImg([listing.thumbnail, ...listing.metadata.propertyImages]);
@@ -106,6 +119,46 @@ export default function ViewListing () {
     setFeaturedImg(image);
   };
 
+  const dateToString = (dateObj: Date) => {
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth() + 1; // getMonth() returns 0-11
+    const day = dateObj.getDate();
+
+    // Pad the month and day with leading zeros if necessary
+    const monthStr = month < 10 ? `0${month}` : `${month}`;
+    const dayStr = day < 10 ? `0${day}` : `${day}`;
+
+    return `${year}-${monthStr}-${dayStr}`;
+  };
+
+  const handleBook = async () => {
+    const token = getToken();
+    if (token) {
+      const body = {
+        dateRange: {
+          from: dateToString(checkinDate as Date),
+          to: dateToString(checkoutDate as Date),
+        },
+        totalPrice:
+          listingDetails.price *
+          calculateDifferenceInDays(checkinDate, checkoutDate),
+      };
+      console.log({ token, ...body }, listingId, token);
+      try {
+        const res = await makeRequest('POST', `bookings/new/${listingId}`, {
+          token,
+          ...body,
+        });
+        console.log(res);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          console.error(error.message)
+        }
+        console.error(error);
+      }
+    }
+  };
+
   return (
     <DateContext.Provider
       value={{
@@ -113,7 +166,7 @@ export default function ViewListing () {
         setCheckinDate,
         checkoutDate,
         setCheckoutDate,
-        availability: listingDetails.availability
+        availability: listingDetails.availability,
       }}
     >
       <div className="xl:mx-auto pt-3 sm:pt-9 xl:max-w-6xl w-full">
@@ -174,7 +227,7 @@ export default function ViewListing () {
                 <BedCard key={key} bedroomName={key} bedTotal={value} />
               ))}
             </section>
-            <section className='px-4'>
+            <section className="px-4">
               <h3>Amenities</h3>
               <ul className="list-disc">
                 {listingDetails.propertyAmenities.map((amenity, idx) => (
@@ -183,7 +236,7 @@ export default function ViewListing () {
               </ul>
             </section>
           </div>
-          <BookingModal price={listingDetails.price} />
+          <BookingModal price={listingDetails.price} handleBook={handleBook} />
         </section>
         <BookingFooter
           price={listingDetails.price}
