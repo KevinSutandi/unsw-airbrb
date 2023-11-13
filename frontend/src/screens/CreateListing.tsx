@@ -17,6 +17,7 @@ import { makeRequest } from '../utils/axiosHelper';
 import { useNavigate } from 'react-router-dom';
 import { getToken } from '../utils/auth';
 import axios from 'axios';
+import CreateBreadcrumbs from '../components/CreateListingComponents/Modals/CreateBreadcrumbs';
 
 export default function CreateListing ({
   setErrorMessage,
@@ -286,6 +287,7 @@ export default function CreateListing ({
   return (
     <>
       <div className='mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24'>
+        <CreateBreadcrumbs />
         <div className='flex flex-row justify-between'>
           <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
             Create Listing

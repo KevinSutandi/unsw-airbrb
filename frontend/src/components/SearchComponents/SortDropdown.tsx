@@ -6,7 +6,6 @@ import { SingleDetailListing, sortingOption } from '../../types/types';
 interface SortDropdownProps {
     products: SingleDetailListing[];
     setProducts: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>;
-    getListings: () => void;
 }
 
 const sortingOptions: sortingOption[] = [
@@ -15,16 +14,16 @@ const sortingOptions: sortingOption[] = [
   { name: 'Rating: High to Low', value: 'ratingHighToLow' },
 ];
 
-export default function SortDropdown ({ products, setProducts, getListings }: SortDropdownProps) {
+export default function SortDropdown ({ products, setProducts }: SortDropdownProps) {
   const [selected, setSelected] = useState(sortingOptions[0] as sortingOption);
 
   // function to sort products by rating
   const sortProducts = (value: sortingOption) => {
-    if (value.value === 'none') {
-      getListings();
-    }
-
     const sortedProducts = [...products];
+
+    if (value.value === 'none') {
+      sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
+    }
 
     if (value.value === 'ratingLowToHigh') {
       sortedProducts.sort((a, b) => a.averageStars - b.averageStars);

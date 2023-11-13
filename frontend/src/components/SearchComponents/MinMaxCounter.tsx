@@ -1,6 +1,7 @@
 import React from 'react';
 import Counter from './Counter';
 import { SingleDetailListing } from '../../types/types';
+import { useNavigate } from 'react-router-dom';
 
 interface MinMaxCounterProps {
   min: number;
@@ -21,6 +22,7 @@ export default function MinMaxCounter ({
   setProducts,
   setIsFiltered,
 }: MinMaxCounterProps) {
+  const navigate = useNavigate()
   // Search by minimum and maximum number of beds
   function handleSearchByMinMax (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
@@ -32,6 +34,7 @@ export default function MinMaxCounter ({
     });
 
     setProducts(filteredProducts);
+    navigate('/')
     setIsFiltered(true);
   }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { SingleDetailListing } from '../../types/types';
 import NumberForm from '../Forms/NumberForm';
+import { useNavigate } from 'react-router-dom';
 
 interface PriceFilterProps {
   minPrice: number;
@@ -21,6 +22,7 @@ export default function PriceFilter ({
   setProducts,
   setIsFiltered,
 }: PriceFilterProps) {
+  const navigate = useNavigate()
   function handleSearchByMinMax (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
@@ -33,6 +35,7 @@ export default function PriceFilter ({
     });
 
     setProducts(filteredProducts);
+    navigate('/')
     setIsFiltered(true);
   }
 
