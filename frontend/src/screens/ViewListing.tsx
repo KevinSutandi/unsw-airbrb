@@ -195,7 +195,7 @@ export default function ViewListing () {
           </div>
         </div>
         <section className="xl:flex xl:justify-between mt-10">
-          <div>
+          <div className='xl:max-w-2xl'>
             <div className="text-md my-5 px-4">
               <h4 className="text-3xl font-medium">
                 {listingDetails.properyType} in {listingDetails.address.city},{' '}
