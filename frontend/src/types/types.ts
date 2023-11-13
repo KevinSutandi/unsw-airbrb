@@ -267,3 +267,11 @@ export type BedCardProps = {
   bedroomName: string;
   bedTotal: string;
 };
+
+export type Address = {
+  streetAddress: string;
+  city: string;
+  state: string;
+  country: string | undefined;
+  postalCode: string;
+};
