@@ -20,6 +20,7 @@ import { getToken } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import PropertyImage from '../components/Forms/PropertyImage';
+import Breadcrumb from '../components/EditListingComponents/EditBreadcrumbs';
 
 export default function EditListing ({
   setErrorMessage,
@@ -439,15 +440,7 @@ export default function EditListing ({
   return (
     <>
       <div className='mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24 relative'>
-        <div className='mb-2 absolute top-0 left-[-30px]'>
-          <span
-            className='cursor-pointer hover:underline hover:font-bold'
-            onClick={() => navigate('/listings')}
-          >
-            my listings
-          </span>
-          /<span>edit</span>
-        </div>
+        <Breadcrumb/>
         <div className='flex flex-row justify-between'>
           <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
             Edit Listing

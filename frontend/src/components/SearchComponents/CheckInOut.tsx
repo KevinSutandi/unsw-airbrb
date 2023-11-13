@@ -2,6 +2,7 @@ import React from 'react';
 import Calendar from './Calendar';
 import { SingleDetailListing } from '../../types/types';
 import { isAfter, isBefore, add } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 interface CheckInOutCounterProps {
     checkIn: Date;
@@ -17,6 +18,7 @@ interface CheckInOutCounterProps {
 export default function CheckInOut ({
   checkIn, setCheckIn, checkOut, setCheckOut, difference, detailedListings, setProducts, setIsFiltered
 }: CheckInOutCounterProps) {
+  const navigate = useNavigate()
   function searchByCheckInOut (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
 
@@ -38,6 +40,7 @@ export default function CheckInOut ({
       });
     });
 
+    navigate('/')
     setProducts(filteredProducts);
     setIsFiltered(true);
   }

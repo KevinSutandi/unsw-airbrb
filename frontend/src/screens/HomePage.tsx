@@ -84,8 +84,10 @@ export default function HomePage ({
   };
 
   useEffect(() => {
-    getListings();
-  }, []);
+    if (isFiltered === false) {
+      getListings();
+    }
+  }, [isFiltered]);
 
   products.forEach((product) => {
     const reviews = product.reviews;
@@ -112,7 +114,7 @@ export default function HomePage ({
             Listings
           </h2>
           <div className='flex flex-row gap-3'>
-          <SortDropdown products={products} setProducts={setProducts} getListings={getListings}/>
+          <SortDropdown products={products} setProducts={setProducts} />
 
             {isFiltered && (
               <button
