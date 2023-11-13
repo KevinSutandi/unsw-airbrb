@@ -8,6 +8,7 @@ import BedCard from '../components/ViewListingComponents/BedCard';
 import BookingModal from '../components/ViewListingComponents/BookingModal';
 import BookingFooter from '../components/ViewListingComponents/BookingFooter';
 import DateModal from '../components/ViewListingComponents/DateModal';
+import DateContext from '../components/ViewListingComponents/DateContext';
 
 export default function ViewListing () {
   const { listingId } = useParams();
@@ -30,16 +31,27 @@ export default function ViewListing () {
   });
 
   const [featuredImg, setFeaturedImg] = useState('');
-  const [combinedImg, setCombinedImg] = useState<string[]>([])
-  const [isDateModalOpen, setIsDateModalOpen] = useState(false)
+  const [combinedImg, setCombinedImg] = useState<string[]>([]);
+  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+
+  const [checkinDate, setCheckinDate] = useState('');
+  const [checkoutDate, setCheckoutDate] = useState('');
 
   const closeDateModal = () => {
-    setIsDateModalOpen(false)
-  }
+    setIsDateModalOpen(false);
+  };
 
   const openDateModal = () => {
-    setIsDateModalOpen(true)
-  }
+    setIsDateModalOpen(true);
+  };
+
+  const handleCheckinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckinDate(event.target.value);
+  };
+
+  const handleCheckoutChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckoutDate(event.target.value);
+  };
 
   const fetchListingDetails = async () => {
     const res = await makeRequest<GetSingleListingReturn>(
@@ -71,7 +83,7 @@ export default function ViewListing () {
         propertyImages: listing.metadata.propertyImages,
       }));
       setFeaturedImg(listing.thumbnail);
-      setCombinedImg([listing.thumbnail, ...listing.metadata.propertyImages])
+      setCombinedImg([listing.thumbnail, ...listing.metadata.propertyImages]);
     };
 
     populateDetails();
@@ -92,75 +104,89 @@ export default function ViewListing () {
   };
 
   return (
-    <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24 w-full">
-      <h3 className="font-bold text-4xl mb-7">{listingDetails.listingTitle}</h3>
-      <div className="grid gap-4">
-        <div>
-          <img
-            className="h-auto max-w-full rounded-lg"
-            src={featuredImg}
-            alt="featured image"
-          />
-        </div>
-        <div className="grid grid-cols-4 gap-4">
-          {combinedImg.map((image, idx) => (
-            <button key={idx} className="hover: bg-gray-500 rounded-lg">
-              <img
-                className="h-auto max-w-full rounded-lg cursor-pointer hover:opacity-25"
-                src={image}
-                onClick={handleClickPropertyImg}
-                alt="property image"
-              />
-            </button>
-          ))}
-        </div>
-      </div>
-      <section className="flex xl:justify-between mt-10">
-        <div>
-          <div className="text-md my-5">
-            <h4 className="text-3xl font-medium">
-              {listingDetails.properyType} in {listingDetails.address.city},{' '}
-              {listingDetails.address.state}
-            </h4>
-            {Object.keys(listingDetails.beds).length} bedroom •{' '}
-            {listingDetails.numBathrooms} bathroom •{' '}
-            {countBeds(listingDetails.beds)} bed
+    <DateContext.Provider
+      value={{
+        checkinDate,
+        handleCheckinChange,
+        checkoutDate,
+        handleCheckoutChange,
+      }}
+    >
+      <div className="mx-auto max-w-4xl px-4 pt-3 sm:px-12 sm:pt-9 lg:max-w-6xl lg:px-24 w-full">
+        <h3 className="font-bold text-4xl mb-7">
+          {listingDetails.listingTitle}
+        </h3>
+        <div className="grid gap-4">
+          <div>
+            <img
+              className="h-auto max-w-full rounded-lg"
+              src={featuredImg}
+              alt="featured image"
+            />
           </div>
-          <div className="w-full flex items-center gap-3 text-lg">
-            <StarIcon className="w-5 h-5" />
-            <div className="flex gap-1">
-              <div>5</div>
-              <div>•</div>
-              <div className="underline"> 90 reviews</div>
-            </div>
-          </div>
-          <div className="w-full flex items-center gap-3 mb-5 text-lg  border-b border-black pb-10">
-            <MapPinIcon className="w-5 h-5" />
-            <div>
-              {listingDetails.address.streetAddress},{' '}
-              {listingDetails.address.postalCode}, {listingDetails.address.city}
-              , {listingDetails.address.state}
-            </div>
-          </div>
-          <section className="border-b border-b-black pb-10">
-            <h3 className="text-2xl font-medium mb-5">Bedrooms</h3>
-            {Object.entries(listingDetails.beds).map(([key, value]) => (
-              <BedCard key={key} bedroomName={key} bedTotal={value} />
+          <div className="grid grid-cols-4 gap-4">
+            {combinedImg.map((image, idx) => (
+              <button key={idx} className="hover: bg-gray-500 rounded-lg">
+                <img
+                  className="h-auto max-w-full rounded-lg cursor-pointer hover:opacity-25"
+                  src={image}
+                  onClick={handleClickPropertyImg}
+                  alt="property image"
+                />
+              </button>
             ))}
-          </section>
-          <section>
-            <h3>Amenities</h3>
-            <ul className="list-disc">
-              {listingDetails.propertyAmenities.map((amenity, idx) => (
-                <li key={idx}>{amenity}</li>
-              ))}
-            </ul>
-          </section>
+          </div>
         </div>
-        <BookingModal price={listingDetails.price} />
-      </section>
-      <BookingFooter price={listingDetails.price} openDateModal={openDateModal}/>
-      <DateModal open={isDateModalOpen} onClose={closeDateModal}/>
-    </div>
+        <section className="flex xl:justify-between mt-10">
+          <div>
+            <div className="text-md my-5">
+              <h4 className="text-3xl font-medium">
+                {listingDetails.properyType} in {listingDetails.address.city},{' '}
+                {listingDetails.address.state}
+              </h4>
+              {Object.keys(listingDetails.beds).length} bedroom •{' '}
+              {listingDetails.numBathrooms} bathroom •{' '}
+              {countBeds(listingDetails.beds)} bed
+            </div>
+            <div className="w-full flex items-center gap-3 text-lg">
+              <StarIcon className="w-5 h-5" />
+              <div className="flex gap-1">
+                <div>5</div>
+                <div>•</div>
+                <div className="underline"> 90 reviews</div>
+              </div>
+            </div>
+            <div className="w-full flex items-center gap-3 mb-5 text-lg  border-b border-black pb-10">
+              <MapPinIcon className="w-5 h-5" />
+              <div>
+                {listingDetails.address.streetAddress},{' '}
+                {listingDetails.address.postalCode},{' '}
+                {listingDetails.address.city}, {listingDetails.address.state}
+              </div>
+            </div>
+            <section className="border-b border-b-black pb-10">
+              <h3 className="text-2xl font-medium mb-5">Bedrooms</h3>
+              {Object.entries(listingDetails.beds).map(([key, value]) => (
+                <BedCard key={key} bedroomName={key} bedTotal={value} />
+              ))}
+            </section>
+            <section>
+              <h3>Amenities</h3>
+              <ul className="list-disc">
+                {listingDetails.propertyAmenities.map((amenity, idx) => (
+                  <li key={idx}>{amenity}</li>
+                ))}
+              </ul>
+            </section>
+          </div>
+          <BookingModal price={listingDetails.price} />
+        </section>
+        <BookingFooter
+          price={listingDetails.price}
+          openDateModal={openDateModal}
+        />
+        <DateModal open={isDateModalOpen} onClose={closeDateModal} />
+      </div>
+    </DateContext.Provider>
   );
 }
