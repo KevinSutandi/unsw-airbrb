@@ -14,7 +14,7 @@ export default function DateForm () {
 
   return (
     <div className="bg-gray-50 border border-gray-300 text-gray-900 xl:text-sm rounded-lg w-full flex box-border gap-1 text-left justify-between cursor-pointer text-lg">
-      <div className='py-2.5 px-2.5'>
+      <div className="py-2.5 px-2.5">
         <div>
           <label htmlFor="checkin" className="cursor-pointer font-medium">
             CHECK-IN
@@ -26,7 +26,7 @@ export default function DateForm () {
         </div>
       </div>
       <div>
-        <div className='py-2.5 px-2.5'>
+        <div className="py-2.5 px-2.5">
           <label htmlFor="checkout" className="cursor-pointer font-medium">
             CHECKOUT
           </label>
