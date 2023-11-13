@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { makeRequest } from '../utils/axiosHelper';
-import { Address, GetSingleListingReturn } from '../types/types';
+import { GetSingleListingReturn } from '../types/types';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { MapPinIcon } from '@heroicons/react/20/solid';
 import BedCard from '../components/ViewListingComponents/BedCard';
+import BookingModal from '../components/ViewListingComponents/BookingModal';
 
 export default function ViewListing () {
   const { listingId } = useParams();
@@ -108,40 +109,45 @@ export default function ViewListing () {
           ))}
         </div>
       </div>
-      <div className="text-md font-medium">
-        {Object.keys(listingDetails.beds).length} bedroom •{' '}
-        {listingDetails.numBathrooms} bathroom •{' '}
-        {countBeds(listingDetails.beds)} bed
-      </div>
-      <div className="w-full flex items-center gap-3">
-        <StarIcon className="w-5 h-5" />
-        <div className="flex gap-1">
-          <div>5</div>
-          <div>•</div>
-          <div className="underline"> 90 reviews</div>
-        </div>
-      </div>
-      <div className="w-full flex items-center gap-3">
-        <MapPinIcon className="w-5 h-5" />
+      <section className="flex justify-between mt-10">
         <div>
-          {listingDetails.address.streetAddress},{' '}
-          {listingDetails.address.postalCode}, {listingDetails.address.city},{' '}
-          {listingDetails.address.state}
+          <div className="text-md font-medium mt-5">
+            {Object.keys(listingDetails.beds).length} bedroom •{' '}
+            {listingDetails.numBathrooms} bathroom •{' '}
+            {countBeds(listingDetails.beds)} bed
+          </div>
+          <div className="w-full flex items-center gap-3">
+            <StarIcon className="w-5 h-5" />
+            <div className="flex gap-1">
+              <div>5</div>
+              <div>•</div>
+              <div className="underline"> 90 reviews</div>
+            </div>
+          </div>
+          <div className="w-full flex items-center gap-3">
+            <MapPinIcon className="w-5 h-5" />
+            <div>
+              {listingDetails.address.streetAddress},{' '}
+              {listingDetails.address.postalCode}, {listingDetails.address.city}
+              , {listingDetails.address.state}
+            </div>
+          </div>
+          <section>
+            <h3 className="text-2xl font-medium">Bedrooms</h3>
+            {Object.entries(listingDetails.beds).map(([key, value]) => (
+              <BedCard key={key} bedroomName={key} bedTotal={value} />
+            ))}
+          </section>
+          <section>
+            <h3>Amenities</h3>
+            <ul className="list-disc">
+              {listingDetails.propertyAmenities.map((amenity, idx) => (
+                <li key={idx}>{amenity}</li>
+              ))}
+            </ul>
+          </section>
         </div>
-      </div>
-      <section>
-        <h3 className="text-2xl font-medium">Bedrooms</h3>
-        {Object.entries(listingDetails.beds).map(([key, value]) => (
-          <BedCard key={key} bedroomName={key} bedTotal={value} />
-        ))}
-      </section>
-      <section>
-        <h3>Amenities</h3>
-        <ul className="list-disc">
-          {listingDetails.propertyAmenities.map((amenity, idx) => (
-            <li key={idx}>{amenity}</li>
-          ))}
-        </ul>
+        <BookingModal />
       </section>
     </div>
   );
