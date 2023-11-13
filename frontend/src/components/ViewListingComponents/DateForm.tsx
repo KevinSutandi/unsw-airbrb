@@ -9,8 +9,30 @@ export default function DateForm () {
     throw new Error('DateContext is undefined');
   }
 
-  const { checkinDate, checkoutDate, setCheckinDate, setCheckoutDate } =
-    contextValue;
+  const {
+    checkinDate,
+    checkoutDate,
+    setCheckinDate,
+    setCheckoutDate,
+    availability,
+  } = contextValue;
+
+  const generateDateRange = (startDate: Date, endDate: Date) => {
+    const dates = [];
+    let currentDate = new Date(startDate);
+    const end = new Date(endDate);
+
+    while (currentDate <= end) {
+      dates.push(new Date(currentDate));
+      currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
+    }
+
+    return dates;
+  };
+
+  const availableDates = availability.flatMap((elem) =>
+    generateDateRange(new Date(elem.from), new Date(elem.to))
+  );
 
   return (
     <div className="bg-gray-50 border border-gray-300 text-gray-900 xl:text-sm rounded-lg w-full flex box-border gap-1 text-left justify-between cursor-pointer text-lg">
@@ -22,6 +44,7 @@ export default function DateForm () {
           <Calendar
             value={checkinDate}
             onChange={(e) => setCheckinDate(e.value)}
+            enabledDates={availableDates}
           />
         </div>
       </div>
@@ -33,6 +56,7 @@ export default function DateForm () {
           <Calendar
             value={checkoutDate}
             onChange={(e) => setCheckoutDate(e.value)}
+            enabledDates={availableDates}
           />
         </div>
       </div>

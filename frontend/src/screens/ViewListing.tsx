@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { makeRequest } from '../utils/axiosHelper';
-import { GetSingleListingReturn } from '../types/types';
+import { Availability, GetSingleListingReturn } from '../types/types';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { MapPinIcon } from '@heroicons/react/20/solid';
 import BedCard from '../components/ViewListingComponents/BedCard';
@@ -29,6 +29,7 @@ export default function ViewListing () {
     thumbnail: '',
     propertyImages: [] as string[],
     properyType: '',
+    availability: [] as Availability[]
   });
 
   const [featuredImg, setFeaturedImg] = useState('');
@@ -82,6 +83,7 @@ export default function ViewListing () {
         beds: listing.metadata.beds,
         thumbnail: listing.thumbnail,
         propertyImages: listing.metadata.propertyImages,
+        availability: listing.availability
       }));
       setFeaturedImg(listing.thumbnail);
       setCombinedImg([listing.thumbnail, ...listing.metadata.propertyImages]);
@@ -111,6 +113,7 @@ export default function ViewListing () {
         setCheckinDate,
         checkoutDate,
         setCheckoutDate,
+        availability: listingDetails.availability
       }}
     >
       <div className="xl:mx-auto pt-3 sm:pt-9 xl:max-w-6xl w-full">
