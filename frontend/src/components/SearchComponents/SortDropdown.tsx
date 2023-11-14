@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { SingleDetailListing, sortingOption } from '../../types/types';
@@ -6,17 +6,12 @@ import { SingleDetailListing, sortingOption } from '../../types/types';
 interface SortDropdownProps {
     products: SingleDetailListing[];
     setProducts: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>;
+    selected: sortingOption;
+    setSelected: React.Dispatch<React.SetStateAction<sortingOption>>;
+    sortingOptions: sortingOption[];
 }
 
-const sortingOptions: sortingOption[] = [
-  { name: 'No Sorting', value: 'none' },
-  { name: 'Rating: Low to High', value: 'ratingLowToHigh' },
-  { name: 'Rating: High to Low', value: 'ratingHighToLow' },
-];
-
-export default function SortDropdown ({ products, setProducts }: SortDropdownProps) {
-  const [selected, setSelected] = useState(sortingOptions[0] as sortingOption);
-
+export default function SortDropdown ({ products, setProducts, selected, setSelected, sortingOptions }: SortDropdownProps) {
   // function to sort products by rating
   const sortProducts = (value: sortingOption) => {
     const sortedProducts = [...products];

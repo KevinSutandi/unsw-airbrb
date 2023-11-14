@@ -5,7 +5,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { getToken, setEmail, setToken } from '../utils/auth';
-import logo from '../../assets/logo.jpeg';
+import logo from '../assets/logo.jpeg';
 import LoginModal from './AuthModals/LoginModal';
 import RegisterModal from './AuthModals/RegisterModal';
 import { useNavigate } from 'react-router-dom';
