@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import DateContext from './DateContext';
 import { Nullable } from 'primereact/ts-helpers';
-import { getEmail } from '../../utils/auth';
+import { getEmail, getToken } from '../../utils/auth';
 import { NavLink } from 'react-router-dom';
 import { calculateDifferenceInDays } from '../../screens/ViewListing';
 
@@ -76,10 +76,10 @@ export default function BookingFooter ({
         : (
         <button
           onClick={handleBook}
-          disabled={!checkinDate || !checkoutDate}
+          disabled={!checkinDate || !checkoutDate || !getToken()}
           className="inline-block rounded-md disabled:opacity-40 disabled:bg-blue-600 bg-blue-600 px-8 py-4 text-center text-2xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
-          Book Now
+          {getToken() ? 'Book Now' : 'Log in to book'}
         </button>
           )}
     </footer>
