@@ -9,9 +9,10 @@ import {
   SingleDetailListing,
 } from '../types/types';
 import { StarIcon } from '@heroicons/react/20/solid';
-import DeleteListing from '../components/CreateListingComponents/Modals/DeleteListingModal';
-import PublishListingModal from '../components/CreateListingComponents/Modals/PublishListingModal';
+import DeleteListing from '../components/HostedListingComponents/DeleteListingModal';
+import PublishListingModal from '../components/HostedListingComponents/PublishListingModal';
 import HostedBreadcrumbs from '../components/HostedListingComponents/HostedListingBreadcrumbs';
+import UnpublishListingModal from '../components/HostedListingComponents/UnpublishListingModal';
 
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
   const starIcons: JSX.Element[] = [];
@@ -65,10 +66,13 @@ export default function HostedListngs ({
   const [myListings, setMyListings] = useState<SingleDetailListing[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedListingId, setSelectedListingId] = useState<number>(0);
-  const [runEffect, setRunEffect] = useState(false);
+  const [runEffect, setRunEffect] = useState<boolean>(false);
 
-  const [publishedListingId, setPublishedListingId] = useState(0);
-  const [publishedListingOpen, setPublishedListingOpen] = useState(false);
+  const [publishedListingId, setPublishedListingId] = useState<number>(0);
+  const [publishedListingOpen, setPublishedListingOpen] = useState<boolean>(false);
+
+  const [unpublishedListingId, setUnpublishedListingId] = useState<number>(0);
+  const [unpublishedListingOpen, setUnpublishedListingOpen] = useState<boolean>(false);
 
   const openDeleteListingModal = (listingId: number) => {
     setSelectedListingId(listingId);
@@ -79,6 +83,11 @@ export default function HostedListngs ({
     setPublishedListingId(listingId);
     setPublishedListingOpen(true);
   };
+
+  const openUnpublishListingModal = (listingId: number) => {
+    setUnpublishedListingId(listingId);
+    setUnpublishedListingOpen(true);
+  }
 
   const navigate = useNavigate();
 
@@ -151,10 +160,6 @@ export default function HostedListngs ({
     }
   }, [runEffect]);
 
-  const navigateCreate = () => {
-    navigate('/listings/create');
-  };
-
   return (
     <>
       <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-15 lg:max-w-7xl lg:px-8">
@@ -163,13 +168,12 @@ export default function HostedListngs ({
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             My Listings
           </h2>
-          <button
-            type="button"
-            onClick={navigateCreate}
+          <NavLink
+            to={'/listings/create'}
             className="inline-flex items-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Add New Listing
-          </button>
+          </NavLink>
         </div>
         <div className="my-3">
           <hr />
@@ -228,24 +232,27 @@ export default function HostedListngs ({
                   <NavLink
                     to={`/listings/edit/${listings.id}`}
                     type="button"
-                    className="inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-sm font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600"
+                    className="inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-xs font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600 sm:text-sm"
                   >
                     Edit Listing
                   </NavLink>
-                  <button
-                    onClick={() => openPublishListingModal(listings.id)}
-                    disabled={listings.published}
-                    className="inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-sm font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600 disabled:opacity-40"
+                  {listings.availability.length > 0
+                    ? <button
+                    onClick={() => openUnpublishListingModal(listings.id)}
+                    className="inline-flex items-center rounded-md ring-1 ring-red-500 px-3 py-2 text-xs font-semibold text-red-500 shadow-sm hover:bg-red-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-red-600 sm:text-sm"
                   >
-                    {listings.published
-                      ? 'Published'
-                      : 'Publish Listing'
-                    }
+                    Unpublish Listing
                   </button>
+                    : <button
+                    onClick={() => openPublishListingModal(listings.id)}
+                    className="inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-xs font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600 sm:text-sm"
+                  >
+                    Publish Listing
+                  </button> }
                   <button
                     type="button"
                     onClick={() => openDeleteListingModal(listings.id)}
-                    className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                    className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 sm:text-sm"
                   >
                     Delete Listing
                   </button>
@@ -267,6 +274,14 @@ export default function HostedListngs ({
         open={publishedListingOpen}
         setOpen={setPublishedListingOpen}
         listingId={publishedListingId}
+        setErrorMessage={setErrorMessage}
+        setErrorModalOpen={setErrorModalOpen}
+        setRunEffect={setRunEffect}
+      />
+      <UnpublishListingModal
+        open={unpublishedListingOpen}
+        setOpen={setUnpublishedListingOpen}
+        listingId={unpublishedListingId}
         setErrorMessage={setErrorMessage}
         setErrorModalOpen={setErrorModalOpen}
         setRunEffect={setRunEffect}

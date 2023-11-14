@@ -4,16 +4,16 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { getToken, setEmail, setToken } from '../../utils/auth';
-import logo from '../../assets/logo.jpeg';
-import LoginModal from '../AuthModals/LoginModal';
-import RegisterModal from '../AuthModals/RegisterModal';
+import { getToken, setEmail, setToken } from '../utils/auth';
+import logo from '../assets/logo.jpeg';
+import LoginModal from './AuthModals/LoginModal';
+import RegisterModal from './AuthModals/RegisterModal';
 import { useNavigate } from 'react-router-dom';
-import HomeProfileMenu from './HomeProfileMenu';
-import { makeRequest } from '../../utils/axiosHelper';
-import { NavBarProps } from '../../types/types';
+import HomeProfileMenu from './HomeComponents/HomeProfileMenu';
+import { makeRequest } from '../utils/axiosHelper';
+import { NavBarProps } from '../types/types';
 import axios from 'axios';
-import Dropdown from '../Dropdown';
+import Dropdown from './Dropdown';
 
 export default function NavBar ({
   isLoggedIn,
