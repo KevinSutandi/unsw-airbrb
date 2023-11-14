@@ -53,7 +53,7 @@ export default function ViewListing () {
 
   const [checkinDate, setCheckinDate] = useState<Nullable<Date>>(null);
   const [checkoutDate, setCheckoutDate] = useState<Nullable<Date>>(null);
-  const [isBookConfirmationOpen, setIsBookConfirmationOpen] = useState(false)
+  const [isBookConfirmationOpen, setIsBookConfirmationOpen] = useState(false);
 
   const closeDateModal = () => {
     setIsDateModalOpen(false);
@@ -64,8 +64,8 @@ export default function ViewListing () {
   };
 
   const closeBookConfirmation = () => {
-    setIsBookConfirmationOpen(false)
-  }
+    setIsBookConfirmationOpen(false);
+  };
 
   // const handleCheckinChange = (event: { originalEvent: Event, value: Date | Date[] }) => {
   //   setCheckinDate(event.value as Date);
@@ -153,14 +153,14 @@ export default function ViewListing () {
       };
       console.log({ token, ...body }, listingId, token);
       try {
-        const res = await makeRequest('POST', `bookings/new/${listingId}`, {
+        await makeRequest('POST', `bookings/new/${listingId}`, {
           token,
           ...body,
         });
-        setIsBookConfirmationOpen(true)
+        setIsBookConfirmationOpen(true);
       } catch (error) {
         if (error instanceof AxiosError) {
-          console.error(error.message)
+          console.error(error.message);
         }
         console.error(error);
       }
@@ -203,7 +203,7 @@ export default function ViewListing () {
           </div>
         </div>
         <section className="xl:flex xl:justify-between mt-10">
-          <div className='xl:max-w-2xl'>
+          <div className="xl:max-w-2xl">
             <div className="text-md my-5 px-4">
               <h4 className="text-3xl font-medium">
                 {listingDetails.properyType} in {listingDetails.address.city},{' '}
@@ -244,14 +244,25 @@ export default function ViewListing () {
               </ul>
             </section>
           </div>
-          <BookingModal price={listingDetails.price} handleBook={handleBook} owner={listingDetails.owner} listingId={listingId as string}/>
+          <BookingModal
+            price={listingDetails.price}
+            handleBook={handleBook}
+            owner={listingDetails.owner}
+            listingId={listingId as string}
+          />
         </section>
         <BookingFooter
           price={listingDetails.price}
           openDateModal={openDateModal}
+          handleBook={handleBook}
+          owner={listingDetails.owner}
+          listingId={listingId as string}
         />
         <DateModal open={isDateModalOpen} onClose={closeDateModal} />
-        <BookConfirmation open={isBookConfirmationOpen} onClose={closeBookConfirmation}/>
+        <BookConfirmation
+          open={isBookConfirmationOpen}
+          onClose={closeBookConfirmation}
+        />
       </div>
     </DateContext.Provider>
   );

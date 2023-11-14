@@ -5,11 +5,15 @@ import { Nullable } from 'primereact/ts-helpers';
 type BookingModalProps = {
   price: number;
   openDateModal: () => void;
+  owner: string
+  handleBook: () => void;
+  listingId: string
 };
 
 export default function BookingFooter ({
   price,
   openDateModal,
+  handleBook
 }: BookingModalProps) {
   const contextValue = useContext(DateContext);
 
@@ -42,7 +46,9 @@ export default function BookingFooter ({
           {formatDate(checkinDate)} - {formatDate(checkoutDate)}
         </button>
       </div>
-      <button className="inline-block rounded-md bg-blue-600 px-8 py-4 text-center text-2xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+      <button
+      onClick={handleBook}
+      className="inline-block rounded-md bg-blue-600 px-8 py-4 text-center text-2xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
         Book Now
       </button>
     </footer>

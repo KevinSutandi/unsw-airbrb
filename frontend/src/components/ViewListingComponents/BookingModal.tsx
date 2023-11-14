@@ -31,9 +31,12 @@ export default function BookingModal ({
       <div className="lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0 box-border">
         <div className="rounded-2xl bg-gray-50 py-5 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center shadow-xl px-10">
           <div className="mx-auto">
+            <div className='flex items-baseline gap-2'>
             <h3 className="font-bold text-left text-2xl font-semibol mb-5">
               ${price} AUD
             </h3>
+            <p>Per Night</p>
+            </div>
             <DateForm />
             {owner === getEmail()
               ? (
