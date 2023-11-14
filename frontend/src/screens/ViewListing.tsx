@@ -28,6 +28,7 @@ export default function ViewListing () {
   const { listingId } = useParams();
 
   const [listingDetails, setListingDetails] = useState({
+    owner: '',
     listingTitle: '',
     propertyAmenities: [] as string[],
     price: 0,
@@ -82,6 +83,7 @@ export default function ViewListing () {
       const listing = res.data.listing;
       setListingDetails((prev) => ({
         ...prev,
+        owner: listing.owner,
         listingTitle: listing.title,
         propertyAmenities: listing.metadata.propertyAmenities,
         properyType: listing.metadata.propertyType,
@@ -236,7 +238,7 @@ export default function ViewListing () {
               </ul>
             </section>
           </div>
-          <BookingModal price={listingDetails.price} handleBook={handleBook} />
+          <BookingModal price={listingDetails.price} handleBook={handleBook} owner={listingDetails.owner} listingId={listingId as string}/>
         </section>
         <BookingFooter
           price={listingDetails.price}
