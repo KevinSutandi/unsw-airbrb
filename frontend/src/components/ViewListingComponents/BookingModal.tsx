@@ -18,13 +18,13 @@ export default function BookingModal ({
   owner,
   listingId
 }: BookingModalProps) {
-  const contextValue = useContext(DateContext);
+  const dateContextValue = useContext(DateContext);
 
-  if (!contextValue) {
+  if (!dateContextValue) {
     throw new Error('Date Context Error');
   }
 
-  const { checkinDate, checkoutDate } = contextValue;
+  const { checkinDate, checkoutDate } = dateContextValue;
 
   return (
     <div className="hidden xl:block">

@@ -3,9 +3,9 @@ import DateContext from './DateContext';
 import { Calendar } from 'primereact/calendar';
 
 export default function DateForm () {
-  const contextValue = useContext(DateContext);
+  const dateContextValue = useContext(DateContext);
 
-  if (!contextValue) {
+  if (!dateContextValue) {
     throw new Error('DateContext is undefined');
   }
 
@@ -15,7 +15,7 @@ export default function DateForm () {
     setCheckinDate,
     setCheckoutDate,
     availability,
-  } = contextValue;
+  } = dateContextValue;
 
   const generateDateRange = (startDate: Date, endDate: Date) => {
     const dates = [];

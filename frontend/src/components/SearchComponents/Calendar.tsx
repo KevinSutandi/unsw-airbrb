@@ -14,6 +14,7 @@ import {
   startOfToday,
   isBefore,
 } from 'date-fns';
+import { Nullable } from 'primereact/ts-helpers';
 import React, { useState } from 'react';
 
 function classNames (...classes: (string | boolean | undefined)[]) {
@@ -24,10 +25,10 @@ interface CalendarProps {
     selectedDay: Date;
     setSelectedDay: React.Dispatch<React.SetStateAction<Date>>;
     checkIn?: Date;
-
+    setFiltered: React.Dispatch<React.SetStateAction<Nullable<Date>>>;
     }
 
-export default function Calendar ({ selectedDay, setSelectedDay, checkIn }: CalendarProps) {
+export default function Calendar ({ selectedDay, setSelectedDay, checkIn, setFiltered }: CalendarProps) {
   const today = startOfToday();
   const yesterday = add(today, { days: -1 });
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
@@ -50,6 +51,12 @@ export default function Calendar ({ selectedDay, setSelectedDay, checkIn }: Cale
 
   if (checkIn && isBefore(selectedDay, add(checkIn, { days: 1 }))) {
     setSelectedDay(add(checkIn, { days: 1 }));
+    setFiltered(add(checkIn, { days: 1 }));
+  }
+
+  const setDay = (day: Date) => {
+    setSelectedDay(day)
+    setFiltered(day)
   }
 
   return (
@@ -98,7 +105,7 @@ export default function Calendar ({ selectedDay, setSelectedDay, checkIn }: Cale
                 >
                   <button
                     type='button'
-                    onClick={() => setSelectedDay(day)}
+                    onClick={() => { setDay(day) }}
                     className={classNames(
                       isEqual(day, selectedDay) && 'text-white',
                       !isEqual(day, selectedDay) &&
