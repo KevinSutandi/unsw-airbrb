@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { StarIcon, AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import {
@@ -12,6 +12,7 @@ import {
 import { AxiosError } from 'axios';
 import { NavLink } from 'react-router-dom';
 import SortDropdown from '../components/SearchComponents/SortDropdown';
+import GlobalContext from '../components/GlobalContext';
 
 // Function to generate star icons based on the average rating
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
@@ -41,6 +42,14 @@ export default function HomePage ({
   isFiltered,
   setIsFiltered,
 }: HomePageProps) {
+  const globalContextValue = useContext(GlobalContext)
+
+  if (!globalContextValue) {
+    throw new Error('Global context undefined')
+  }
+
+  const { setFilteredCheckin, setFilteredCheckout } = globalContextValue
+
   const setAvailableProducts = async (listings: Product[]) => {
     const productsNew: SingleDetailListing[] = [];
 
@@ -115,6 +124,8 @@ export default function HomePage ({
   async function clearFilter () {
     setIsFiltered(false);
     setSelected(sortingOptions[0] as sortingOption);
+    setFilteredCheckin(null)
+    setFilteredCheckout(null)
     await getListings();
   }
 

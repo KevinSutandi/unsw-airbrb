@@ -25,7 +25,7 @@ function App () {
   const [products, setProducts] = useState<SingleDetailListing[]>([]);
   const [isFiltered, setIsFiltered] = useState(false);
 
-  const [filteredCheckin, setFilteredCheckin] = useState<Nullable<Date>>(null)
+  const [filteredCheckin, setFilteredCheckin] = useState<Nullable<Date>>(new Date())
   const [filteredCheckout, setFilteredCheckout] = useState<Nullable<Date>>(null)
 
   return (
