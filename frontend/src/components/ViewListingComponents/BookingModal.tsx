@@ -50,7 +50,8 @@ export default function BookingModal ({
               : (
               <button
                 onClick={handleBook}
-                className="mt-10 block w-full rounded-md bg-blue-600 px-3 py-2 text-center text-xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                disabled={!checkinDate || !checkoutDate}
+                className="mt-10 block w-full rounded-md bg-blue-600 px-3 py-2 text-center text-xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-40 disabled:hover:bg-blue-600"
               >
                 Book Now
               </button>

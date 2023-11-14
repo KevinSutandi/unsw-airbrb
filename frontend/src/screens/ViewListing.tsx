@@ -67,14 +67,6 @@ export default function ViewListing () {
     setIsBookConfirmationOpen(false);
   };
 
-  // const handleCheckinChange = (event: { originalEvent: Event, value: Date | Date[] }) => {
-  //   setCheckinDate(event.value as Date);
-  // };
-
-  // const handleCheckoutChange = (event: FormEvent<Date, React.SyntheticEvent<Element, Event>>) => {
-  //   setCheckoutDate(event.value as Date);
-  // };
-
   const fetchListingDetails = async () => {
     const res = await makeRequest<GetSingleListingReturn>(
       'GET',
