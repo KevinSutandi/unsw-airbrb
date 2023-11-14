@@ -143,7 +143,6 @@ export default function ViewListing () {
           listingDetails.price *
           calculateDifferenceInDays(checkinDate, checkoutDate),
       };
-      console.log({ token, ...body }, listingId, token);
       try {
         await makeRequest('POST', `bookings/new/${listingId}`, {
           token,
