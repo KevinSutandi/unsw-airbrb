@@ -124,7 +124,7 @@ export default function HomePage ({
   async function clearFilter () {
     setIsFiltered(false);
     setSelected(sortingOptions[0] as sortingOption);
-    setFilteredCheckin(null)
+    setFilteredCheckin(new Date())
     setFilteredCheckout(null)
     await getListings();
   }
