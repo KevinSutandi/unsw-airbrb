@@ -7,6 +7,10 @@ import HostedListings from './screens/HostedListings';
 import ErrorModal from './components/ErrorModal';
 import CreateListing from './screens/CreateListing';
 import EditListing from './screens/EditListing';
+import ViewListing from './screens/ViewListing';
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 import { SingleDetailListing } from './types/types';
 
 function App () {
@@ -62,6 +66,7 @@ function App () {
               />
             }
           />
+          <Route path="/listings/view/:listingId" element={<ViewListing />} />
         </Routes>
       </Router>
 

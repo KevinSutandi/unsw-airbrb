@@ -10,6 +10,7 @@ import {
   sortingOption,
 } from '../types/types';
 import { AxiosError } from 'axios';
+import { NavLink } from 'react-router-dom';
 import SortDropdown from '../components/SearchComponents/SortDropdown';
 
 // Function to generate star icons based on the average rating
@@ -65,6 +66,7 @@ export default function HomePage ({
     await Promise.all(requests);
 
     // Set the state after all requests are complete
+    // Set all products current user doesnt host
     setProducts(productsNew);
   };
 
@@ -151,8 +153,9 @@ export default function HomePage ({
         <div className='mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8'>
           {products.length > 0
             ? (
-                products.map((product) => (
-              <div key={product.id} className='group relative'>
+                products.map((product) => {
+                  console.log(product)
+                  return <NavLink to={`/listings/view/${product.id}`} key={product.id} className='group relative'>
                 <div className='aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80'>
                   <img
                     src={product.thumbnail}
@@ -183,8 +186,8 @@ export default function HomePage ({
                     ({product.numReviews})
                   </p>
                 </div>
-              </div>
-                ))
+              </NavLink>
+                })
               )
             : isFiltered
               ? (

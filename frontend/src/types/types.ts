@@ -278,6 +278,11 @@ export type PropertyImageProps = {
   deletePropertyImage: (idxToRemove: number) => void;
 };
 
+export type BedCardProps = {
+  bedroomName: string;
+  bedTotal: string;
+};
+
 export interface sortingOption {
   name: string;
   value: string;

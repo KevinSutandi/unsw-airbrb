@@ -55,7 +55,7 @@ export default function Dropdown ({
         'GET',
         `listings/${listing.id}`
       );
-      detailedListings.push(res.data.listing);
+      detailedListings.push({ ...res.data.listing, id: listing.id });
     });
 
     setDetailedListings(detailedListings);
