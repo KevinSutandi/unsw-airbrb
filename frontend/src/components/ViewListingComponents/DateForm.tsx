@@ -45,6 +45,7 @@ export default function DateForm () {
             value={checkinDate}
             onChange={(e) => setCheckinDate(e.value)}
             enabledDates={availableDates}
+            minDate={new Date()}
           />
         </div>
       </div>
@@ -57,6 +58,7 @@ export default function DateForm () {
             value={checkoutDate}
             onChange={(e) => setCheckoutDate(e.value)}
             enabledDates={availableDates}
+            minDate={new Date()}
           />
         </div>
       </div>
