@@ -12,6 +12,7 @@ import DateContext from '../components/ViewListingComponents/DateContext';
 import { Nullable } from 'primereact/ts-helpers';
 import { getToken } from '../utils/auth';
 import { AxiosError } from 'axios';
+import BookConfirmation from '../components/ViewListingComponents/BookConfirmation';
 
 export const calculateDifferenceInDays = (
   date1: Nullable<Date>,
@@ -52,6 +53,7 @@ export default function ViewListing () {
 
   const [checkinDate, setCheckinDate] = useState<Nullable<Date>>(null);
   const [checkoutDate, setCheckoutDate] = useState<Nullable<Date>>(null);
+  const [isBookConfirmationOpen, setIsBookConfirmationOpen] = useState(false)
 
   const closeDateModal = () => {
     setIsDateModalOpen(false);
@@ -60,6 +62,10 @@ export default function ViewListing () {
   const openDateModal = () => {
     setIsDateModalOpen(true);
   };
+
+  const closeBookConfirmation = () => {
+    setIsBookConfirmationOpen(false)
+  }
 
   // const handleCheckinChange = (event: { originalEvent: Event, value: Date | Date[] }) => {
   //   setCheckinDate(event.value as Date);
@@ -151,7 +157,7 @@ export default function ViewListing () {
           token,
           ...body,
         });
-        console.log(res);
+        setIsBookConfirmationOpen(true)
       } catch (error) {
         if (error instanceof AxiosError) {
           console.error(error.message)
@@ -245,6 +251,7 @@ export default function ViewListing () {
           openDateModal={openDateModal}
         />
         <DateModal open={isDateModalOpen} onClose={closeDateModal} />
+        <BookConfirmation open={isBookConfirmationOpen} onClose={closeBookConfirmation}/>
       </div>
     </DateContext.Provider>
   );
