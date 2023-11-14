@@ -13,6 +13,7 @@ import { Nullable } from 'primereact/ts-helpers';
 import { getToken } from '../utils/auth';
 import { AxiosError } from 'axios';
 import BookConfirmation from '../components/ViewListingComponents/BookConfirmation';
+import AmenitiesList from '../components/ViewListingComponents/AmenitiesList';
 
 export const calculateDifferenceInDays = (
   date1: Nullable<Date>,
@@ -226,11 +227,11 @@ export default function ViewListing () {
                 <BedCard key={key} bedroomName={key} bedTotal={value} />
               ))}
             </section>
-            <section className="px-4">
-              <h3>Amenities</h3>
-              <ul className="list-disc">
+            <section className="px-4 mt-5">
+              <h3 className='text-2xl font-medium mb-2'>Amenities</h3>
+              <ul className='flex flex-col gap-2'>
                 {listingDetails.propertyAmenities.map((amenity, idx) => (
-                  <li key={idx}>{amenity}</li>
+                  <AmenitiesList amenity={amenity} key={idx} idx={idx}/>
                 ))}
               </ul>
             </section>
