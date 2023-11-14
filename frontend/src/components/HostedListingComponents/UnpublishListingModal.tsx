@@ -1,22 +1,22 @@
 import React, { Fragment, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { TrashIcon } from '@heroicons/react/24/outline';
-import { DeleteListingProps } from '../../../types/types';
-import { makeRequest } from '../../../utils/axiosHelper';
+import { FaceFrownIcon } from '@heroicons/react/24/outline';
+import { DeleteListingProps } from '../../types/types';
+import { makeRequest } from '../../utils/axiosHelper';
 import axios from 'axios';
-import { getToken } from '../../../utils/auth';
+import { getToken } from '../../utils/auth';
 
-export default function DeleteListing ({ open, setOpen, listingId, setErrorModalOpen, setErrorMessage, setRunEffect }: DeleteListingProps) {
+export default function UnpublishListingModal ({ open, setOpen, listingId, setErrorModalOpen, setErrorMessage, setRunEffect }: DeleteListingProps) {
   const cancelButtonRef = useRef(null);
 
-  const handleDelete = async () => {
+  const handleUnpublish = async () => {
     if (listingId) {
       const token = getToken();
       if (token) {
         try {
           // Make a DELETE request to delete the listing
-          await makeRequest('DELETE', `listings/${listingId}`, { token });
-          // Close the delete confirmation modal
+          await makeRequest('PUT', `listings/unpublish/${listingId}`, { token });
+          // Close the unpublish confirmation modal
           setOpen(false);
           setRunEffect(true);
         } catch (err) {
@@ -24,11 +24,11 @@ export default function DeleteListing ({ open, setOpen, listingId, setErrorModal
           if (axios.isAxiosError(err)) {
             if (err.response?.data) {
               setErrorMessage(err.response.data.error);
-              console.error('Delete failed:', err.response.data.error);
+              console.error('Unpublish listing failed:', err.response.data.error);
             }
           } else {
             setErrorMessage('An unexpected error occurred.');
-            console.error('Delete failed:', err);
+            console.error('Unpublish listing failed:', err);
           }
         }
       }
@@ -70,7 +70,7 @@ export default function DeleteListing ({ open, setOpen, listingId, setErrorModal
                 <div className='bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4'>
                   <div className='sm:flex sm:items-start'>
                     <div className='mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10'>
-                      <TrashIcon
+                      <FaceFrownIcon
                         className='h-6 w-6 text-red-600'
                         aria-hidden='true'
                       />
@@ -80,11 +80,11 @@ export default function DeleteListing ({ open, setOpen, listingId, setErrorModal
                         as='h3'
                         className='text-base font-semibold leading-6 text-gray-900'
                       >
-                        Delete Listing
+                        Unpublish Listing
                       </Dialog.Title>
                       <div className='mt-2'>
                         <p className='text-sm text-gray-500'>
-                          Are you sure you want to delete this Listing
+                          Are you sure you want to unpublish this listing?
                         </p>
                       </div>
                     </div>
@@ -94,9 +94,9 @@ export default function DeleteListing ({ open, setOpen, listingId, setErrorModal
                   <button
                     type='button'
                     className='inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto'
-                    onClick={() => handleDelete()}
+                    onClick={() => handleUnpublish()}
                   >
-                    Delete
+                    Unpublish
                   </button>
                   <button
                     type='button'

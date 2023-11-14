@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeRequest } from '../utils/axiosHelper';
 import { StarIcon, AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import {
@@ -7,6 +7,7 @@ import {
   ListingsReturn,
   Product,
   SingleDetailListing,
+  sortingOption,
 } from '../types/types';
 import { AxiosError } from 'axios';
 import SortDropdown from '../components/SearchComponents/SortDropdown';
@@ -26,6 +27,12 @@ const generateStarIcons = (averageStars: number): JSX.Element[] => {
 
   return starIcons;
 };
+
+const sortingOptions: sortingOption[] = [
+  { name: 'No Sorting', value: 'none' },
+  { name: 'Rating: Low to High', value: 'ratingLowToHigh' },
+  { name: 'Rating: High to Low', value: 'ratingHighToLow' },
+];
 
 export default function HomePage ({
   products,
@@ -60,6 +67,8 @@ export default function HomePage ({
     // Set the state after all requests are complete
     setProducts(productsNew);
   };
+
+  const [selected, setSelected] = useState(sortingOptions[0] as sortingOption);
 
   const getListings = async () => {
     makeRequest<ListingsReturn>('GET', 'listings')
@@ -103,6 +112,7 @@ export default function HomePage ({
 
   async function clearFilter () {
     setIsFiltered(false);
+    setSelected(sortingOptions[0] as sortingOption);
     await getListings();
   }
 
@@ -114,7 +124,13 @@ export default function HomePage ({
             Listings
           </h2>
           <div className='flex flex-row gap-3'>
-          <SortDropdown products={products} setProducts={setProducts} />
+            <SortDropdown
+              products={products}
+              setProducts={setProducts}
+              selected={selected}
+              setSelected={setSelected}
+              sortingOptions={sortingOptions}
+            />
 
             {isFiltered && (
               <button
@@ -129,7 +145,6 @@ export default function HomePage ({
                 Reset Filters
               </button>
             )}
-
           </div>
         </div>
 
