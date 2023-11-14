@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './screens/HomePage';
-import NavBar from './components/HomeComponents/NavBar';
+import NavBar from './components/NavBar';
 import './input.css';
 import HostedListings from './screens/HostedListings';
 import ErrorModal from './components/ErrorModal';

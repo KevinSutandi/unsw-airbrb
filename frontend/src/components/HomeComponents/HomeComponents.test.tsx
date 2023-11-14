@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import HomeProfileMenu from './HomeProfileMenu';
 import React from 'react';
 import * as axiosHelpers from '../../utils/axiosHelper';
-import NavBar from './NavBar';
+import NavBar from '../NavBar';
 import { BrowserRouter } from 'react-router-dom';
 import { Product, SingleDetailListing } from '../../types/types';
 
