@@ -8,8 +8,8 @@ type AmenitiesListProps = {
 
 export default function AmenitiesList ({ amenity }: AmenitiesListProps) {
   return (
-    <li className='flex items-center gap-2'>
-      <CheckCircleIcon className='w-5 h-5'/>
+    <li className="flex items-center gap-2">
+      <CheckCircleIcon className="w-5 h-5" />
       <div className="text-xl">{amenity}</div>
     </li>
   );
