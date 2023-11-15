@@ -16,6 +16,9 @@ import BookConfirmation from '../components/ViewListingComponents/BookConfirmati
 import AmenitiesList from '../components/ViewListingComponents/AmenitiesList';
 import GlobalContext from '../components/GlobalContext';
 
+// TODO: Adjust reviews accordingly
+// TODO: Calendar to date earlier than from date validation
+
 export const calculateDifferenceInDays = (
   date1: Nullable<Date>,
   date2: Nullable<Date>
