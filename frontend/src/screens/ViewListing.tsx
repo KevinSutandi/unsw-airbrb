@@ -3,7 +3,6 @@ import { useParams } from 'react-router';
 import { makeRequest } from '../utils/axiosHelper';
 import {
   Availability,
-  Booking,
   GetBookingsReturn,
   GetSingleListingReturn,
   Review,
