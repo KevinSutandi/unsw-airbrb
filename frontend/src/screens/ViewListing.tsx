@@ -17,6 +17,7 @@ import AmenitiesList from '../components/ViewListingComponents/AmenitiesList';
 import GlobalContext from '../components/GlobalContext';
 
 // TODO: Set a booking status
+// TODO: Validation for footer
 
 export const calculateDifferenceInDays = (
   date1: Nullable<Date>,
