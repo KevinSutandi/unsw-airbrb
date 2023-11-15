@@ -4,6 +4,7 @@ export type RequestOptions = {
 };
 
 export type Review = {
+  text: string;
   rating: number;
 };
 
@@ -287,3 +288,16 @@ export interface sortingOption {
   name: string;
   value: string;
 }
+
+export type Booking = {
+  id: string;
+  owner: string;
+  dateRange: { from: string; to: string };
+  totalPrice: number;
+  listingId: string;
+  status: string;
+};
+
+export type GetBookingsReturn = {
+  bookings: Booking[];
+};

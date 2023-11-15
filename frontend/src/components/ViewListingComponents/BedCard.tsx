@@ -1,12 +1,12 @@
 import React from 'react';
-import BedIcon from '../../assets/double-bed-icon.svg'
+import BedIcon from '../../assets/double-bed-icon.svg';
 import { BedCardProps } from '../../types/types';
 
 export default function BedCard ({ bedroomName, bedTotal }: BedCardProps) {
   const getBedroomName = () => {
-    const nameSplit = (bedroomName.split('_'))
-    return `Bedroom ${nameSplit[1]}`
-  }
+    const nameSplit = bedroomName.split('_');
+    return `Bedroom ${nameSplit[1]}`;
+  };
 
   return (
     <div key={bedroomName} className="inline-block">

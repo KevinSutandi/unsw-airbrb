@@ -4,6 +4,7 @@ import { Nullable } from 'primereact/ts-helpers';
 import { getEmail, getToken } from '../../utils/auth';
 import { NavLink } from 'react-router-dom';
 import { calculateDifferenceInDays } from '../../screens/ViewListing';
+import { areDatesValid } from '../../utils/helpers';
 
 type BookingModalProps = {
   price: number;
@@ -53,16 +54,24 @@ export default function BookingFooter ({
         >
           {formatDate(checkinDate)} - {formatDate(checkoutDate)}
         </button>
-        <div className="flex gap-2 font-bold items-baseline text-xl">
-          <div>Total</div>
-          <div>{`$${
-            price * calculateDifferenceInDays(checkinDate, checkoutDate)
-          } AUD`}</div>
-          <div className='text-sm font-light'>{`($${price} X ${calculateDifferenceInDays(
-          checkinDate,
-          checkoutDate
-        )} nights)`}</div>
-        </div>
+        {areDatesValid(checkinDate, checkoutDate)
+          ? (
+          <div className="flex gap-2 font-bold items-baseline text-xl">
+            <div>Total</div>
+            <div>{`$${
+              price * calculateDifferenceInDays(checkinDate, checkoutDate)
+            } AUD`}</div>
+            <div className="text-sm font-light">{`($${price} X ${calculateDifferenceInDays(
+              checkinDate,
+              checkoutDate
+            )} nights)`}</div>
+          </div>
+            )
+          : (
+          <p className="text-red-500">
+            Checkout date cannot be earlier than check-in date
+          </p>
+            )}
       </div>
       {owner === getEmail()
         ? (
@@ -76,7 +85,7 @@ export default function BookingFooter ({
         : (
         <button
           onClick={handleBook}
-          disabled={!checkinDate || !checkoutDate || !getToken()}
+          disabled={!areDatesValid(checkinDate, checkoutDate) || !getToken()}
           className="inline-block rounded-md disabled:opacity-40 disabled:bg-blue-600 bg-blue-600 px-8 py-4 text-center text-2xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           {getToken() ? 'Book Now' : 'Log in to book'}
