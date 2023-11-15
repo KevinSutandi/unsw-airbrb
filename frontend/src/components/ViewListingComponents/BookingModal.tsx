@@ -4,6 +4,7 @@ import DateContext from './DateContext';
 import { calculateDifferenceInDays } from '../../screens/ViewListing';
 import { getEmail, getToken } from '../../utils/auth';
 import { NavLink } from 'react-router-dom';
+import { areDatesValid } from '../../utils/helpers';
 
 type BookingModalProps = {
   owner: string;
@@ -50,13 +51,13 @@ export default function BookingModal ({
               : (
               <button
                 onClick={handleBook}
-                disabled={!checkinDate || !checkoutDate || !getToken()}
+                disabled={!getToken() || !areDatesValid(checkinDate, checkoutDate)}
                 className="mt-10 block w-full rounded-md bg-blue-600 px-3 py-2 text-center text-xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-40 disabled:hover:bg-blue-600"
               >
                 {getToken() ? 'Book Now' : 'Log in to book'}
               </button>
                 )}
-            {checkinDate && checkoutDate && (
+            {areDatesValid(checkinDate, checkoutDate) && (
               <div className="mt-5 text-lg">
                 <div className="flex justify-between border-black border-b pb-5">
                   <div className="underline">{`$${price} X ${calculateDifferenceInDays(
