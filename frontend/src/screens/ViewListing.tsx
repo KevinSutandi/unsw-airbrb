@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { makeRequest } from '../utils/axiosHelper';
-import { Availability, GetSingleListingReturn, Review } from '../types/types';
+import {
+  Availability,
+  Booking,
+  GetBookingsReturn,
+  GetSingleListingReturn,
+  Review,
+} from '../types/types';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { MapPinIcon } from '@heroicons/react/20/solid';
 import BedCard from '../components/ViewListingComponents/BedCard';
@@ -15,8 +21,10 @@ import { AxiosError } from 'axios';
 import BookConfirmation from '../components/ViewListingComponents/BookConfirmation';
 import AmenitiesList from '../components/ViewListingComponents/AmenitiesList';
 import GlobalContext from '../components/GlobalContext';
+import ViewListingHeader from '../components/ViewListingComponents/ViewListingHeader';
 
 // TODO: Set a booking status
+// TODO: Show chevrons when the showcased pictures exceed 5
 
 export const calculateDifferenceInDays = (
   date1: Nullable<Date>,
@@ -50,6 +58,15 @@ export default function ViewListing () {
     properyType: '',
     availability: [] as Availability[],
     reviews: [] as Review[],
+  });
+
+  const [bookingDetails, setBookingDetails] = useState({
+    id: '',
+    owner: '',
+    dateRange: { from: '', to: '' },
+    totalPrice: 0,
+    listingId: '',
+    status: '',
   });
 
   const [featuredImg, setFeaturedImg] = useState('');
@@ -96,40 +113,74 @@ export default function ViewListing () {
     return res;
   };
 
+  const fetchBookingDetails = async (token: string, listingId: string) => {
+    const res = await makeRequest<GetBookingsReturn>('GET', 'bookings', {
+      token,
+    });
+    console.log(res.data.bookings);
+    return res.data.bookings.find((booking) => booking.listingId === listingId);
+  };
+
   const calculateRating = (reviewsToCalculate: Review[]) => {
     let total = 0;
     reviewsToCalculate.forEach((review) => {
       total += review.rating;
     });
-    return total / reviewsToCalculate.length
+    return total / reviewsToCalculate.length;
   };
 
   useEffect(() => {
     const populateDetails = async () => {
-      const res = await fetchListingDetails();
-      const listing = res.data.listing;
-      setListingDetails((prev) => ({
-        ...prev,
-        owner: listing.owner,
-        listingTitle: listing.title,
-        propertyAmenities: listing.metadata.propertyAmenities,
-        properyType: listing.metadata.propertyType,
-        address: {
-          city: listing.address.city,
-          state: listing.address.state,
-          postalCode: listing.address.postalCode,
-          streetAddress: listing.address.streetAddress,
-        },
-        price: listing.price,
-        numBathrooms: listing.metadata.numBathrooms,
-        beds: listing.metadata.beds,
-        thumbnail: listing.thumbnail,
-        propertyImages: listing.metadata.propertyImages,
-        availability: listing.availability,
-        reviews: listing.reviews,
-      }));
-      setFeaturedImg(listing.thumbnail);
-      setCombinedImg([listing.thumbnail, ...listing.metadata.propertyImages]);
+      try {
+        const listingRes = await fetchListingDetails();
+        const listing = listingRes.data.listing;
+        setListingDetails((prev) => ({
+          ...prev,
+          owner: listing.owner,
+          listingTitle: listing.title,
+          propertyAmenities: listing.metadata.propertyAmenities,
+          properyType: listing.metadata.propertyType,
+          address: {
+            city: listing.address.city,
+            state: listing.address.state,
+            postalCode: listing.address.postalCode,
+            streetAddress: listing.address.streetAddress,
+          },
+          price: listing.price,
+          numBathrooms: listing.metadata.numBathrooms,
+          beds: listing.metadata.beds,
+          thumbnail: listing.thumbnail,
+          propertyImages: listing.metadata.propertyImages,
+          availability: listing.availability,
+          reviews: listing.reviews,
+        }));
+        setFeaturedImg(listing.thumbnail);
+        setCombinedImg([listing.thumbnail, ...listing.metadata.propertyImages]);
+
+        const token = getToken();
+        if (token) {
+          const bookingRes = await fetchBookingDetails(
+            token,
+            listingId as string
+          );
+          if (bookingRes) {
+            setBookingDetails((prev) => ({
+              ...prev,
+              id: bookingRes.id,
+              owner: bookingRes.owner,
+              dateRange: {
+                from: bookingRes.dateRange.from,
+                to: bookingRes.dateRange.to,
+              },
+              totalPrice: bookingRes.totalPrice,
+              listingId: bookingRes.listingId,
+              status: bookingRes.status,
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('View listing error', error);
+      }
     };
 
     populateDetails();
@@ -199,6 +250,7 @@ export default function ViewListing () {
       }}
     >
       <div className="xl:mx-auto pt-3 sm:pt-9 xl:max-w-6xl w-full">
+        <ViewListingHeader status={bookingDetails.status} />
         <h3 className="font-bold text-4xl mb-7 px-4">
           {listingDetails.listingTitle}
         </h3>
@@ -237,9 +289,15 @@ export default function ViewListing () {
             <div className="w-full flex items-center gap-3 text-lg px-4">
               <StarIcon className="w-5 h-5" />
               <div className="flex gap-1">
-                <div>{listingDetails.reviews.length === 0 ? 'N/A' : calculateRating(listingDetails.reviews)}</div>
+                <div>
+                  {listingDetails.reviews.length === 0
+                    ? 'N/A'
+                    : calculateRating(listingDetails.reviews)}
+                </div>
                 <div>•</div>
-                <div className="underline">{listingDetails.reviews.length} reviews</div>
+                <div className="underline">
+                  {listingDetails.reviews.length} reviews
+                </div>
               </div>
             </div>
             <div className="w-full flex items-center gap-3 mb-5 text-lg px-4 border-b border-black pb-10">
