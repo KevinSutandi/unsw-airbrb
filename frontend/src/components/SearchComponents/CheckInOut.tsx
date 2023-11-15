@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Calendar from './Calendar';
 import { SingleDetailListing } from '../../types/types';
 import { isAfter, isBefore, add } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import GlobalContext from '../GlobalContext';
 
 interface CheckInOutCounterProps {
     checkIn: Date;
@@ -45,12 +46,20 @@ export default function CheckInOut ({
     setIsFiltered(true);
   }
 
+  const globalContextValue = useContext(GlobalContext)
+
+  if (!globalContextValue) {
+    throw new Error('Global context value not provided')
+  }
+
+  const { setFilteredCheckin, setFilteredCheckout } = globalContextValue
+
   return (
     <>
       <div className='flex flex-col p-5 gap-3 justify-center lg:flex-row'>
         <div className='flex flex-col gap-3 justify-center items-center'>
           <h1 className='font-bold text-gray-800'>Check in</h1>
-          <Calendar selectedDay={checkIn} setSelectedDay={setCheckIn} />
+          <Calendar selectedDay={checkIn} setSelectedDay={setCheckIn} setFiltered={setFilteredCheckin} />
         </div>
 
         <hr className='border-gray-200 lg:hidden' />
@@ -61,6 +70,7 @@ export default function CheckInOut ({
             selectedDay={checkOut}
             setSelectedDay={setCheckOut}
             checkIn={checkIn}
+            setFiltered={setFilteredCheckout}
           />
         </div>
       </div>

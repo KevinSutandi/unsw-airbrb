@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { makeRequest } from '../utils/axiosHelper';
 import { Availability, GetSingleListingReturn } from '../types/types';
@@ -14,6 +14,7 @@ import { getToken } from '../utils/auth';
 import { AxiosError } from 'axios';
 import BookConfirmation from '../components/ViewListingComponents/BookConfirmation';
 import AmenitiesList from '../components/ViewListingComponents/AmenitiesList';
+import GlobalContext from '../components/GlobalContext';
 
 export const calculateDifferenceInDays = (
   date1: Nullable<Date>,
@@ -55,6 +56,22 @@ export default function ViewListing () {
   const [checkinDate, setCheckinDate] = useState<Nullable<Date>>(null);
   const [checkoutDate, setCheckoutDate] = useState<Nullable<Date>>(null);
   const [isBookConfirmationOpen, setIsBookConfirmationOpen] = useState(false);
+
+  const globalContextValue = useContext(GlobalContext);
+
+  if (!globalContextValue) {
+    throw new Error('Global Context Error');
+  }
+
+  const { filteredCheckin, filteredCheckout } = globalContextValue
+
+  // Set the pricing to price per stay if the user uses a date range
+  useEffect(() => {
+    if (filteredCheckin && filteredCheckout) {
+      setCheckinDate(filteredCheckin)
+      setCheckoutDate(filteredCheckout)
+    }
+  }, [])
 
   const closeDateModal = () => {
     setIsDateModalOpen(false);

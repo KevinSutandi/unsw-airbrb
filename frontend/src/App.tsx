@@ -12,6 +12,8 @@ import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import { SingleDetailListing } from './types/types';
+import GlobalContext from './components/GlobalContext';
+import { Nullable } from 'primereact/ts-helpers';
 
 function App () {
   document.title = 'AirBRB';
@@ -23,8 +25,11 @@ function App () {
   const [products, setProducts] = useState<SingleDetailListing[]>([]);
   const [isFiltered, setIsFiltered] = useState(false);
 
+  const [filteredCheckin, setFilteredCheckin] = useState<Nullable<Date>>(new Date())
+  const [filteredCheckout, setFilteredCheckout] = useState<Nullable<Date>>(null)
+
   return (
-    <>
+  <GlobalContext.Provider value={{ filteredCheckin, filteredCheckout, setFilteredCheckin, setFilteredCheckout }}>
       <Router>
         <NavBar
           isLoggedIn={isLoggedIn}
@@ -75,7 +80,7 @@ function App () {
         onClose={() => setErrorModalOpen(false)}
         errorMessage={errorMessage}
       ></ErrorModal>
-    </>
+    </GlobalContext.Provider>
   );
 }
 

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import DateForm from './DateForm';
 import DateContext from './DateContext';
 import { calculateDifferenceInDays } from '../../screens/ViewListing';
-import { getEmail } from '../../utils/auth';
+import { getEmail, getToken } from '../../utils/auth';
 import { NavLink } from 'react-router-dom';
 
 type BookingModalProps = {
@@ -18,13 +18,13 @@ export default function BookingModal ({
   owner,
   listingId
 }: BookingModalProps) {
-  const contextValue = useContext(DateContext);
+  const dateContextValue = useContext(DateContext);
 
-  if (!contextValue) {
+  if (!dateContextValue) {
     throw new Error('Date Context Error');
   }
 
-  const { checkinDate, checkoutDate } = contextValue;
+  const { checkinDate, checkoutDate } = dateContextValue;
 
   return (
     <div className="hidden xl:block">
@@ -50,10 +50,10 @@ export default function BookingModal ({
               : (
               <button
                 onClick={handleBook}
-                disabled={!checkinDate || !checkoutDate}
+                disabled={!checkinDate || !checkoutDate || !getToken()}
                 className="mt-10 block w-full rounded-md bg-blue-600 px-3 py-2 text-center text-xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-40 disabled:hover:bg-blue-600"
               >
-                Book Now
+                {getToken() ? 'Book Now' : 'Log in to book'}
               </button>
                 )}
             {checkinDate && checkoutDate && (
