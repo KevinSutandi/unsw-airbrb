@@ -77,6 +77,7 @@ export default function ViewListing () {
   const [checkinDate, setCheckinDate] = useState<Nullable<Date>>(null);
   const [checkoutDate, setCheckoutDate] = useState<Nullable<Date>>(null);
   const [isBookConfirmationOpen, setIsBookConfirmationOpen] = useState(false);
+  const [bookingId, setBookingId] = useState('')
 
   const globalContextValue = useContext(GlobalContext);
 
@@ -184,6 +185,7 @@ export default function ViewListing () {
               listingId: bookingRes.listingId,
               status: bookingRes.status,
             }));
+            setBookingId(bookingRes.id)
           }
         }
       } catch (error) {
@@ -258,7 +260,7 @@ export default function ViewListing () {
       }}
     >
       <div className="xl:mx-auto pt-3 sm:pt-9 xl:max-w-6xl w-full">
-        <ViewListingHeader status={bookingDetails.status} openReviewModal={openReviewModal}/>
+        <ViewListingHeader status={bookingDetails.status} openReviewModal={openReviewModal} />
         <h3 className="font-bold text-4xl mb-7 px-4">
           {listingDetails.listingTitle}
         </h3>
@@ -350,7 +352,7 @@ export default function ViewListing () {
           open={isBookConfirmationOpen}
           onClose={closeBookConfirmation}
         />
-        <ReviewModal open={isReviewModalOpen} onClose={closeReviewModal} />
+        <ReviewModal open={isReviewModalOpen} onClose={closeReviewModal} bookingId={bookingId} listingId={listingId} />
       </div>
     </DateContext.Provider>
   );

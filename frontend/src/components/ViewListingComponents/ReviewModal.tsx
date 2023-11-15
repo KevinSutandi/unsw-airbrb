@@ -1,15 +1,44 @@
 import React, { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { StarIcon } from '@heroicons/react/24/outline';
+import { getToken } from '../../utils/auth';
+import { makeRequest } from '../../utils/axiosHelper';
 
 type ReviewModalProps = {
   open: boolean;
   onClose: React.Dispatch<React.SetStateAction<boolean>>;
+  listingId: string | undefined;
+  bookingId: string;
 };
 
-export default function ReviewModal ({ open, onClose }: ReviewModalProps) {
+export default function ReviewModal ({
+  open,
+  onClose,
+  listingId,
+  bookingId,
+}: ReviewModalProps) {
   const cancelButtonRef = useRef(null);
-  const [rating, setRating] = useState(0);
+  const [reviewForm, setReviewForm] = useState({
+    rating: 0,
+    textValue: '',
+  });
+
+  const handleSubmitReview = async () => {
+    const token = getToken();
+    if (token && listingId) {
+      try {
+        console.log(reviewForm);
+        const body = { review: reviewForm };
+        await makeRequest('PUT', `listings/${listingId}/review/${bookingId}`, {
+          token,
+          ...body,
+        });
+        onClose(false);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -51,14 +80,37 @@ export default function ReviewModal ({ open, onClose }: ReviewModalProps) {
                 </Dialog.Title>
                 <div className="flex">
                   {Array.from({ length: 5 }, (_, index) => (
-                    <StarIcon key={index} onClick={() => setRating(index + 1)} className={`${index < rating ? 'fill-yellow-500' : 'fill-white'} cursor-pointer`}/>
+                    <StarIcon
+                      key={index}
+                      onClick={() =>
+                        setReviewForm((prev) => ({
+                          ...prev,
+                          rating: index + 1,
+                        }))
+                      }
+                      className={`${
+                        index < reviewForm.rating
+                          ? 'fill-yellow-500'
+                          : 'fill-white'
+                      } cursor-pointer`}
+                    />
                   ))}
                 </div>
                 <textarea
                   className="w-full h-32"
                   placeholder="Leave a review"
+                  value={reviewForm.textValue}
+                  onChange={(e) =>
+                    setReviewForm((prev) => ({
+                      ...prev,
+                      textValue: e.target.value,
+                    }))
+                  }
                 ></textarea>
-                <button className="ml-auto inline-block rounded-md disabled:opacity-40 disabled:bg-blue-600 bg-blue-600 px-5 py-3 text-center text-xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <button
+                  onClick={handleSubmitReview}
+                  className="ml-auto inline-block rounded-md disabled:opacity-40 disabled:bg-blue-600 bg-blue-600 px-5 py-3 text-center text-xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
                   Submit
                 </button>
               </div>
