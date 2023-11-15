@@ -147,7 +147,8 @@ export default function ViewListing () {
     reviewsToCalculate.forEach((review) => {
       total += review.rating;
     });
-    return total / reviewsToCalculate.length;
+    const average = total / reviewsToCalculate.length;
+    return parseFloat(average.toFixed(1));
   };
 
   useEffect(() => {
@@ -206,7 +207,7 @@ export default function ViewListing () {
     };
 
     populateDetails();
-  }, [isBookConfirmationOpen]);
+  }, [isBookConfirmationOpen, isReviewModalOpen]);
 
   const countBeds = (beds: { [key: string]: string }) => {
     return Object.values(beds).reduce(
