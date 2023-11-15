@@ -69,10 +69,12 @@ export default function HostedListngs ({
   const [runEffect, setRunEffect] = useState<boolean>(false);
 
   const [publishedListingId, setPublishedListingId] = useState<number>(0);
-  const [publishedListingOpen, setPublishedListingOpen] = useState<boolean>(false);
+  const [publishedListingOpen, setPublishedListingOpen] =
+    useState<boolean>(false);
 
   const [unpublishedListingId, setUnpublishedListingId] = useState<number>(0);
-  const [unpublishedListingOpen, setUnpublishedListingOpen] = useState<boolean>(false);
+  const [unpublishedListingOpen, setUnpublishedListingOpen] =
+    useState<boolean>(false);
 
   const openDeleteListingModal = (listingId: number) => {
     setSelectedListingId(listingId);
@@ -87,7 +89,7 @@ export default function HostedListngs ({
   const openUnpublishListingModal = (listingId: number) => {
     setUnpublishedListingId(listingId);
     setUnpublishedListingOpen(true);
-  }
+  };
 
   const navigate = useNavigate();
 
@@ -237,18 +239,22 @@ export default function HostedListngs ({
                     Edit Listing
                   </NavLink>
                   {listings.availability.length > 0
-                    ? <button
-                    onClick={() => openUnpublishListingModal(listings.id)}
-                    className="inline-flex items-center rounded-md ring-1 ring-red-500 px-3 py-2 text-xs font-semibold text-red-500 shadow-sm hover:bg-red-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-red-600 sm:text-sm"
-                  >
-                    Unpublish Listing
-                  </button>
-                    : <button
-                    onClick={() => openPublishListingModal(listings.id)}
-                    className="inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-xs font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600 sm:text-sm"
-                  >
-                    Publish Listing
-                  </button> }
+                    ? (
+                    <button
+                      onClick={() => openUnpublishListingModal(listings.id)}
+                      className="inline-flex items-center rounded-md ring-1 ring-red-500 px-3 py-2 text-xs font-semibold text-red-500 shadow-sm hover:bg-red-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-red-600 sm:text-sm"
+                    >
+                      Unpublish Listing
+                    </button>
+                      )
+                    : (
+                    <button
+                      onClick={() => openPublishListingModal(listings.id)}
+                      className="inline-flex items-center rounded-md ring-1 ring-blue-500 px-3 py-2 text-xs font-semibold text-blue-500 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-1 focus-visible:ring-offset-1 focus-visible:ring-blue-600 sm:text-sm"
+                    >
+                      Publish Listing
+                    </button>
+                      )}
                   <button
                     type="button"
                     onClick={() => openDeleteListingModal(listings.id)}

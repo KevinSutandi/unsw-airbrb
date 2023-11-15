@@ -23,7 +23,6 @@ import GlobalContext from '../components/GlobalContext';
 import ViewListingHeader from '../components/ViewListingComponents/ViewListingHeader';
 import ReviewModal from '../components/ViewListingComponents/ReviewModal';
 
-// TODO: Set a booking status
 // TODO: Show chevrons when the showcased pictures exceed 5
 
 export const calculateDifferenceInDays = (
@@ -72,12 +71,12 @@ export default function ViewListing () {
   const [featuredImg, setFeaturedImg] = useState('');
   const [combinedImg, setCombinedImg] = useState<string[]>([]);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   const [checkinDate, setCheckinDate] = useState<Nullable<Date>>(null);
   const [checkoutDate, setCheckoutDate] = useState<Nullable<Date>>(null);
   const [isBookConfirmationOpen, setIsBookConfirmationOpen] = useState(false);
-  const [bookingId, setBookingId] = useState('')
+  const [bookingId, setBookingId] = useState('');
 
   const globalContextValue = useContext(GlobalContext);
 
@@ -108,12 +107,12 @@ export default function ViewListing () {
   };
 
   const openReviewModal = () => {
-    setIsReviewModalOpen(true)
-  }
+    setIsReviewModalOpen(true);
+  };
 
   const closeReviewModal = () => {
-    setIsReviewModalOpen(false)
-  }
+    setIsReviewModalOpen(false);
+  };
 
   const fetchListingDetails = async () => {
     const res = await makeRequest<GetSingleListingReturn>(
@@ -127,7 +126,10 @@ export default function ViewListing () {
     const res = await makeRequest<GetBookingsReturn>('GET', 'bookings', {
       token,
     });
-    return res.data.bookings.find((booking) => booking.listingId === listingId && booking.owner === getEmail());
+    return res.data.bookings.find(
+      (booking) =>
+        booking.listingId === listingId && booking.owner === getEmail()
+    );
   };
 
   const calculateRating = (reviewsToCalculate: Review[]) => {
@@ -185,7 +187,7 @@ export default function ViewListing () {
               listingId: bookingRes.listingId,
               status: bookingRes.status,
             }));
-            setBookingId(bookingRes.id)
+            setBookingId(bookingRes.id);
           }
         }
       } catch (error) {
@@ -260,7 +262,10 @@ export default function ViewListing () {
       }}
     >
       <div className="xl:mx-auto pt-3 sm:pt-9 xl:max-w-6xl w-full">
-        <ViewListingHeader status={bookingDetails.status} openReviewModal={openReviewModal} />
+        <ViewListingHeader
+          status={bookingDetails.status}
+          openReviewModal={openReviewModal}
+        />
         <h3 className="font-bold text-4xl mb-7 px-4">
           {listingDetails.listingTitle}
         </h3>
@@ -352,7 +357,12 @@ export default function ViewListing () {
           open={isBookConfirmationOpen}
           onClose={closeBookConfirmation}
         />
-        <ReviewModal open={isReviewModalOpen} onClose={closeReviewModal} bookingId={bookingId} listingId={listingId} />
+        <ReviewModal
+          open={isReviewModalOpen}
+          onClose={closeReviewModal}
+          bookingId={bookingId}
+          listingId={listingId}
+        />
       </div>
     </DateContext.Provider>
   );
