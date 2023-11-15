@@ -67,8 +67,8 @@ export default function BookConfirmation ({ open, onClose }: BookConfirmationPro
               </div>
 
               <div className='mt-6'>
-                <div className='progress-bar'>
-                  <div className='progress' />
+                <div className='confirmation-bar'>
+                  <div className='confirmation' />
                 </div>
               </div>
             </Dialog.Panel>
