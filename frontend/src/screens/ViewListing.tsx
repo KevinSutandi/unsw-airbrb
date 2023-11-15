@@ -15,12 +15,13 @@ import BookingFooter from '../components/ViewListingComponents/BookingFooter';
 import DateModal from '../components/ViewListingComponents/DateModal';
 import DateContext from '../components/ViewListingComponents/DateContext';
 import { Nullable } from 'primereact/ts-helpers';
-import { getToken } from '../utils/auth';
+import { getEmail, getToken } from '../utils/auth';
 import { AxiosError } from 'axios';
 import BookConfirmation from '../components/ViewListingComponents/BookConfirmation';
 import AmenitiesList from '../components/ViewListingComponents/AmenitiesList';
 import GlobalContext from '../components/GlobalContext';
 import ViewListingHeader from '../components/ViewListingComponents/ViewListingHeader';
+import ReviewModal from '../components/ViewListingComponents/ReviewModal';
 
 // TODO: Set a booking status
 // TODO: Show chevrons when the showcased pictures exceed 5
@@ -71,6 +72,7 @@ export default function ViewListing () {
   const [featuredImg, setFeaturedImg] = useState('');
   const [combinedImg, setCombinedImg] = useState<string[]>([]);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
 
   const [checkinDate, setCheckinDate] = useState<Nullable<Date>>(null);
   const [checkoutDate, setCheckoutDate] = useState<Nullable<Date>>(null);
@@ -104,6 +106,14 @@ export default function ViewListing () {
     setIsBookConfirmationOpen(false);
   };
 
+  const openReviewModal = () => {
+    setIsReviewModalOpen(true)
+  }
+
+  const closeReviewModal = () => {
+    setIsReviewModalOpen(false)
+  }
+
   const fetchListingDetails = async () => {
     const res = await makeRequest<GetSingleListingReturn>(
       'GET',
@@ -116,8 +126,7 @@ export default function ViewListing () {
     const res = await makeRequest<GetBookingsReturn>('GET', 'bookings', {
       token,
     });
-    console.log(res.data.bookings);
-    return res.data.bookings.find((booking) => booking.listingId === listingId);
+    return res.data.bookings.find((booking) => booking.listingId === listingId && booking.owner === getEmail());
   };
 
   const calculateRating = (reviewsToCalculate: Review[]) => {
@@ -183,7 +192,7 @@ export default function ViewListing () {
     };
 
     populateDetails();
-  }, []);
+  }, [isBookConfirmationOpen]);
 
   const countBeds = (beds: { [key: string]: string }) => {
     return Object.values(beds).reduce(
@@ -249,7 +258,7 @@ export default function ViewListing () {
       }}
     >
       <div className="xl:mx-auto pt-3 sm:pt-9 xl:max-w-6xl w-full">
-        <ViewListingHeader status={bookingDetails.status} />
+        <ViewListingHeader status={bookingDetails.status} openReviewModal={openReviewModal}/>
         <h3 className="font-bold text-4xl mb-7 px-4">
           {listingDetails.listingTitle}
         </h3>
@@ -341,6 +350,7 @@ export default function ViewListing () {
           open={isBookConfirmationOpen}
           onClose={closeBookConfirmation}
         />
+        <ReviewModal open={isReviewModalOpen} onClose={closeReviewModal} />
       </div>
     </DateContext.Provider>
   );

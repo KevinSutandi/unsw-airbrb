@@ -2,9 +2,10 @@ import React from 'react';
 
 type ViewListingHeaderProps = {
   status: string;
+  openReviewModal: () => void
 };
 
-export default function ViewListingHeader ({ status }: ViewListingHeaderProps) {
+export default function ViewListingHeader ({ status, openReviewModal }: ViewListingHeaderProps) {
   return (
     <>
       {status === 'pending' && (
@@ -16,7 +17,7 @@ export default function ViewListingHeader ({ status }: ViewListingHeaderProps) {
       {status === 'accepted' && (
         <section className="w-full bg-blue-500 p-5 text-white font-bold text-lg mb-5 flex justify-between items-center">
           <div>Your booking has been accepted</div>
-          <button className="border px-4 py-2">Leave a review</button>
+          <button className="border px-4 py-2" onClick={openReviewModal}>Leave a review</button>
         </section>
       )}
     </>
