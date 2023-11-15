@@ -27,7 +27,6 @@ export default function ReviewModal ({
     const token = getToken();
     if (token && listingId) {
       try {
-        console.log(reviewForm);
         const body = { review: reviewForm };
         await makeRequest('PUT', `listings/${listingId}/review/${bookingId}`, {
           token,
@@ -97,7 +96,7 @@ export default function ReviewModal ({
                   ))}
                 </div>
                 <textarea
-                  className="w-full h-32"
+                  className="w-full h-32 mt-5"
                   placeholder="Leave a review"
                   value={reviewForm.textValue}
                   onChange={(e) =>
@@ -109,7 +108,7 @@ export default function ReviewModal ({
                 ></textarea>
                 <button
                   onClick={handleSubmitReview}
-                  className="ml-auto inline-block rounded-md disabled:opacity-40 disabled:bg-blue-600 bg-blue-600 px-5 py-3 text-center text-xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="ml-auto mt-5 inline-block rounded-md disabled:opacity-40 disabled:bg-blue-600 bg-blue-600 px-5 py-3 text-center text-xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Submit
                 </button>
