@@ -126,6 +126,16 @@ export default function ViewListing () {
     const res = await makeRequest<GetBookingsReturn>('GET', 'bookings', {
       token,
     });
+    const acceptedBooking = res.data.bookings.find(
+      (booking) =>
+        booking.listingId === listingId &&
+        booking.owner === getEmail() &&
+        booking.status === 'accepted'
+    );
+
+    if (acceptedBooking) {
+      return acceptedBooking;
+    }
     return res.data.bookings.find(
       (booking) =>
         booking.listingId === listingId && booking.owner === getEmail()
