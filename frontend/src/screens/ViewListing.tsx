@@ -17,7 +17,6 @@ import AmenitiesList from '../components/ViewListingComponents/AmenitiesList';
 import GlobalContext from '../components/GlobalContext';
 
 // TODO: Set a booking status
-// TODO: Change booking confirmation progress bar color
 
 export const calculateDifferenceInDays = (
   date1: Nullable<Date>,
