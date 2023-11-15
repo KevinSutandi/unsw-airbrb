@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { makeRequest } from '../utils/axiosHelper';
-import { Availability, GetSingleListingReturn } from '../types/types';
+import { Availability, GetSingleListingReturn, Review } from '../types/types';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { MapPinIcon } from '@heroicons/react/20/solid';
 import BedCard from '../components/ViewListingComponents/BedCard';
@@ -18,6 +18,8 @@ import GlobalContext from '../components/GlobalContext';
 
 // TODO: Adjust reviews accordingly
 // TODO: Calendar to date earlier than from date validation
+// TODO: Set a booking status
+// TODO: Change booking confirmation progress bar color
 
 export const calculateDifferenceInDays = (
   date1: Nullable<Date>,
@@ -50,6 +52,7 @@ export default function ViewListing () {
     propertyImages: [] as string[],
     properyType: '',
     availability: [] as Availability[],
+    reviews: [] as Review[],
   });
 
   const [featuredImg, setFeaturedImg] = useState('');
@@ -66,15 +69,15 @@ export default function ViewListing () {
     throw new Error('Global Context Error');
   }
 
-  const { filteredCheckin, filteredCheckout } = globalContextValue
+  const { filteredCheckin, filteredCheckout } = globalContextValue;
 
   // Set the pricing to price per stay if the user uses a date range
   useEffect(() => {
     if (filteredCheckin && filteredCheckout) {
-      setCheckinDate(filteredCheckin)
-      setCheckoutDate(filteredCheckout)
+      setCheckinDate(filteredCheckin);
+      setCheckoutDate(filteredCheckout);
     }
-  }, [])
+  }, []);
 
   const closeDateModal = () => {
     setIsDateModalOpen(false);
@@ -94,6 +97,14 @@ export default function ViewListing () {
       `listings/${listingId}`
     );
     return res;
+  };
+
+  const calculateRating = (reviewsToCalculate: Review[]) => {
+    let total = 0;
+    reviewsToCalculate.forEach((review) => {
+      total += review.rating;
+    });
+    return total / reviewsToCalculate.length
   };
 
   useEffect(() => {
@@ -118,6 +129,7 @@ export default function ViewListing () {
         thumbnail: listing.thumbnail,
         propertyImages: listing.metadata.propertyImages,
         availability: listing.availability,
+        reviews: listing.reviews,
       }));
       setFeaturedImg(listing.thumbnail);
       setCombinedImg([listing.thumbnail, ...listing.metadata.propertyImages]);
@@ -228,9 +240,9 @@ export default function ViewListing () {
             <div className="w-full flex items-center gap-3 text-lg px-4">
               <StarIcon className="w-5 h-5" />
               <div className="flex gap-1">
-                <div>5</div>
+                <div>{listingDetails.reviews.length === 0 ? 'N/A' : calculateRating(listingDetails.reviews)}</div>
                 <div>•</div>
-                <div className="underline"> 90 reviews</div>
+                <div className="underline">{listingDetails.reviews.length} reviews</div>
               </div>
             </div>
             <div className="w-full flex items-center gap-3 mb-5 text-lg px-4 border-b border-black pb-10">
@@ -248,10 +260,10 @@ export default function ViewListing () {
               ))}
             </section>
             <section className="px-4 mt-5">
-              <h3 className='text-2xl font-medium mb-2'>Amenities</h3>
-              <ul className='flex flex-col gap-2'>
+              <h3 className="text-2xl font-medium mb-2">Amenities</h3>
+              <ul className="flex flex-col gap-2">
                 {listingDetails.propertyAmenities.map((amenity, idx) => (
-                  <AmenitiesList amenity={amenity} key={idx} idx={idx}/>
+                  <AmenitiesList amenity={amenity} key={idx} idx={idx} />
                 ))}
               </ul>
             </section>

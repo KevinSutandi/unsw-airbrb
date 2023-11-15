@@ -4,6 +4,7 @@ export type RequestOptions = {
 };
 
 export type Review = {
+  text: string
   rating: number;
 };
 
