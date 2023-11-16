@@ -113,6 +113,7 @@ context('Happy path', () => {
     cy.get('input[name=checkout]').type('1/18/2024');
 
     cy.contains('Book Now').click();
+    cy.wait(1000)
     // 7. Logs out of the application successfully
     cy.get('button').find('img[alt="Profile Icon"]').click();
     cy.contains('button', 'Log out').click();
