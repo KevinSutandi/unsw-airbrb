@@ -1,7 +1,5 @@
 /**
  * Happy Path 2
- * Flow - First the user goes through the website, registers as a user, and then they want to go the listing page
- * after the listing page they want to create a listing and then they want to go to the profile page
  */
 
 import 'cypress-file-upload';
