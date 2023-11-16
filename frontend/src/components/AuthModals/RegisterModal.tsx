@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { makeRequest } from '../../utils/axiosHelper';
@@ -17,13 +17,19 @@ export default function RegisterModal ({
   setNewToken,
 }: RegisterModalProps) {
   const cancelButtonRef = useRef(null);
-  const [formData, setFormData] = useState({
+  const initialForm = {
     email: '',
     name: '',
     password: '',
     setPassword: '',
     confirmPassword: '',
-  });
+  };
+
+  const [formData, setFormData] = useState(initialForm);
+
+  useEffect(() => {
+    setFormData(initialForm);
+  }, [open]);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

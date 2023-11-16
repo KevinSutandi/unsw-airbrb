@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { setEmail, setToken } from '../../utils/auth';
@@ -17,21 +17,29 @@ export default function LoginModal ({
   setNewToken,
 }: LoginModalProps) {
   const cancelButtonRef = useRef(null);
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const initialForm = {
+    email: '',
+    password: '',
+  };
 
-  function clearForm () {
-    setFormData({ email: '', password: '' });
-  }
+  const [formData, setFormData] = useState(initialForm);
+
+  useEffect(() => {
+    setFormData(initialForm);
+  }, [open]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await makeRequest<AuthReturn>('POST', 'user/auth/login', formData);
+      const res = await makeRequest<AuthReturn>(
+        'POST',
+        'user/auth/login',
+        formData
+      );
       setToken(res.data.token);
       setEmail(formData.email);
       setIsLoggedIn(true);
       setNewToken(res.data.token);
-      clearForm();
       setLoginModalOpen(false);
     } catch (err) {
       setErrorModalOpen(true);

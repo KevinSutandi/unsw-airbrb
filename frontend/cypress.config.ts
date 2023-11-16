@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { defineConfig } from 'cypress'
 
 export default defineConfig({
@@ -8,3 +9,14 @@ export default defineConfig({
     viewportHeight: 1080,
   },
 })
+=======
+import { defineConfig } from 'cypress';
+
+export default defineConfig({
+  e2e: {
+    setupNodeEvents (on, config) {
+      // implement node event listeners here
+    },
+  },
+});
+>>>>>>> 4d16a979ceb579eda1fcc7f26098047b975532fa

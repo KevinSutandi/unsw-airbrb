@@ -19,7 +19,7 @@ export default function ReviewModal ({
 }: ReviewModalProps) {
   const cancelButtonRef = useRef(null);
   const [reviewForm, setReviewForm] = useState({
-    rating: 0,
+    rating: 1,
     textValue: '',
   });
 
@@ -81,6 +81,7 @@ export default function ReviewModal ({
                   {Array.from({ length: 5 }, (_, index) => (
                     <StarIcon
                       key={index}
+                      data-testid={`star-${index + 1}`}
                       onClick={() =>
                         setReviewForm((prev) => ({
                           ...prev,

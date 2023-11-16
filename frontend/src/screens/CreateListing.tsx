@@ -503,7 +503,7 @@ export default function CreateListing ({
               </div>
               <div className="sm:col-span-2">
                 <label
-                  htmlFor="numBathroomsc"
+                  htmlFor="numBathrooms"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   Number of Bathrooms
