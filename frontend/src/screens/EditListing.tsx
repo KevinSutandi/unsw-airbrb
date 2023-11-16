@@ -712,6 +712,7 @@ export default function EditListing ({
                   {state.beds.map((bed) => (
                     <div
                       key={bed.id}
+                      data-cy="bed-input-indiv"
                       className="rounded-md h-40 ring-1 ring-inset ring-gray-500 px-3 my-2 py-3"
                     >
                       <div className="flex items-center">

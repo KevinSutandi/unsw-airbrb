@@ -37,7 +37,7 @@ export const calculateDifferenceInDays = (
 };
 
 export default function ViewListing () {
-  const { listingId } = useParams();
+  const { listingId } = useParams<{ listingId: string }>();
 
   const [listingDetails, setListingDetails] = useState({
     owner: '',

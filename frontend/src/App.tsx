@@ -14,6 +14,7 @@ import 'primeicons/primeicons.css';
 import { SingleDetailListing } from './types/types';
 import GlobalContext from './components/GlobalContext';
 import { Nullable } from 'primereact/ts-helpers';
+import ViewBookings from './screens/ViewBookings';
 
 function App () {
   document.title = 'AirBRB';
@@ -71,6 +72,12 @@ function App () {
               />
             }
           />
+          <Route
+            path='/listings/bookings/:listingId'
+            element={
+              <ViewBookings />
+            }
+            />
           <Route path="/listings/view/:listingId" element={<ViewListing />} />
         </Routes>
       </Router>

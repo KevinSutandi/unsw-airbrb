@@ -112,6 +112,10 @@ describe('Test the root path', () => {
     reset();
   });
 
+  afterAll(() => {
+    reset();
+  })
+
   beforeAll(() => {
     server.close();
   });

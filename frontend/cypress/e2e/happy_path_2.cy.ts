@@ -195,7 +195,7 @@ context('Happy Path User Testing 2', () => {
   })
 
   it('User edits the listing', () => {
-    cy.get('button[name="edit-listing-button"]').click();
+    cy.get('[data-cy="edit-listing"]').click();
     cy.url().should('include', '/listings/edit');
   })
 
@@ -207,6 +207,75 @@ context('Happy Path User Testing 2', () => {
   })
 
   it('Add property images', () => {
+    const fileName = 'src/assets/yers.jpeg'
+    const fileName2 = 'src/assets/yes.jpg'
 
+    // Get the file input and set the file
+    cy.get('input[name="property-img-upload"]').as('image');
+    cy.get('@image').should('be.visible');
+    cy.get('@image').attachFile(fileName);
+    // image should be visible in the page
+    cy.get('[data-cy="property-image"]').should('have.length', 1);
+
+    cy.get('@image').attachFile(fileName2);
+    // image should be visible in the page
+    cy.get('[data-cy="property-image"]').should('have.length', 2);
+  })
+
+  it('Add more bedrooms', () => {
+    cy.get('input[name="numBedrooms"]').as('numBedrooms');
+    cy.get('@numBedrooms').should('be.visible');
+    cy.get('@numBedrooms').clear();
+    cy.get('@numBedrooms').type('4');
+  })
+
+  it('Check that the number of beds is correct and input number of beds', () => {
+    cy.get('[data-cy="bed-input-indiv"]').should('have.length', 4);
+
+    cy.get('input[name="Bedroom 1"]').as('Bedroom 1');
+    cy.get('input[name="Bedroom 2"]').as('Bedroom 2');
+
+    cy.get('@Bedroom 1').should('have.value', '2');
+    cy.get('@Bedroom 2').should('have.value', '1');
+
+    // Set Number of Beds
+    cy.get('input[name="Bedroom 3"]').as('Bedroom 3');
+    cy.get('@Bedroom 3').should('be.visible');
+    cy.get('@Bedroom 3').type('2');
+
+    cy.get('input[name="Bedroom 4"]').as('Bedroom 4');
+    cy.get('@Bedroom 4').should('be.visible');
+    cy.get('@Bedroom 4').type('1');
+  })
+
+  it('User updates the listing', () => {
+    cy.contains('Save Changes').click();
+    // Check that save button does not redir to listings page
+    cy.url().should('include', '/listings/edit');
+
+    cy.get('a[href="/listings"]').click();
+    cy.url().should('include', '/listings');
+  })
+
+  it('User publishes the listing', () => {
+    cy.get('button[name="publish-listing"]').click();
+
+    const fromDate = '2024-01-15';
+    const toDate = '2024-01-20';
+
+    const fromDate2 = '2024-01-25';
+    const toDate2 = '2024-02-20';
+
+    cy.get('[data-cy=fromDate-0]').focus().type(fromDate);
+    cy.get('[data-cy=toDate-0]').focus().type(toDate);
+
+    cy.contains('Add availability').click();
+
+    cy.get('[data-cy=fromDate-1]').focus().type(fromDate2);
+    cy.get('[data-cy=toDate-1]').focus().type(toDate2);
+
+    cy.get('button[name="publish-button"]').click();
+
+    cy.get('button[name="unpublish-listing"]').should('be.visible');
   })
 });

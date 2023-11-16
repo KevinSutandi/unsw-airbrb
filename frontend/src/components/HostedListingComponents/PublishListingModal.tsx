@@ -198,7 +198,7 @@ export default function PublishListingModal ({
                       )}
                       <button
                         onClick={addAvailability}
-                        className='text-blue-500 mt-2.5 text-sm hover:underline'
+                        className='text-blue-500 mt-2.5 text-sm cursor-pointer hover:underline'
                       >
                         + Add availability
                       </button>
@@ -209,6 +209,7 @@ export default function PublishListingModal ({
                 <div className='bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6'>
                   <button
                     type="button"
+                    name="publish-button"
                     className="publish-btn inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto disabled:opacity-50"
                     onClick={handlePublishListing}
                     disabled={disabled}
