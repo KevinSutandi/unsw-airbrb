@@ -105,8 +105,6 @@ describe('CountryList', () => {
       fireEvent.change(input, { target: { value: 'au' } });
     });
 
-    const list = screen.getByRole('listbox');
-
     await act(async () => {
       fireEvent.click(screen.getByText('Australia'));
     });
