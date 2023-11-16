@@ -59,6 +59,10 @@ describe('Review Modal', () => {
     return { onClose };
   };
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('Clicking on stars', () => {
     reviewModalSetup();
 
