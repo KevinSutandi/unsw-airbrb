@@ -193,4 +193,20 @@ context('Happy Path User Testing 2', () => {
     cy.get('button[name="create-listing-button"]').click();
     cy.url().should('include', '/listings');
   })
+
+  it('User edits the listing', () => {
+    cy.get('button[name="edit-listing-button"]').click();
+    cy.url().should('include', '/listings/edit');
+  })
+
+  it('User changes the title', () => {
+    cy.get('input[name="listingTitle"]').as('listingTitle');
+    cy.get('@listingTitle').should('be.visible');
+    cy.get('@listingTitle').clear();
+    cy.get('@listingTitle').type('Cat House');
+  })
+
+  it('Add property images', () => {
+
+  })
 });
