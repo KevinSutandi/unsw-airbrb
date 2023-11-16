@@ -3,6 +3,7 @@ import ReviewModal from './ReviewModal';
 import React from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
 import * as axiosHelpers from '../../utils/axiosHelper'; // Import the module to mock the makeRequest function
+import { localStorageMock } from '../../utils/helpers';
 
 // To prevent ResizeObserver error
 beforeAll(() => {
@@ -16,25 +17,6 @@ afterAll(() => {
 jest.mock('../../utils/axiosHelper', () => ({
   makeRequest: jest.fn(),
 }));
-
-const localStorageMock = (function () {
-  let store: Record<string, string> = {};
-
-  return {
-    getItem: function (key: string) {
-      return store[key] || null;
-    },
-    setItem: function (key: string, value: string) {
-      store[key] = value.toString();
-    },
-    removeItem: function (key: string) {
-      delete store[key];
-    },
-    clear: function () {
-      store = {};
-    },
-  };
-})();
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,

@@ -9,6 +9,7 @@ import {
   DetailListing,
   HomePageProps,
   ListingsReturn,
+  Product,
   SingleDetailListing,
 } from '../types/types';
 import { makeRequest } from '../utils/axiosHelper';
@@ -47,16 +48,18 @@ export default function Dropdown ({
   // Get all listings and with details
   async function getDetailedListings () {
     const res = await makeRequest<ListingsReturn>('GET', 'listings');
-    const listings = res.data.listings;
+    const listings: Product[] | undefined = res.data.listings;
     const detailedListings: SingleDetailListing[] = [];
 
-    listings.forEach(async (listing) => {
-      const res = await makeRequest<DetailListing>(
-        'GET',
-        `listings/${listing.id}`
-      );
-      detailedListings.push({ ...res.data.listing, id: listing.id });
-    });
+    if (listings) {
+      listings.forEach(async (listing) => {
+        const res = await makeRequest<DetailListing>(
+          'GET',
+          `listings/${listing.id}`
+        );
+        detailedListings.push({ ...res.data.listing, id: listing.id });
+      });
+    }
 
     setDetailedListings(detailedListings);
   }
