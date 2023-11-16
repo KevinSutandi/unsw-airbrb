@@ -330,8 +330,9 @@ export default function CreateListing ({
                 >
                   Property Type
                 </label>
-                <div className="mt-2">
+                <div className="mt-2" data-cy="property-type">
                   <TypeList
+
                     selectedType={selectedType}
                     setSelectedType={setSelectedType}
                   />
@@ -464,7 +465,7 @@ export default function CreateListing ({
                 >
                   Country
                 </label>
-                <div className="mt-2">
+                <div className="mt-2" data-cy="country">
                   <TypeCountry
                     selectedCountry={selectedCountry}
                     setSelectedCountry={setSelectedCountry}
@@ -551,9 +552,10 @@ export default function CreateListing ({
                 >
                   Bed Number Selector
                 </label>
-                <div className="grid grid-cols-2 p-3 rounded-md border border-dashed border-gray-300 gap-4 h-72 overflow-y-scroll sm:col-span-full lg:grid-cols-4">
+                <div className="grid grid-cols-2 p-3 rounded-md border border-dashed border-gray-300 gap-4 h-72 overflow-y-scroll sm:col-span-full lg:grid-cols-4" data-cy='bed-input'>
                   {state.beds.map((bed) => (
                     <div
+                      data-cy="bed-input-indiv"
                       key={bed.id}
                       className="rounded-md h-40 ring-1 ring-inset ring-gray-500 px-3 my-2 py-3"
                     >
@@ -630,7 +632,7 @@ export default function CreateListing ({
                     </div>
                     {selectedFile
                       ? (
-                      <p className="text-xs leading-5 text-gray-600">
+                      <p className="text-xs leading-5 text-gray-600" data-cy="file-name">
                         Selected file: {selectedFile.name}
                       </p>
                         )
@@ -650,7 +652,7 @@ export default function CreateListing ({
             </div>
           </div>
         </div>
-        <button className="w-full my-3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md">
+        <button name="create-listing-button" className="w-full my-3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md">
           Create Listing
         </button>
       </form>

@@ -45,6 +45,7 @@ export default function HomeProfileMenu ({
                           active ? 'bg-blue-500 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm font-bold`}
                         onClick={navigateHostedListings}
+                        name='view-listings'
                       >
                         View Listings
                       </button>
@@ -58,6 +59,7 @@ export default function HomeProfileMenu ({
                         className={`${
                           active ? 'bg-blue-500 text-white' : 'text-red-500'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        name='logout'
                       >
                         Log out
                       </button>
@@ -74,6 +76,7 @@ export default function HomeProfileMenu ({
                           active ? 'bg-blue-500 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm font-bold`}
                         onClick={openRegisterModal}
+                        name='register'
                       >
                         Sign up
                       </button>
@@ -86,6 +89,7 @@ export default function HomeProfileMenu ({
                         className={`${
                           active ? 'bg-blue-500 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        name='login'
                       >
                         Login
                       </button>
