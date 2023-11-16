@@ -37,7 +37,7 @@ export const CountryList: React.FC<CountryListProps> = ({ selectedCountry, setSe
       <div className="relative mt-1 z-10">
         <div className="relative w-full cursor-default overflow-hidden shadow-sm rounded-lg ring-1 ring-gray-300 bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-500 sm:text-sm">
           <Combobox.Input
-            className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+            className="country-input w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
             displayValue={(country: Country | null) =>
               country ? country.name : ''
             }
