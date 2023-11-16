@@ -10,24 +10,15 @@ context('Happy path', () => {
     const name = 'Jane Doe';
     const password = 'pw123';
 
-    // cy.get('button').find('img[alt="Profile Icon"]').click();
-    // cy.contains('button', 'Sign up').click();
-
-    // cy.get('input[name=email]').focus().type(email);
-    // cy.get('input[name=name]').focus().type(name);
-    // cy.get('input[name=password]').focus().type(password);
-    // cy.get('input[name=confirmPassword]').focus().type(password);
-
-    // cy.contains('button', 'Register').click();
-
-    // 1.2 Login
     cy.get('button').find('img[alt="Profile Icon"]').click();
-    cy.contains('button', 'Login').click();
+    cy.contains('button', 'Sign up').click();
 
     cy.get('input[name=email]').focus().type(email);
+    cy.get('input[name=name]').focus().type(name);
     cy.get('input[name=password]').focus().type(password);
+    cy.get('input[name=confirmPassword]').focus().type(password);
 
-    cy.contains('button', 'Login').click();
+    cy.contains('button', 'Register').click();
 
     // 2. Creates a new listing successfully
     cy.get('button').find('img[alt="Profile Icon"]').click();
@@ -44,7 +35,6 @@ context('Happy path', () => {
     const price = '300';
     const bathrooms = '2';
     const bedrooms = '2';
-    const thumbnail = 'https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg'
 
     cy.get('input[name=listingTitle]').focus().type(listingTitle);
     cy.contains('Select a type').click();
@@ -62,12 +52,84 @@ context('Happy path', () => {
     cy.get('#bed_1').focus().type(bedrooms);
     cy.get('#bed_2').focus().type(bedrooms);
 
+    cy.get('#file-upload').attachFile('/house.jpg');
+    cy.contains('button', 'Create Listing').click();
 
     // 3. Updates the thumbnail and title of the listing successfully
+    const newTitle = ' ';
+    const fromDate = '2024-01-15';
+    const toDate = '2024-03-10';
+
+    cy.contains('Edit Listing').click();
+    cy.get('input[name=listingTitle]').focus().type(newTitle);
+
+    cy.get('#file-upload').attachFile('/house2.jpg');
+    cy.contains('Save Changes').click();
+
     // 4. Publish a listing successfully
+    cy.contains('Listings').click();
+    cy.contains('Publish Listing').click();
+    cy.get('input[name=fromDate]').focus().type(fromDate);
+    cy.get('input[name=toDate]').focus().type(toDate);
+    cy.get('.publish-btn').filter(':visible').click();
+
     // 5. Unpublish a listing successfully
+    cy.contains('Unpublish Listing').click();
+    cy.get('.unpublish-btn').click();
+
+    // 4. Publish again
+    cy.contains('Listings').click();
+    cy.contains('Publish Listing').click();
+    cy.get('input[name=fromDate]').focus().type(fromDate);
+    cy.get('input[name=toDate]').focus().type(toDate);
+    cy.get('.publish-btn').filter(':visible').click();
+
+    // Log out and make a new account
+    cy.get('button').find('img[alt="Profile Icon"]').click();
+    cy.contains('button', 'Log out').click();
+
+    // Sign up new account
+    const anotherEmail = 'brucewayne@gmail.com';
+    const anotherName = 'Bruce Wayne';
+    const anotherPassword = 'batman';
+
+    cy.wait(2000);
+
+    cy.get('button').find('img[alt="Profile Icon"]').click();
+    cy.contains('button', 'Sign up').click({ force: true });
+
+    cy.get('input[name=email]').focus().type(anotherEmail);
+    cy.get('input[name=name]').focus().type(anotherName);
+    cy.get('input[name=password]').focus().type(anotherPassword);
+    cy.get('input[name=confirmPassword]').focus().type(anotherPassword);
+
+    cy.contains('button', 'Register').click();
+
+    // Log in to the new account
+    // cy.contains('button', 'Login').click();
+
+    // cy.get('input[name=email]').focus().type(anotherEmail);
+    // cy.get('input[name=password]').focus().type(anotherPassword);
+    // cy.contains('button', 'Login').click();
     // 6. Make a booking successfully
+    cy.contains('House with 2 bedrooms').click();
+    cy.get('input[name=checkin]').click().click();
+    cy.get('input[name=checkin]').type('1/15/2024');
+
+    cy.get('input[name=checkout]').click().click();
+    cy.get('input[name=checkout]').type('1/18/2024');
+
+    cy.contains('Book Now').click();
     // 7. Logs out of the application successfully
+    cy.get('button').find('img[alt="Profile Icon"]').click();
+    cy.contains('button', 'Log out').click();
     // 8. Logs back into the application successfully
+    cy.get('button').find('img[alt="Profile Icon"]').click();
+    cy.contains('button', 'Login').click();
+
+    cy.get('input[name=email]').focus().type(email);
+    cy.get('input[name=password]').focus().type(password);
+
+    cy.contains('button', 'Login').click();
   });
 });

@@ -45,6 +45,7 @@ export default function DateForm () {
             </label>
             <Calendar
               value={checkinDate}
+              name='checkin'
               onChange={(e) => setCheckinDate(e.value)}
               enabledDates={availableDates}
               minDate={new Date()}
@@ -61,6 +62,7 @@ export default function DateForm () {
               onChange={(e) => setCheckoutDate(e.value)}
               enabledDates={availableDates}
               minDate={new Date()}
+              name='checkout'
             />
           </div>
         </div>
