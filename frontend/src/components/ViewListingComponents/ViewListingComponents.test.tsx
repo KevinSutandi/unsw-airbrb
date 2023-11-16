@@ -18,27 +18,27 @@ jest.mock('../../utils/axiosHelper', () => ({
 }));
 
 const localStorageMock = (function () {
-  let store: Record<string, string> = {}
+  let store: Record<string, string> = {};
 
   return {
     getItem: function (key: string) {
-      return store[key] || null
+      return store[key] || null;
     },
     setItem: function (key: string, value: string) {
-      store[key] = value.toString()
+      store[key] = value.toString();
     },
     removeItem: function (key: string) {
-      delete store[key]
+      delete store[key];
     },
     clear: function () {
-      store = {}
-    }
-  }
-})()
+      store = {};
+    },
+  };
+})();
 
 Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock
-})
+  value: localStorageMock,
+});
 
 describe('Review Modal', () => {
   const reviewModalSetup = () => {
@@ -94,7 +94,7 @@ describe('Review Modal', () => {
       data: {},
     });
 
-    window.localStorage.setItem('token', 'token')
+    window.localStorage.setItem('token', 'token');
 
     const { onClose } = reviewModalSetup();
 
