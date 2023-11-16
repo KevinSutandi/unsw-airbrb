@@ -8,6 +8,8 @@
     "jsx": "react",
     "allowJs": true,
     "moduleResolution": "node",
+    "lib": ["dom", "dom.iterable", "esnext"],
+
 
     "allowSyntheticDefaultImports": true,
     "strict": true,

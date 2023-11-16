@@ -5,13 +5,15 @@ import RegisterModal from './RegisterModal';
 import ResizeObserver from 'resize-observer-polyfill';
 import * as axiosHelpers from '../../utils/axiosHelper'; // Import the module to mock the makeRequest function
 
-// To prevent ResizeObserver error
+interface GlobalThisWithResizeObserver {
+  ResizeObserver?: typeof ResizeObserver;
+}
 beforeAll(() => {
-  (globalThis as any).ResizeObserver = ResizeObserver;
+  (globalThis as GlobalThisWithResizeObserver).ResizeObserver = ResizeObserver;
 });
 
 afterAll(() => {
-  delete (globalThis as any).ResizeObserver;
+  delete (globalThis as GlobalThisWithResizeObserver).ResizeObserver;
 });
 
 jest.mock('../../utils/axiosHelper', () => ({
