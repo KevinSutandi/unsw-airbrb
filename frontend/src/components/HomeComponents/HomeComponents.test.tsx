@@ -1,14 +1,19 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import HomeProfileMenu from './HomeProfileMenu';
 import React from 'react';
-import * as axiosHelpers from '../../utils/axiosHelper';
 import NavBar from '../NavBar';
 import { BrowserRouter } from 'react-router-dom';
-import { Product, SingleDetailListing } from '../../types/types';
+import { SingleDetailListing } from '../../types/types';
+import { localStorageMock } from '../../utils/helpers';
+import * as axiosHelpers from '../../utils/axiosHelper'; // Import the module to mock the makeRequest function
 
 jest.mock('../../utils/axiosHelper', () => ({
   makeRequest: jest.fn(),
 }));
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+});
 
 describe('Home Components Not Logged In', () => {
   const navbarSetup = (isLoggedIn: boolean) => {
@@ -91,10 +96,22 @@ describe('Home Components Not Logged In', () => {
     expect(openLoginModal).toHaveBeenCalled();
   });
 
-  it('Log out', () => {
-    const { handleLogout } = profileIconSetup(true);
-    const logoutButton = screen.getByRole('menuitem', { name: /log out/i });
-    fireEvent.click(logoutButton);
-    expect(handleLogout).toHaveBeenCalled();
+  it('Log out', async () => {
+    (axiosHelpers.makeRequest as jest.Mock).mockResolvedValue({
+      data: {},
+    });
+    window.localStorage.setItem('token', 'token');
+
+    const { setIsLoggedIn } = navbarSetup(true);
+    const profileBtn = screen.getByAltText('Profile Icon');
+
+    fireEvent.click(profileBtn);
+
+    const logoutBtn = screen.getByRole('menuitem', { name: /log out/i });
+    fireEvent.click(logoutBtn);
+
+    await waitFor(() => {
+      expect(setIsLoggedIn).toHaveBeenCalledWith(false);
+    });
   });
 });
