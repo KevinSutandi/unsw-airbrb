@@ -56,11 +56,12 @@ context('Happy path', () => {
     cy.contains('button', 'Create Listing').click();
 
     // 3. Updates the thumbnail and title of the listing successfully
-    const newTitle = ' ';
+    const newTitle = 'House with 2 bedrooms';
     const fromDate = '2024-01-15';
     const toDate = '2024-03-10';
 
     cy.contains('Edit Listing').click();
+    cy.get('input[name=listingTitle]').clear()
     cy.get('input[name=listingTitle]').focus().type(newTitle);
 
     cy.get('#file-upload').attachFile('/house2.jpg');
@@ -71,7 +72,7 @@ context('Happy path', () => {
     cy.contains('Publish Listing').click();
     cy.get('input[name=fromDate]').focus().type(fromDate);
     cy.get('input[name=toDate]').focus().type(toDate);
-    cy.get('.publish-btn').filter(':visible').click();
+    cy.get('.publish-btn').click();
 
     // 5. Unpublish a listing successfully
     cy.contains('Unpublish Listing').click();
@@ -82,7 +83,7 @@ context('Happy path', () => {
     cy.contains('Publish Listing').click();
     cy.get('input[name=fromDate]').focus().type(fromDate);
     cy.get('input[name=toDate]').focus().type(toDate);
-    cy.get('.publish-btn').filter(':visible').click();
+    cy.get('.publish-btn').click();
 
     // Log out and make a new account
     cy.get('button').find('img[alt="Profile Icon"]').click();
@@ -92,8 +93,6 @@ context('Happy path', () => {
     const anotherEmail = 'brucewayne@gmail.com';
     const anotherName = 'Bruce Wayne';
     const anotherPassword = 'batman';
-
-    cy.wait(2000);
 
     cy.get('button').find('img[alt="Profile Icon"]').click();
     cy.contains('button', 'Sign up').click({ force: true });
@@ -105,12 +104,6 @@ context('Happy path', () => {
 
     cy.contains('button', 'Register').click();
 
-    // Log in to the new account
-    // cy.contains('button', 'Login').click();
-
-    // cy.get('input[name=email]').focus().type(anotherEmail);
-    // cy.get('input[name=password]').focus().type(anotherPassword);
-    // cy.contains('button', 'Login').click();
     // 6. Make a booking successfully
     cy.contains('House with 2 bedrooms').click();
     cy.get('input[name=checkin]').click().click();
@@ -125,7 +118,7 @@ context('Happy path', () => {
     cy.contains('button', 'Log out').click();
     // 8. Logs back into the application successfully
     cy.get('button').find('img[alt="Profile Icon"]').click();
-    cy.contains('button', 'Login').click();
+    cy.contains('button', 'Login').click({ force: true });
 
     cy.get('input[name=email]').focus().type(email);
     cy.get('input[name=password]').focus().type(password);
