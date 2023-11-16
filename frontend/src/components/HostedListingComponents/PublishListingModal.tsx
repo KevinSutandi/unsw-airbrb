@@ -5,7 +5,6 @@ import DateForm from '../Forms/DateForm';
 import { getToken } from '../../utils/auth';
 import { makeRequest } from '../../utils/axiosHelper';
 import axios from 'axios';
-import { set } from 'lodash';
 
 export default function PublishListingModal ({
   open,
