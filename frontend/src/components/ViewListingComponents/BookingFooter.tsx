@@ -42,42 +42,47 @@ export default function BookingFooter ({
   };
 
   return (
-    <footer className="w-full border-t border-black xl:hidden flex justify-between p-5 items-center sticky bottom-0 bg-white left-0">
+    <footer className='w-full border-t border-black xl:hidden flex justify-between p-5 items-center sticky bottom-0 bg-white left-0'>
       <div>
-        <div className="flex items-baseline gap-2">
-          <div className="font-bold text-2xl">${price} AUD</div>
+        <div className='flex items-baseline gap-2'>
+          <div className='font-bold text-2xl'>${price} AUD</div>
           <p>Per Night</p>
         </div>
         <button
-          className="underline text-lg font-semibold"
+          className='underline text-lg font-semibold'
           onClick={openDateModal}
         >
-          {formatDate(checkinDate)} - {formatDate(checkoutDate)}
+          {checkinDate === null || checkoutDate === null
+            ? 'Select Dates'
+            : `${formatDate(checkinDate)} - ${formatDate(checkoutDate)}`}
         </button>
+
         {areDatesValid(checkinDate, checkoutDate)
           ? (
-          <div className="flex gap-2 font-bold items-baseline text-xl">
+          <div className='flex gap-2 font-bold items-baseline text-xl'>
             <div>Total</div>
             <div>{`$${
               price * calculateDifferenceInDays(checkinDate, checkoutDate)
             } AUD`}</div>
-            <div className="text-sm font-light">{`($${price} X ${calculateDifferenceInDays(
+            <div className='text-sm font-light'>{`($${price} X ${calculateDifferenceInDays(
               checkinDate,
               checkoutDate
             )} nights)`}</div>
           </div>
             )
-          : (
-          <p className="text-red-500">
+          : checkinDate !== null || checkoutDate !== null
+            ? (
+          <p className='text-red-500'>
             Checkout date cannot be earlier than check-in date
           </p>
-            )}
+              )
+            : null}
       </div>
       {owner === getEmail()
         ? (
         <NavLink
           to={`/listings/edit/${listingId}`}
-          className="inline-block rounded-md bg-blue-600 px-8 py-4 text-center text-2xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          className='inline-block rounded-md bg-blue-600 px-8 py-4 text-center text-2xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
         >
           Edit Listing
         </NavLink>
@@ -86,7 +91,7 @@ export default function BookingFooter ({
         <button
           onClick={handleBook}
           disabled={!areDatesValid(checkinDate, checkoutDate) || !getToken()}
-          className="inline-block rounded-md disabled:opacity-40 disabled:bg-blue-600 bg-blue-600 px-8 py-4 text-center text-2xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          className='inline-block rounded-md disabled:opacity-40 disabled:bg-blue-600 bg-blue-600 px-8 py-4 text-center text-2xl font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
         >
           {getToken() ? 'Book Now' : 'Log in to book'}
         </button>

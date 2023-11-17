@@ -11,6 +11,8 @@ interface SearchFormProps {
 function SearchForm ({ detailedListings, setProducts, setIsFiltered }: SearchFormProps) {
   const navigate = useNavigate()
 
+  console.log(detailedListings);
+
   const [showError, setShowError] = React.useState(false);
 
   async function filterTitleCity (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -72,6 +74,7 @@ function SearchForm ({ detailedListings, setProducts, setIsFiltered }: SearchFor
         />
         <button
           type="submit"
+          name='search'
           onClick={(e) => { filterTitleCity(e) }}
           className="text-white absolute end-2.5 bottom-2.5 bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
         >

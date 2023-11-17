@@ -33,7 +33,7 @@ export default function BookingModal ({
         <div className="rounded-2xl bg-gray-50 py-5 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center shadow-xl px-10">
           <div className="mx-auto">
             <div className="flex items-baseline gap-2">
-              <h3 className="font-bold text-left text-2xl font-semibol mb-5">
+              <h3 className="font-bold text-left text-2xl mb-5">
                 ${price} AUD
               </h3>
               <p>Per Night</p>
@@ -72,7 +72,7 @@ export default function BookingModal ({
                 </div>
                 <div className="flex justify-between font-bold text-xl mt-5">
                   <div>Total</div>
-                  <div>{`$${
+                  <div data-cy="total-price">{`$${
                     price * calculateDifferenceInDays(checkinDate, checkoutDate)
                   } AUD`}</div>
                 </div>

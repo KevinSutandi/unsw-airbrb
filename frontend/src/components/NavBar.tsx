@@ -20,9 +20,10 @@ export default function NavBar ({
   setIsLoggedIn,
   setErrorModalOpen,
   setErrorMessage,
-  product,
   setProduct,
-  setIsFiltered
+  setIsFiltered,
+  runEffect,
+  setRunEffect
 }: NavBarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -62,6 +63,7 @@ export default function NavBar ({
         setToken('');
         setEmail('');
         navigate('/');
+        setRunEffect(true);
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -103,7 +105,7 @@ export default function NavBar ({
         </div>
 
         <Popover.Group className="lg:flex lg:gap-x-12">
-          <Dropdown products={product} setProducts={setProduct} setIsFiltered={setIsFiltered}/>
+          <Dropdown runEffect={runEffect} setProducts={setProduct} setIsFiltered={setIsFiltered}/>
         </Popover.Group>
         <div className="flex lg:hidden">
           <button

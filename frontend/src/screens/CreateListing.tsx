@@ -22,6 +22,7 @@ import CreateBreadcrumbs from '../components/CreateListingComponents/Modals/Crea
 export default function CreateListing ({
   setErrorMessage,
   setErrorModalOpen,
+  setRunEffect,
 }: CreateListingProps) {
   // For Property Type
   const defaultSelection: PropertyType = { id: '', name: 'Select a type' };
@@ -88,6 +89,7 @@ export default function CreateListing ({
 
       makeRequest('POST', 'listings/new', { token, ...body })
         .then(() => {
+          setRunEffect(true);
           navigate('/listings');
         })
         .catch((error) => {

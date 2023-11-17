@@ -3,6 +3,7 @@ import { makeRequest } from '../utils/axiosHelper';
 import { StarIcon, AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import {
   DetailListing,
+  GetBookingsReturn,
   HomePageProps,
   ListingsReturn,
   Product,
@@ -13,6 +14,7 @@ import { AxiosError } from 'axios';
 import { NavLink } from 'react-router-dom';
 import SortDropdown from '../components/SearchComponents/SortDropdown';
 import GlobalContext from '../components/GlobalContext';
+import { getEmail, getToken } from '../utils/auth';
 
 // Function to generate star icons based on the average rating
 const generateStarIcons = (averageStars: number): JSX.Element[] => {
@@ -41,6 +43,8 @@ export default function HomePage ({
   setProducts,
   isFiltered,
   setIsFiltered,
+  runEffect,
+  setRunEffect,
 }: HomePageProps) {
   const globalContextValue = useContext(GlobalContext);
 
@@ -48,48 +52,97 @@ export default function HomePage ({
     throw new Error('Global context undefined');
   }
 
+  const [selected, setSelected] = useState(sortingOptions[0] as sortingOption);
   const { setFilteredCheckin, setFilteredCheckout } = globalContextValue;
 
   const setAvailableProducts = async (listings: Product[]) => {
     const productsNew: SingleDetailListing[] = [];
 
-    // Use map to create an array of promises
-    const requests = listings.map(async (listing) => {
+    for (const listing of listings) {
       try {
-        const response = await makeRequest<DetailListing>(
-          'GET',
-          `listings/${listing.id}`
-        );
+        const response = await makeRequest<DetailListing>('GET', `listings/${listing.id}`);
         const product = response.data.listing;
+
         if (product.published === false) {
-          return;
+          continue; // Skip to the next iteration if the product is not published
         }
+
         product.id = listing.id;
         productsNew.push(product);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    });
-
-    // Wait for all promises to resolve
-    await Promise.all(requests);
+    }
 
     // Set the state after all requests are complete
-    // Set all products current user doesnt host
+    // Set all products current user doesn't host
     setProducts(productsNew);
   };
 
-  const [selected, setSelected] = useState(sortingOptions[0] as sortingOption);
+  const fetchBookings = async () => {
+    try {
+      const email = getEmail()
+      const token = getToken();
+
+      if (!email || !token) {
+        return null;
+      }
+
+      const response = await makeRequest<GetBookingsReturn>('GET', 'bookings', {
+        token,
+      });
+      const bookings = response.data.bookings;
+      // Filter bookings to only include those that match the listingId
+      const filteredBookings = bookings.filter(
+        (booking) => booking.owner === email
+      );
+      return filteredBookings
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      return null;
+    }
+  };
 
   const getListings = async () => {
-    makeRequest<ListingsReturn>('GET', 'listings')
-      .then(async (response) => {
-        const listings = response.data.listings;
-        const sortedListings = listings.sort((a, b) =>
-          a.title.localeCompare(b.title)
+    try {
+      // Fetch user's bookings
+      const userBookings = await fetchBookings();
+
+      // Fetch all listings
+      const response = await makeRequest<ListingsReturn>('GET', 'listings');
+      const listings = response.data.listings;
+      if (userBookings) {
+        const uniqueListingIds = new Set<string>();
+        const ListingWithBookings: Product[] = [];
+
+        // Get all listings that have bookings, ensuring no duplicates
+        userBookings.forEach((booking) => {
+          const listing = listings.find(
+            (listing) => listing.id.toString() === booking.listingId
+          );
+          if (listing && !uniqueListingIds.has(listing.id.toString())) {
+            uniqueListingIds.add(listing.id.toString());
+            ListingWithBookings.push(listing);
+          }
+        });
+
+        // Get all listings that do not have bookings
+        const listingsWithBookings = ListingWithBookings.map(
+          (listing) => listing.id
         );
+
+        // Filter and sort listings
+        const sortedListings = listings
+          .filter((listing) => !listingsWithBookings.includes(listing.id))
+          .sort((a, b) => a.title.localeCompare(b.title));
+
+        // Combine
+        const combinedListings = [...ListingWithBookings, ...sortedListings];
+
+        // Set the combined array as available products
+
         try {
-          await setAvailableProducts(sortedListings);
+          await setAvailableProducts(combinedListings);
         } catch (err) {
           if (err instanceof AxiosError) {
             console.error('Error setting available products', err.message);
@@ -97,17 +150,37 @@ export default function HomePage ({
             console.error('Error setting available products');
           }
         }
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+      } else {
+        // Set all products and sort
+        const listing = listings.sort((a, b) => a.title.localeCompare(b.title));
+
+        try {
+          await setAvailableProducts(listing);
+        } catch (err) {
+          if (err instanceof AxiosError) {
+            console.error('Error setting available products', err.message);
+          } else {
+            console.error('Error setting available products');
+          }
+        }
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error('Error fetching or sorting data:', error.message);
+      } else {
+        console.error('Error fetching or sorting data');
+      }
+    }
   };
 
   useEffect(() => {
+    setRunEffect(false);
+    console.log('runEffect', runEffect)
+    console.log('isFiltered', isFiltered)
     if (isFiltered === false) {
       getListings();
     }
-  }, [isFiltered]);
+  }, [isFiltered, runEffect]);
 
   products.forEach((product) => {
     const reviews = product.reviews;
@@ -171,7 +244,7 @@ export default function HomePage ({
                     key={product.id}
                     className="group relative"
                   >
-                    <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                    <div className="aspect-h-1 aspect-w-1 w-full h-[400px] overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                       <img
                         src={product.thumbnail}
                         alt={product.title}
@@ -181,13 +254,13 @@ export default function HomePage ({
                     <div className="mt-4 flex justify-between">
                       <div>
                         <h3 className="text-sm text-gray-700">
-                          <a className="cursor-pointer">
+                          <p className="cursor-pointer">
                             <span
                               aria-hidden="true"
                               className="absolute inset-0"
                             />
                             <span className="font-semibold">{product.title}</span>
-                          </a>
+                          </p>
                         </h3>
                       </div>
                       <p className="text-sm font-bold text-gray-900 underline underline-offset-2">

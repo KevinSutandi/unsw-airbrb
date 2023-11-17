@@ -33,6 +33,8 @@ describe('Home Components Not Logged In', () => {
           product={products}
           setProduct={setProducts}
           setIsFiltered={jest.fn()}
+          setRunEffect={jest.fn()}
+          runEffect={false}
         />
       </BrowserRouter>
     );

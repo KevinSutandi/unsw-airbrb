@@ -278,4 +278,124 @@ context('Happy Path User Testing 2', () => {
 
     cy.get('button[name="unpublish-listing"]').should('be.visible');
   })
+
+  it('User unpublishes the listing to add more dates', () => {
+    cy.get('button[name="unpublish-listing"]').click();
+
+    cy.get('button[name="unpublish"]').should('be.visible');
+    cy.get('button[name="unpublish"]').click();
+
+    cy.get('button[name="publish-listing"]').should('be.visible');
+  })
+
+  it('User publishes the listing', () => {
+    cy.get('button[name="publish-listing"]').click();
+
+    const fromDate = '2024-01-15';
+    const toDate = '2024-01-20';
+
+    const fromDate2 = '2024-01-25';
+    const toDate2 = '2024-02-20';
+
+    const fromDate3 = '2023-11-01';
+    const toDate3 = '2023-11-20';
+
+    const fromDate4 = '2024-12-10';
+    const toDate4 = '2024-12-20';
+
+    cy.get('[data-cy=fromDate-0]').focus().type(fromDate);
+    cy.get('[data-cy=toDate-0]').focus().type(toDate);
+
+    cy.contains('Add availability').click();
+
+    cy.get('[data-cy=fromDate-1]').focus().type(fromDate2);
+    cy.get('[data-cy=toDate-1]').focus().type(toDate2);
+
+    cy.contains('Add availability').click();
+
+    cy.get('[data-cy=fromDate-2]').focus().type(fromDate3);
+    cy.get('[data-cy=toDate-2]').focus().type(toDate3);
+
+    cy.contains('Add availability').click();
+
+    cy.get('[data-cy=fromDate-3]').focus().type(fromDate4);
+    cy.get('[data-cy=toDate-3]').focus().type(toDate4);
+
+    cy.get('button[name="publish-button"]').click();
+
+    cy.get('button[name="unpublish-listing"]').should('be.visible');
+  })
+
+  it('logout user', () => {
+    cy.get('[data-cy=profile-menu]').as('profileMenu');
+    cy.get('@profileMenu').find('button') // Adjust the selector based on your actual HTML structure
+      .click();
+
+    cy.get('button[name="logout"]').click();
+    cy.url().should('include', '/');
+  });
+
+  // it('Other user registers lmao', () => {
+  //   cy.get('button[name="register"]').click();
+
+  //   // Make sure that all forms are there
+  //   cy.get('input[name="email"]').should('be.visible');
+  //   cy.get('input[name="password"]').should('be.visible');
+  //   cy.get('input[name="confirmPassword"]').should('be.visible');
+  //   cy.get('input[name="name"]').should('be.visible');
+
+  //   // Fill out the form
+  //   const email = 'welovecats@gmail.com';
+  //   const password = 'catcatcatcat';
+  //   const name = 'Superman Batman';
+  //   cy.get('input[name="email"]').type(email);
+  //   cy.get('input[name="password"]').type(password);
+  //   cy.get('input[name="confirmPassword"]').type(password);
+  //   cy.get('input[name="name"]').type(name);
+
+  //   // Submit the form
+  //   cy.get('button[name="submit-register"]').click();
+  // });
+
+  it('User should be able to login', () => {
+    cy.get('button[name="login"]').click();
+
+    // Make sure that all forms are there
+    cy.get('input[name="email"]').should('be.visible');
+    cy.get('input[name="password"]').should('be.visible');
+
+    // Fill out the form
+    const email = 'welovecats@gmail.com';
+    const password = 'catcatcatcat';
+
+    cy.get('input[name="email"]').type(email);
+    cy.get('input[name="password"]').type(password);
+
+    // Submit the form
+    cy.get('button[name="submit-login"]').click();
+  })
+
+  it('Other user searchs for 17jan to 20jan', () => {
+    cy.contains('Search by category').click();
+    cy.get('#default-search').should('be.visible');
+    cy.get('#default-search').type('Cat House');
+    cy.get('button[name="search"]').click();
+  })
+
+  it('Other user clicks on cat house', () => {
+    cy.contains('Cat House').click();
+    cy.url().should('include', '/listings/view');
+  })
+
+  it('Other user searchs for 17jan to 20jan', () => {
+    cy.get('input[name="checkin"]').should('be.visible');
+    cy.get('input[name="checkout"]').should('be.visible');
+
+    // Verify that price is $300 on screen
+    cy.get('[data-cy="total-price"]').should('have.text', '$300 AUD');
+
+    cy.contains('Book Now').click();
+
+    cy.contains('Hooray!!').should('be.visible');
+  })
 });

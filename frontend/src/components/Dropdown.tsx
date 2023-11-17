@@ -16,14 +16,16 @@ import { makeRequest } from '../utils/axiosHelper';
 import PriceFilter from './SearchComponents/PriceFilter';
 
 interface DropdownProps {
-  products: HomePageProps['products'];
+
   setProducts: HomePageProps['setProducts'];
   setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
+  runEffect: boolean;
 }
 
 export default function Dropdown ({
   setProducts,
   setIsFiltered,
+  runEffect,
 }: DropdownProps) {
   function classNames (...classes: string[]) {
     return classes.filter(Boolean).join(' ');
@@ -40,14 +42,11 @@ export default function Dropdown ({
   const [detailedListings, setDetailedListings] = useState<
     SingleDetailListing[]
   >([]);
-
-  useEffect(() => {
-    getDetailedListings();
-  }, []);
-
   // Get all listings and with details
   async function getDetailedListings () {
     const res = await makeRequest<ListingsReturn>('GET', 'listings');
+    console.log(res.data.listings);
+
     const listings: Product[] | undefined = res.data.listings;
     const detailedListings: SingleDetailListing[] = [];
 
@@ -63,6 +62,12 @@ export default function Dropdown ({
 
     setDetailedListings(detailedListings);
   }
+
+  useEffect(() => {
+    console.log('useEffect');
+
+    getDetailedListings();
+  }, [runEffect]);
 
   /**
    * The difference in calendar days between checkOut and checkIn dates.
