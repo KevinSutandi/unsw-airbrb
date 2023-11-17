@@ -6,12 +6,16 @@ import * as axiosHelpers from '../../utils/axiosHelper'; // Import the module to
 import { localStorageMock } from '../../utils/helpers';
 
 // To prevent ResizeObserver error
+// Define a type for the global context
+type CustomGlobal = Window & typeof globalThis;
+
+// To prevent ResizeObserver error
 beforeAll(() => {
-  (globalThis as any).ResizeObserver = ResizeObserver;
+  (globalThis as CustomGlobal).ResizeObserver = ResizeObserver;
 });
 
 afterAll(() => {
-  delete (globalThis as any).ResizeObserver;
+  delete (globalThis as CustomGlobal & { ResizeObserver?: unknown }).ResizeObserver;
 });
 
 jest.mock('../../utils/axiosHelper', () => ({
