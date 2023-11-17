@@ -97,7 +97,7 @@ export default function NavBar ({
             onClick={navigateHome}
           >
             <span className="sr-only">AirBRB</span>
-            <img className="h-10 w-auto" src={logo} alt="" />
+            <img className="h-10 w-auto" src={logo} alt="logo" />
             <span className="hidden mx-3 my-auto text-2xl underline underline-offset-3 lg:block">
               AirBRB
             </span>
@@ -139,7 +139,7 @@ export default function NavBar ({
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5 flex">
               <span className="sr-only">AirBRB</span>
-              <img className="h-8 w-auto" src={logo} alt="" />
+              <img className="h-8 w-auto" src={logo} alt="logo" />
               <span className="mx-3 my-auto text-2xl underline underline-offset-3">
                 AirBRB
               </span>

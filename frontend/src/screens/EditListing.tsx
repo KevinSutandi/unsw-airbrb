@@ -821,6 +821,7 @@ export default function EditListing ({
                     <img
                       className="mx-auto h-full w-full text-gray-300"
                       aria-hidden="true"
+                      alt='selected thumbnail'
                       src={selectedThumbnail}
                     />
                   </div>
