@@ -22,6 +22,7 @@ const NumberForm: React.FC<NumberFormProps> = ({ name, id, min, max, value, clas
     <input
       type='number'
       name={name}
+      data-testid={name}
       id={id}
       min={min}
       max={max}

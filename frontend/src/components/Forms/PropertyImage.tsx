@@ -10,7 +10,7 @@ export default function PropertyImage ({
   return (
     <div className="items-center flex">
       <div className="relative">
-        <img className="object-scale-down rounded-md" src={src} />
+        <img className="object-scale-down rounded-md" data-cy="property-image" src={src} />
         <button
           onClick={() => deletePropertyImage(idx)}
           aria-label="delete image"

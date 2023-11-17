@@ -8,7 +8,7 @@ import { getToken, setEmail, setToken } from '../utils/auth';
 import logo from '../assets/logo.jpeg';
 import LoginModal from './AuthModals/LoginModal';
 import RegisterModal from './AuthModals/RegisterModal';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import HomeProfileMenu from './HomeComponents/HomeProfileMenu';
 import { makeRequest } from '../utils/axiosHelper';
 import { NavBarProps } from '../types/types';
@@ -20,9 +20,10 @@ export default function NavBar ({
   setIsLoggedIn,
   setErrorModalOpen,
   setErrorMessage,
-  product,
   setProduct,
-  setIsFiltered
+  setIsFiltered,
+  runEffect,
+  setRunEffect
 }: NavBarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -44,11 +45,13 @@ export default function NavBar ({
   const openLoginModal = () => {
     setRegisterModalOpen(false);
     setLoginModalOpen(true);
+    setMobileMenuOpen(false);
   };
 
   const openRegisterModal = () => {
     setLoginModalOpen(false);
     setRegisterModalOpen(true);
+    setMobileMenuOpen(false);
   };
 
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -60,6 +63,7 @@ export default function NavBar ({
         setToken('');
         setEmail('');
         navigate('/');
+        setRunEffect(true);
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -76,10 +80,6 @@ export default function NavBar ({
     }
   };
 
-  const navigateHome = () => {
-    navigate('/');
-  };
-
   const navigateHostedListings = () => {
     setMobileMenuOpen(false)
     navigate('/listings');
@@ -92,23 +92,24 @@ export default function NavBar ({
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <a
+          <NavLink
             className="-m-1.5 p-1.5 flex hover:scale-105 ease-in duration-200 cursor-pointer"
-            onClick={navigateHome}
+            to={'/'}
           >
             <span className="sr-only">AirBRB</span>
             <img className="h-10 w-auto" src={logo} alt="logo" />
             <span className="hidden mx-3 my-auto text-2xl underline underline-offset-3 lg:block">
               AirBRB
             </span>
-          </a>
+          </NavLink>
         </div>
 
         <Popover.Group className="lg:flex lg:gap-x-12">
-          <Dropdown products={product} setProducts={setProduct} setIsFiltered={setIsFiltered}/>
+          <Dropdown runEffect={runEffect} setProducts={setProduct} setIsFiltered={setIsFiltered}/>
         </Popover.Group>
         <div className="flex lg:hidden">
           <button
+            name='open-menu'
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
             onClick={() => setMobileMenuOpen(true)}
@@ -118,7 +119,7 @@ export default function NavBar ({
           </button>
         </div>
 
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center" data-cy="profile-menu">
           <HomeProfileMenu
             openLoginModal={openLoginModal}
             openRegisterModal={openRegisterModal}
@@ -178,12 +179,14 @@ export default function NavBar ({
                 : (
                 <div className="py-6">
                   <button
+                    name='registerMobile'
                     onClick={openRegisterModal}
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-bold leading-7 text-gray-900 hover:bg-gray-50"
                   >
                     Sign up
                   </button>
                   <button
+                    name='loginMobile'
                     onClick={openLoginModal}
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >

@@ -22,6 +22,7 @@ import AmenitiesList from '../components/ViewListingComponents/AmenitiesList';
 import GlobalContext from '../components/GlobalContext';
 import ViewListingHeader from '../components/ViewListingComponents/ViewListingHeader';
 import ReviewModal from '../components/ViewListingComponents/ReviewModal';
+import { differenceInCalendarDays } from 'date-fns';
 
 // TODO: Show chevrons when the showcased pictures exceed 5
 
@@ -32,12 +33,12 @@ export const calculateDifferenceInDays = (
   if (!date1 || !date2) {
     return 0;
   }
-  const differenceInMilliseconds = date2.getTime() - date1.getTime();
-  return Math.round(differenceInMilliseconds / (24 * 60 * 60 * 1000));
+
+  return differenceInCalendarDays(date2, date1);
 };
 
 export default function ViewListing () {
-  const { listingId } = useParams();
+  const { listingId } = useParams<{ listingId: string }>();
 
   const [listingDetails, setListingDetails] = useState({
     owner: '',
@@ -272,7 +273,7 @@ export default function ViewListing () {
         availability: listingDetails.availability,
       }}
     >
-      <div className="xl:mx-auto pt-3 sm:pt-9 xl:max-w-6xl w-full">
+      <div className="xl:mx-auto pt-3 sm:pt-9 xl:max-w-6xl w-full p-10">
         <ViewListingHeader
           status={bookingDetails.status}
           openReviewModal={openReviewModal}
@@ -340,7 +341,7 @@ export default function ViewListing () {
                 <BedCard key={key} bedroomName={key} bedTotal={value} />
               ))}
             </section>
-            <section className="px-4 mt-5">
+            <section className="mt-2 p-5">
               <h3 className="text-2xl font-medium mb-2">Amenities</h3>
               <ul className="flex flex-col gap-2">
                 {listingDetails.propertyAmenities.map((amenity, idx) => (

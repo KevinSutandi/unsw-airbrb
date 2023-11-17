@@ -14,6 +14,7 @@ import 'primeicons/primeicons.css';
 import { SingleDetailListing } from './types/types';
 import GlobalContext from './components/GlobalContext';
 import { Nullable } from 'primereact/ts-helpers';
+import ViewBookings from './screens/ViewBookings';
 
 function App () {
   document.title = 'AirBRB';
@@ -24,12 +25,23 @@ function App () {
   const [errorMessage, setErrorMessage] = useState('');
   const [products, setProducts] = useState<SingleDetailListing[]>([]);
   const [isFiltered, setIsFiltered] = useState(false);
+  const [runEffect, setRunEffect] = useState(false);
 
-  const [filteredCheckin, setFilteredCheckin] = useState<Nullable<Date>>(new Date())
-  const [filteredCheckout, setFilteredCheckout] = useState<Nullable<Date>>(null)
+  const [filteredCheckin, setFilteredCheckin] = useState<Nullable<Date>>(
+    new Date()
+  );
+  const [filteredCheckout, setFilteredCheckout] =
+    useState<Nullable<Date>>(null);
 
   return (
-  <GlobalContext.Provider value={{ filteredCheckin, filteredCheckout, setFilteredCheckin, setFilteredCheckout }}>
+    <GlobalContext.Provider
+      value={{
+        filteredCheckin,
+        filteredCheckout,
+        setFilteredCheckin,
+        setFilteredCheckout,
+      }}
+    >
       <Router>
         <NavBar
           isLoggedIn={isLoggedIn}
@@ -39,11 +51,26 @@ function App () {
           product={products}
           setProduct={setProducts}
           setIsFiltered={setIsFiltered}
+          runEffect={runEffect}
+          setRunEffect={setRunEffect}
         />
         <Routes>
-          <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} products={products} setProducts={setProducts} isFiltered={isFiltered} setIsFiltered={setIsFiltered}/>} />
           <Route
-            path="/listings"
+            path='/'
+            element={
+              <HomePage
+                runEffect={runEffect}
+                setRunEffect={setRunEffect}
+                isLoggedIn={isLoggedIn}
+                products={products}
+                setProducts={setProducts}
+                isFiltered={isFiltered}
+                setIsFiltered={setIsFiltered}
+              />
+            }
+          />
+          <Route
+            path='/listings'
             element={
               <HostedListings
                 setErrorMessage={setErrorMessage}
@@ -54,24 +81,30 @@ function App () {
             }
           />
           <Route
-            path="/listings/create"
+            path='/listings/create'
             element={
               <CreateListing
                 setErrorMessage={setErrorMessage}
                 setErrorModalOpen={setErrorModalOpen}
+                setRunEffect={setRunEffect}
               />
             }
           />
           <Route
-            path="/listings/edit/:id"
+            path='/listings/edit/:id'
             element={
               <EditListing
                 setErrorMessage={setErrorMessage}
                 setErrorModalOpen={setErrorModalOpen}
+                setRunEffect={setRunEffect}
               />
             }
           />
-          <Route path="/listings/view/:listingId" element={<ViewListing />} />
+          <Route
+            path='/listings/bookings/:listingId'
+            element={<ViewBookings />}
+          />
+          <Route path='/listings/view/:listingId' element={<ViewListing />} />
         </Routes>
       </Router>
 

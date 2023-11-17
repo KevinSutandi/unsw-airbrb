@@ -21,7 +21,9 @@ export default function PublishListingModal ({
   ]);
 
   const [availabilityErrors, setAvailabilityErrors] = useState<string[]>([]);
-  const [disabled, setDisabled] = useState(false)
+  const [disabled, setDisabled] = useState(false);
+
+  const [footerError, setFooterError] = useState(false);
 
   // Reset the date input when modal is closed
   useEffect(() => {
@@ -32,10 +34,30 @@ export default function PublishListingModal ({
 
   // Check for publish button state
   useEffect(() => {
-    setDisabled(checkForErrors())
-  }, [availabilityErrors])
+    setDisabled(checkForErrors());
+  }, [availabilityErrors]);
 
   const handlePublishListing = async () => {
+    // Check if the inputs are empty and produce an error for each row if empty
+    const newErrors = availability.map((elem) => {
+      if (!elem.from || !elem.to) {
+        return 'Please fill in both dates';
+      } else {
+        return '';
+      }
+    });
+
+    if (newErrors.some((err) => err !== '')) {
+      setAvailabilityErrors(newErrors);
+      return;
+    }
+
+    // if there are no inputs, return
+    if (availability.length === 0) {
+      setFooterError(true);
+      return;
+    }
+
     if (listingId) {
       const token = getToken();
       if (token) {
@@ -72,6 +94,7 @@ export default function PublishListingModal ({
       const currentInput = newDates[idx];
 
       if (currentInput) {
+        console.log(currentInput.from, currentInput.to);
         if (field === 'to' && new Date(value) < new Date(currentInput.from)) {
           const newErrors = [...availabilityErrors];
           newErrors[idx] = 'To date cannot be earlier than From date';
@@ -99,8 +122,10 @@ export default function PublishListingModal ({
   };
 
   const checkForErrors = () => {
-    return availabilityErrors.some(err => err === 'To date cannot be earlier than From date')
-  }
+    return availabilityErrors.some(
+      (err) => err === 'To date cannot be earlier than From date'
+    );
+  };
 
   const removeAvailability = (idx: number) => {
     setAvailability((prev) => prev.filter((_, index) => index !== idx));
@@ -108,6 +133,7 @@ export default function PublishListingModal ({
   };
 
   const addAvailability = () => {
+    setFooterError(false)
     setAvailability((prev) => [...prev, { from: '', to: '' }]);
     setAvailabilityErrors((prev) => [...prev, '']);
   };
@@ -115,41 +141,41 @@ export default function PublishListingModal ({
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
-        as="div"
-        className="relative z-10"
+        as='div'
+        className='relative z-10'
         initialFocus={cancelButtonRef}
         onClose={setOpen}
       >
         <Transition.Child
           as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+          enter='ease-out duration-300'
+          enterFrom='opacity-0'
+          enterTo='opacity-100'
+          leave='ease-in duration-200'
+          leaveFrom='opacity-100'
+          leaveTo='opacity-0'
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div className='fixed inset-0 z-10 w-screen overflow-y-auto'>
+          <div className='flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0'>
             <Transition.Child
               as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter='ease-out duration-300'
+              enterFrom='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+              enterTo='opacity-100 translate-y-0 sm:scale-100'
+              leave='ease-in duration-200'
+              leaveFrom='opacity-100 translate-y-0 sm:scale-100'
+              leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+              <Dialog.Panel className='relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg'>
+                <div className='bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4'>
                   <div>
-                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                    <div className='mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left'>
                       <Dialog.Title
-                        as="h3"
-                        className="text-base font-semibold leading-6 text-gray-900"
+                        as='h3'
+                        className='text-base font-semibold leading-6 text-gray-900'
                       >
                         Set availability
                       </Dialog.Title>
@@ -164,18 +190,26 @@ export default function PublishListingModal ({
                           errorMessage={availabilityErrors[idx] as string}
                         />
                       ))}
+
+                      {footerError && (
+                        <div className='text-red-500 text-xs'>
+                          Please add at least one availability
+                        </div>
+                      )}
                       <button
                         onClick={addAvailability}
-                        className="text-blue-500 mt-2.5 text-sm hover:underline"
+                        className='text-blue-500 mt-2.5 text-sm cursor-pointer hover:underline'
                       >
                         + Add availability
                       </button>
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+
+                <div className='bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6'>
                   <button
                     type="button"
+                    name="publish-button"
                     className="publish-btn inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto disabled:opacity-50"
                     onClick={handlePublishListing}
                     disabled={disabled}
@@ -183,8 +217,8 @@ export default function PublishListingModal ({
                     Publish
                   </button>
                   <button
-                    type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    type='button'
+                    className='mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto'
                     onClick={() => setOpen(false)}
                     ref={cancelButtonRef}
                   >

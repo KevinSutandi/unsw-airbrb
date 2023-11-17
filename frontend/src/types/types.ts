@@ -69,6 +69,7 @@ export type HostedListingsProps = {
 export type CreateListingProps = {
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setErrorModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setRunEffect: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type ListingsReturn = {
@@ -81,6 +82,8 @@ export type HomePageProps = {
   setProducts: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>;
   isFiltered: boolean;
   setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
+  runEffect: boolean;
+  setRunEffect: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type ErrorModalsProps = {
@@ -97,6 +100,8 @@ export type NavBarProps = {
   product: SingleDetailListing[];
   setProduct: React.Dispatch<React.SetStateAction<SingleDetailListing[]>>;
   setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
+  runEffect: boolean;
+  setRunEffect: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type HomeProfileMenuProps = {

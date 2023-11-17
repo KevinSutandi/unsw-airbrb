@@ -25,6 +25,7 @@ import Breadcrumb from '../components/EditListingComponents/EditBreadcrumbs';
 export default function EditListing ({
   setErrorMessage,
   setErrorModalOpen,
+  setRunEffect
 }: CreateListingProps) {
   const { id } = useParams();
   const [isFormChanged, setIsFormChanged] = useState(false);
@@ -92,7 +93,7 @@ export default function EditListing ({
 
     if (token === 'null') {
       navigate('/');
-      setErrorMessage("Cannot access 'My Listings' Page when not logged in");
+      setErrorMessage("Cannot access 'Edit Listings' Page when not logged in");
       setErrorModalOpen(true);
     } else {
       getListingData(token as string).then((res) => {
@@ -213,6 +214,7 @@ export default function EditListing ({
     if (token !== 'null') {
       makeRequest('PUT', `listings/${id}`, { token, ...body })
         .then(() => {
+          setRunEffect(true);
           setIsSubmitted(true);
         })
         .catch((error) => {
@@ -712,6 +714,7 @@ export default function EditListing ({
                   {state.beds.map((bed) => (
                     <div
                       key={bed.id}
+                      data-cy="bed-input-indiv"
                       className="rounded-md h-40 ring-1 ring-inset ring-gray-500 px-3 my-2 py-3"
                     >
                       <div className="flex items-center">
