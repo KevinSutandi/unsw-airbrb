@@ -19,45 +19,27 @@ context('Happy Path User Testing 2', () => {
     cy.get('button[name="register"]').should('be.visible');
   });
 
-  // it('User should register as a user', () => {
-  //   cy.get('button[name="register"]').click();
-
-  //   // Make sure that all forms are there
-  //   cy.get('input[name="email"]').should('be.visible');
-  //   cy.get('input[name="password"]').should('be.visible');
-  //   cy.get('input[name="confirmPassword"]').should('be.visible');
-  //   cy.get('input[name="name"]').should('be.visible');
-
-  //   // Fill out the form
-  //   const email = 'example@gmeil.com';
-  //   const password = 'password';
-  //   const name = 'John Doe';
-  //   cy.get('input[name="email"]').type(email);
-  //   cy.get('input[name="password"]').type(password);
-  //   cy.get('input[name="confirmPassword"]').type(password);
-  //   cy.get('input[name="name"]').type(name);
-
-  //   // Submit the form
-  //   cy.get('button[name="submit-register"]').click();
-  // });
-
-  it('User should be able to login', () => {
-    cy.get('button[name="login"]').click();
+  it('User should register as a user', () => {
+    cy.get('button[name="register"]').click();
 
     // Make sure that all forms are there
     cy.get('input[name="email"]').should('be.visible');
     cy.get('input[name="password"]').should('be.visible');
+    cy.get('input[name="confirmPassword"]').should('be.visible');
+    cy.get('input[name="name"]').should('be.visible');
 
     // Fill out the form
     const email = 'example@gmeil.com';
     const password = 'password';
-
+    const name = 'John Doe';
     cy.get('input[name="email"]').type(email);
     cy.get('input[name="password"]').type(password);
+    cy.get('input[name="confirmPassword"]').type(password);
+    cy.get('input[name="name"]').type(name);
 
     // Submit the form
-    cy.get('button[name="submit-login"]').click();
-  })
+    cy.get('button[name="submit-register"]').click();
+  });
 
   it('User should be logged in by checking the buttons', () => {
     cy.get('[data-cy=profile-menu]').as('profileMenu');
@@ -333,45 +315,27 @@ context('Happy Path User Testing 2', () => {
     cy.url().should('include', '/');
   });
 
-  // it('Other user registers lmao', () => {
-  //   cy.get('button[name="register"]').click();
-
-  //   // Make sure that all forms are there
-  //   cy.get('input[name="email"]').should('be.visible');
-  //   cy.get('input[name="password"]').should('be.visible');
-  //   cy.get('input[name="confirmPassword"]').should('be.visible');
-  //   cy.get('input[name="name"]').should('be.visible');
-
-  //   // Fill out the form
-  //   const email = 'welovecats@gmail.com';
-  //   const password = 'catcatcatcat';
-  //   const name = 'Superman Batman';
-  //   cy.get('input[name="email"]').type(email);
-  //   cy.get('input[name="password"]').type(password);
-  //   cy.get('input[name="confirmPassword"]').type(password);
-  //   cy.get('input[name="name"]').type(name);
-
-  //   // Submit the form
-  //   cy.get('button[name="submit-register"]').click();
-  // });
-
-  it('User should be able to login', () => {
-    cy.get('button[name="login"]').click();
+  it('Other user registers lmao', () => {
+    cy.get('button[name="register"]').click();
 
     // Make sure that all forms are there
     cy.get('input[name="email"]').should('be.visible');
     cy.get('input[name="password"]').should('be.visible');
+    cy.get('input[name="confirmPassword"]').should('be.visible');
+    cy.get('input[name="name"]').should('be.visible');
 
     // Fill out the form
     const email = 'welovecats@gmail.com';
     const password = 'catcatcatcat';
-
+    const name = 'Superman Batman';
     cy.get('input[name="email"]').type(email);
     cy.get('input[name="password"]').type(password);
+    cy.get('input[name="confirmPassword"]').type(password);
+    cy.get('input[name="name"]').type(name);
 
     // Submit the form
-    cy.get('button[name="submit-login"]').click();
-  })
+    cy.get('button[name="submit-register"]').click();
+  });
 
   it('Other user searchs for 17jan to 20jan', () => {
     cy.contains('Search by category').click();

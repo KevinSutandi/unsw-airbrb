@@ -5,7 +5,7 @@ Our component testing strategy involves writing tests for different components t
 
 **Selection of Components**
 - Components chosen are those that play a critical role in the application, have complex logic, or are reused across different parts of the application.
-- Components chosen : Sign in modal, Sign up modal, Review modal, Profile Icon, Sign out button
+- Components chosen : Sign in modal, Sign up modal, Review modal, Profile Icon, Sign out button, Price Filter Selector, Country Combobox Dropdown, Calendar Form for Published Modal
 
 **Testing Methodologies**
 - Mocking Local Storage: For components that require authentication or rely on token-based mechanisms, we create a mock local storage to simulate user authentication states.
@@ -16,6 +16,6 @@ Our component testing strategy involves writing tests for different components t
 
 <h1>Second UI Testing with Cypress</h1>
 
-**Summary**
+**Rationale**
 
-The testing that i went and undergoed was testing the other functionalities that the first ui test did not use, the first one being adding more availabities (up to 4 dates) and making sure that they all work. The second thign that i felt had to be different was to check if the search functionality works, we used the normal search function (check by title or city) and the last one was for the owner of the property to accept the booking and let the user staying at the AirBRB to leave a review to check if our review systems were working 
+The testing that i went and undergoed was testing the other functionalities that the first ui test did not use, the first one being adding more availabities (up to 4 dates) and making sure that they all work. The second thing that i felt had to be different was to check if the search functionality works, we used the normal search function (check by title or city), the third one was for the owner of the property to accept the booking and let the user staying at the AirBRB to leave a review to check if our review systems were working. Another one that we decided to do was to check if adding more property images are working as realistically if we were to host an airbnb we don't want to see a listing with just one photo.
