@@ -51,6 +51,7 @@ export default function BookingModal ({
               : (
               <button
                 onClick={handleBook}
+                name='bookNow'
                 disabled={
                   !getToken() || !areDatesValid(checkinDate, checkoutDate)
                 }

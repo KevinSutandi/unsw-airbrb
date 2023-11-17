@@ -233,6 +233,7 @@ export default function ViewBookings () {
                     <div className='flex flex-col gap-2'>
                       <button
                         type='button'
+                        name='accept-booking'
                         onClick={() => acceptBooking(booking.id)}
                         className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'
                       >
@@ -240,6 +241,7 @@ export default function ViewBookings () {
                       </button>
                       <button
                         type='button'
+                        name='decline-booking'
                         onClick={() => declineBooking(booking.id)}
                         className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
                       >

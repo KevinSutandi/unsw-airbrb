@@ -19,29 +19,27 @@ context('Happy Path User Testing 2', () => {
     cy.get('button[name="register"]').should('be.visible');
   });
 
-  /* ONLY TO BE USED WHEN TESTING FIRST TIME
-  it('User should register as a user', () => {
-    cy.get('button[name="register"]').click();
+  // it('User should register as a user', () => {
+  //   cy.get('button[name="register"]').click();
 
-    // Make sure that all forms are there
-    cy.get('input[name="email"]').should('be.visible');
-    cy.get('input[name="password"]').should('be.visible');
-    cy.get('input[name="confirmPassword"]').should('be.visible');
-    cy.get('input[name="name"]').should('be.visible');
+  //   // Make sure that all forms are there
+  //   cy.get('input[name="email"]').should('be.visible');
+  //   cy.get('input[name="password"]').should('be.visible');
+  //   cy.get('input[name="confirmPassword"]').should('be.visible');
+  //   cy.get('input[name="name"]').should('be.visible');
 
-    // Fill out the form
-    const email = 'example@gmeil.com';
-    const password = 'password';
-    const name = 'John Doe';
-    cy.get('input[name="email"]').type(email);
-    cy.get('input[name="password"]').type(password);
-    cy.get('input[name="confirmPassword"]').type(password);
-    cy.get('input[name="name"]').type(name);
+  //   // Fill out the form
+  //   const email = 'example@gmeil.com';
+  //   const password = 'password';
+  //   const name = 'John Doe';
+  //   cy.get('input[name="email"]').type(email);
+  //   cy.get('input[name="password"]').type(password);
+  //   cy.get('input[name="confirmPassword"]').type(password);
+  //   cy.get('input[name="name"]').type(name);
 
-    // Submit the form
-    cy.get('button[name="submit-register"]').click();
-  });
-  */
+  //   // Submit the form
+  //   cy.get('button[name="submit-register"]').click();
+  // });
 
   it('User should be able to login', () => {
     cy.get('button[name="login"]').click();
@@ -380,6 +378,7 @@ context('Happy Path User Testing 2', () => {
     cy.get('#default-search').should('be.visible');
     cy.get('#default-search').type('Cat House');
     cy.get('button[name="search"]').click();
+    cy.get('body').type('{esc}');
   })
 
   it('Other user clicks on cat house', () => {
@@ -391,11 +390,131 @@ context('Happy Path User Testing 2', () => {
     cy.get('input[name="checkin"]').should('be.visible');
     cy.get('input[name="checkout"]').should('be.visible');
 
+    const fromDate = '01/17/2024';
+    const toDate = '01/20/2024';
+
+    cy.get('input[name="checkin"]').focus().type(fromDate);
+    cy.get('body').type('{esc}');
+
+    cy.get('input[name="checkout"]').focus().type(toDate);
+    cy.get('body').type('{esc}');
+
     // Verify that price is $300 on screen
     cy.get('[data-cy="total-price"]').should('have.text', '$300 AUD');
 
-    cy.contains('Book Now').click();
+    cy.get('button[name="bookNow"]').click();
 
     cy.contains('Hooray!!').should('be.visible');
+  })
+
+  it('Other user logs out', () => {
+    cy.get('[data-cy=profile-menu]').as('profileMenu');
+    cy.get('@profileMenu').find('button') // Adjust the selector based on your actual HTML structure
+      .click();
+
+    cy.get('button[name="logout"]').click();
+    cy.url().should('include', '/');
+  })
+
+  it('User should be able to login', () => {
+    cy.get('button[name="login"]').click();
+
+    // Make sure that all forms are there
+    cy.get('input[name="email"]').should('be.visible');
+    cy.get('input[name="password"]').should('be.visible');
+
+    // Fill out the form
+    const email = 'example@gmeil.com';
+    const password = 'password';
+
+    cy.get('input[name="email"]').type(email);
+    cy.get('input[name="password"]').type(password);
+
+    // Submit the form
+    cy.get('button[name="submit-login"]').click();
+  })
+
+  it('User should be able to go to the listing page', () => {
+    cy.get('[data-cy=profile-menu]').as('profileMenu');
+    cy.get('@profileMenu').find('button') // Adjust the selector based on your actual HTML structure
+      .click();
+
+    cy.get('button[name="view-listings"]').click();
+    cy.url().should('include', '/listings');
+  });
+
+  it('User should be able to go to view bookings page', () => {
+    cy.get('button[name="view-bookings"]').click();
+    cy.url().should('include', '/bookings');
+  })
+
+  it('User should be able to view booking from welovecats', () => {
+    cy.contains('welovecats@gmail.com').should('be.visible');
+    cy.contains('Cat House').should('be.visible');
+    cy.contains('17 January 2024').should('be.visible');
+    cy.contains('20 January 2024').should('be.visible');
+
+    cy.get('button[name="accept-booking"]').should('be.visible');
+    cy.get('button[name="decline-booking"]').should('be.visible');
+
+    cy.get('button[name="accept-booking"]').click();
+
+    cy.contains('Status: Accepted').should('be.visible');
+  })
+
+  it('user logs out', () => {
+    cy.get('[data-cy=profile-menu]').as('profileMenu');
+    cy.get('@profileMenu').find('button') // Adjust the selector based on your actual HTML structure
+      .click();
+
+    cy.get('button[name="logout"]').click();
+    cy.url().should('include', '/');
+  })
+
+  it('User should be able to login to make a review', () => {
+    cy.get('button[name="login"]').click();
+
+    // Make sure that all forms are there
+    cy.get('input[name="email"]').should('be.visible');
+    cy.get('input[name="password"]').should('be.visible');
+
+    // Fill out the form
+    const email = 'welovecats@gmail.com';
+    const password = 'catcatcatcat';
+
+    cy.get('input[name="email"]').type(email);
+    cy.get('input[name="password"]').type(password);
+
+    // Submit the form
+    cy.get('button[name="submit-login"]').click();
+  })
+
+  it('Other user clicks on cat house', () => {
+    cy.contains('Cat House').click();
+    cy.url().should('include', '/listings/view');
+  })
+
+  it('user makes a review', () => {
+    cy.contains('Leave a review').as('review');
+    cy.get('@review').should('be.visible');
+    cy.get('@review').click()
+
+    cy.get('svg[data-testid="star-5"]').click();
+    cy.get('textarea[placeholder="Leave a review"]').type('This is a fantastic review');
+
+    cy.contains('Submit').click();
+  })
+
+  it('checks that review is there', () => {
+    cy.contains('1 reviews').should('be.visible');
+  });
+
+  it('user logs out', () => {
+    cy.get('[data-cy=profile-menu]').as('profileMenu');
+    cy.get('@profileMenu').find('button') // Adjust the selector based on your actual HTML structure
+      .click();
+
+    cy.get('button[name="logout"]').click();
+    cy.url().should('include', '/');
   })
 });
