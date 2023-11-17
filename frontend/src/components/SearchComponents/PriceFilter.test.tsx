@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { act } from 'react-dom/test-utils'; // Import act for async code
 import PriceFilter from './PriceFilter';
 import { useNavigate } from 'react-router-dom';
 
