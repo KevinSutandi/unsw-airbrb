@@ -189,7 +189,7 @@ export default function HostedListngs ({
                   <img
                     className="h-12 w-12 flex-none rounded-full bg-gray-50"
                     src={listings.thumbnail}
-                    alt=""
+                    alt="listing thumbnail"
                   />
                   <div className="min-w-0 flex-auto">
                     <p className="text-sm font-semibold leading-6 text-gray-900 flex flex-row space-x-3 align-middle">
